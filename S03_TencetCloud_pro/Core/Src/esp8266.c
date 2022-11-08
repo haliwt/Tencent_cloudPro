@@ -262,7 +262,7 @@ void SmartPhone_LinkTengxunCloud(void)
 
 	      sprintf((char *)device_massage, "AT+TCPRDINFOSET=1,\"%s\",\"%s\",\"%s\"\r\n", PRODUCT_ID, DEVICE_SECRET,DEVUICE_NAME);
 	      HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000);
-          HAL_Delay(10000);
+          HAL_Delay(2000);
 
 		  esp8266data.esp8266_dynamic_reg_flag=1;
 		 
@@ -275,12 +275,23 @@ void SmartPhone_LinkTengxunCloud(void)
 
          esp8266data.esp8266_dynamic_reg_flag=0;
 		 HAL_UART_Transmit(&huart2, "AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"), 5000); //动态注册 
-	     HAL_Delay(200);
+	     HAL_Delay(2000);
+		 esp8266data.esp8266_link_cloud_flag =1;
+         esp8266data.esp8266_timer_link_1s=0;
 
      }
 
-	
-    
+	if(esp8266data.esp8266_link_cloud_flag==1){
+		
+       if(esp8266data.esp8266_timer_link_1s > 5){
+	   	esp8266data.esp8266_timer_link_1s=0;
+	     esp8266data.esp8266_link_cloud_flag=0;
+
+       HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
+       HAL_Delay(2000);
+
+	  }
+	}
  	 free(device_massage);
 
 }

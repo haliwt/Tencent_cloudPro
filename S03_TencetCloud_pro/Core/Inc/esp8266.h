@@ -27,8 +27,12 @@ typedef struct ESP8266_DATA
 	unsigned char wifi_RunState;
 	unsigned char esp8266_smartphone_flag;
 	unsigned char esp8266_link_cloud_flag;
-	unsigned char esp8266_timer_1s;
+	
 	unsigned char esp8266_dynamic_reg_flag;
+
+	unsigned char esp8266_timer_link_1s;
+	unsigned char esp8266_timer_1s;
+	
 }ESP8266DATATypedef;
 
 extern ESP8266DATATypedef esp8266data;
