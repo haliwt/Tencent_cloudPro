@@ -8,6 +8,7 @@
 #include "special_power.h"
 
 #include "single_mode.h"
+#include "esp8266.h"
 
 
  
@@ -670,6 +671,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     
        run_t.sendtimes++;
        run_t.gTimer_wifi_1s++;
+	   esp8266data.esp8266_timer_1s++;
      
 	   run_t.gTimer_send_0xaa++;
 	   if(run_t.gFan_continueRun ==1){

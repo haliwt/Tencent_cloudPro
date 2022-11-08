@@ -107,8 +107,9 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-     InitWifiModule(); 
-     WifiManger_Fun();
+  
+    Wifi_Link_SmartPhone_Fun();
+	SmartPhone_LinkTengxunCloud();
       
   }
   /* USER CODE END 3 */

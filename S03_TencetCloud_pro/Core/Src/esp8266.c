@@ -8,6 +8,7 @@
 ESP8266DATATypedef esp8266data;
 
 
+static void InitWifiModule(void);
 
 
 static uint8_t wifi_inputBuf[20];
@@ -175,7 +176,7 @@ void Esp8266LinkloTExplorer(void)
 *Return Ref:NO
 *
 ****************************************************************************************************/
-void InitWifiModule(void)
+static void InitWifiModule(void)
 {
 	
 
@@ -195,15 +196,18 @@ void InitWifiModule(void)
 
 /****************************************************************************************************
 **
-*Function Name:void WifiMaager_Action(void)
+*Function Name:void Wifi_Link_SmartPhone_Fun(void)
 *Function: 
 *Input Ref: 
 *Return Ref:NO
 *
 ****************************************************************************************************/
-void WifiManger_Fun(void)
+void Wifi_Link_SmartPhone_Fun(void)
 {
    static uint8_t wifi_cw=0xff,wifi_cwsap=0xff;
+
+   InitWifiModule();
+    
 
    if(run_t.wifi_init_flag ==1){
      
@@ -225,7 +229,8 @@ void WifiManger_Fun(void)
 
          HAL_UART_Transmit(&huart2, "AT+CWSAP=\"YUYIJIA_S03\",\"12345678\",4,4\r\n", strlen("AT+CWSAP=\"YUYIJIA_S03\",\"12345678\",4,4\r\n"), 5000);
          HAL_Delay(10000);
-
+         esp8266data.esp8266_smartphone_flag =1;
+		 esp8266data.esp8266_timer_1s=0;
 	  }
 
 
@@ -234,5 +239,37 @@ void WifiManger_Fun(void)
 
 }
 
+/****************************************************************************************************
+**
+*Function Name:void Wifi_Link_SmartPhone_Fun(void)
+*Function: 
+*Input Ref: 
+*Return Ref:NO
+*
+****************************************************************************************************/
+void SmartPhone_LinkTengxunCloud(void)
+{
+   
+    uint8_t *device_massage;
+
+    device_massage = (uint8_t *)malloc(128);
+
+	if(esp8266data.esp8266_smartphone_flag ==1){
+		
+        if(esp8266data.esp8266_timer_1s >10){
+		   esp8266data.esp8266_timer_1s=0;
+		   esp8266data.esp8266_smartphone_flag=0; //return this function
+
+	      sprintf((char *)device_massage, "AT+TCDEVINFOSET=1,\"%s\",\"%s\",\"%s\"\r\n", PRODUCT_ID, DEVICE_SECRET,DEVUICE_NAME);
+	      HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000);
+          HAL_Delay(10000);
+
+        }
+
+	}
+    
+ 	 free(device_massage);
+
+}
 
 
