@@ -242,7 +242,7 @@ void Wifi_Link_SmartPhone_Fun(void)
 /****************************************************************************************************
 **
 *Function Name:void Wifi_Link_SmartPhone_Fun(void)
-*Function: 
+*Function: dy
 *Input Ref: 
 *Return Ref:NO
 *
@@ -256,17 +256,28 @@ void SmartPhone_LinkTengxunCloud(void)
 
 	if(esp8266data.esp8266_smartphone_flag ==1){
 		
-        if(esp8266data.esp8266_timer_1s >10){
+        if(esp8266data.esp8266_timer_1s >5){
 		   esp8266data.esp8266_timer_1s=0;
 		   esp8266data.esp8266_smartphone_flag=0; //return this function
 
 	      sprintf((char *)device_massage, "AT+TCPRDINFOSET=1,\"%s\",\"%s\",\"%s\"\r\n", PRODUCT_ID, DEVICE_SECRET,DEVUICE_NAME);
 	      HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000);
           HAL_Delay(10000);
+
+		  esp8266data.esp8266_dynamic_reg_flag=1;
 		 
         }
+		
 
 	}
+
+	if(esp8266data.esp8266_dynamic_reg_flag==1){
+
+         esp8266data.esp8266_dynamic_reg_flag=0;
+		 HAL_UART_Transmit(&huart2, "AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"), 5000); //动态注册 
+	     HAL_Delay(200);
+
+     }
 
 	
     

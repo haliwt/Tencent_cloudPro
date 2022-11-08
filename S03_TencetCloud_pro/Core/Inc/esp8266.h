@@ -7,7 +7,7 @@
 
 #define PRODUCT_ID              "XE4FRQT2DP" //production ID 
 #define DEVUICE_NAME            "UYIJIA_S03"      //device Name:
-#define DEVICE_SECRET           "YJuZKqu9cwb2Xd87Ul/0Jg==" //Secret key 
+#define DEVICE_SECRET           "97pxHin7FtMBq8D4J4MRFENh" //"YJuZKqu9cwb2Xd87Ul/0Jg==" //Secret key 
 #define PRODUCT_REGION          "ap-guangzhou" //filed name 
 
 #define WIFI_IC_ENABLE()         HAL_GPIO_WritePin(WIFI_EN_GPIO_Port,WIFI_EN_Pin,GPIO_PIN_SET)
@@ -28,6 +28,7 @@ typedef struct ESP8266_DATA
 	unsigned char esp8266_smartphone_flag;
 	unsigned char esp8266_link_cloud_flag;
 	unsigned char esp8266_timer_1s;
+	unsigned char esp8266_dynamic_reg_flag;
 }ESP8266DATATypedef;
 
 extern ESP8266DATATypedef esp8266data;
