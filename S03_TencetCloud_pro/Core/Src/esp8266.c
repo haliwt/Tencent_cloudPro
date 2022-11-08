@@ -260,13 +260,15 @@ void SmartPhone_LinkTengxunCloud(void)
 		   esp8266data.esp8266_timer_1s=0;
 		   esp8266data.esp8266_smartphone_flag=0; //return this function
 
-	      sprintf((char *)device_massage, "AT+TCDEVINFOSET=1,\"%s\",\"%s\",\"%s\"\r\n", PRODUCT_ID, DEVICE_SECRET,DEVUICE_NAME);
+	      sprintf((char *)device_massage, "AT+TCPRDINFOSET=1,\"%s\",\"%s\",\"%s\"\r\n", PRODUCT_ID, DEVICE_SECRET,DEVUICE_NAME);
 	      HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000);
           HAL_Delay(10000);
-
+		 
         }
 
 	}
+
+	
     
  	 free(device_massage);
 
