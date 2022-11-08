@@ -108,6 +108,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
      InitWifiModule(); 
+     WifiManger_Fun();
       
   }
   /* USER CODE END 3 */

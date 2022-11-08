@@ -62,6 +62,9 @@ typedef struct _RUN_T{
 	uint8_t wifi_key;
 	uint8_t wifi_key_off;
     uint8_t wifi_init_flag;
+    uint8_t wifi_cwsap_flag;
+	uint8_t wifi_cwmode_flag;
+	
 
 	uint8_t  globe_sub_flag;
 	uint8_t set_temperature_on;
@@ -70,6 +73,7 @@ typedef struct _RUN_T{
 
 
 	uint8_t gTimer_60s;
+	uint8_t gTimer_wifi_1s;
 
 	uint8_t gFan_counter;
 

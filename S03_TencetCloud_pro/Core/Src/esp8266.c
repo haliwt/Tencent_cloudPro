@@ -8,7 +8,6 @@
 ESP8266DATATypedef esp8266data;
 
 
-static uint8_t CheckWifi(void);
 
 
 static uint8_t wifi_inputBuf[20];
@@ -186,33 +185,54 @@ void InitWifiModule(void)
         HAL_UART_Abort(&huart2);
 		HAL_Delay(50);
 		WIFI_IC_ENABLE();
-		//HAL_UART_Transmit(&huart2,swStr,3,USART_TX_TIMEOUT);
 	    HAL_UART_Transmit(&huart2, "AT+RST\r\n", strlen("AT+RST\r\n"), 5000);
 		HAL_Delay(500);
 		
 		
 	}
-	//HAL_UART_Abort(&huart2);
-}
-
-static uint8_t CheckWifi(void)
-{
-	HAL_StatusTypeDef ret;
-
 	HAL_UART_Abort(&huart2);
-	//HAL_UART_Transmit(&huart2,getAdvDataCmd,10,USART_TX_TIMEOUT);
-	 HAL_UART_Transmit(&huart2, "AT+RST\r\n", strlen("AT+RST\r\n"), 5000);
-	ret=HAL_UART_Receive(&huart2,wifi_inputBuf,14,5000);
-	if(ret==HAL_OK)
-	{
-		
-		HAL_UART_Transmit(&huart2, "AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"), 5000);
-		
-      HAL_Delay(2000);
-		
-		return 1;
-	}
-	return 0;
 }
+
+/****************************************************************************************************
+**
+*Function Name:void WifiMaager_Action(void)
+*Function: 
+*Input Ref: 
+*Return Ref:NO
+*
+****************************************************************************************************/
+void WifiManger_Fun(void)
+{
+   static uint8_t wifi_cw=0xff,wifi_cwsap=0xff;
+
+   if(run_t.wifi_init_flag ==1){
+     
+      run_t.gTimer_wifi_1s++;
+	  if(run_t.gTimer_wifi_1s>5){
+	  	  run_t.gTimer_wifi_1s=0;
+		 if(wifi_cw != run_t.wifi_cwmode_flag){
+		    wifi_cw = run_t.wifi_cwmode_flag;
+			
+         	HAL_UART_Transmit(&huart2, "AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"), 5000);
+        	HAL_Delay(500);
+			run_t.wifi_cwsap_flag =1;
+
+		 }
+	  }
+
+	  if(run_t.wifi_cwsap_flag ==1){
+	  	  run_t.wifi_cwsap_flag =0;
+
+         HAL_UART_Transmit(&huart2, "AT+CWSAP=\"YUYIJIA_S03\",\"12345678\",4,4\r\n", strlen("AT+CWSAP=\"YUYIJIA_S03\",\"12345678\",4,4\r\n"), 5000);
+         HAL_Delay(10000);
+
+	  }
+
+
+   }
+
+
+}
+
 
 

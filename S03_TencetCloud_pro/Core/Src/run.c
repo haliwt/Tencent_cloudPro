@@ -664,12 +664,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
       
 
      }
-	   if(tm0 == 100){//100ms *10 = 1000ms =1s
-       tm0 =0;
+	 if(tm0 == 100){//100ms *10 = 1000ms =1s
+        tm0 =0;
         tm3++;
     
        run_t.sendtimes++;
-     
+       run_t.gTimer_wifi_1s++;
      
 	   run_t.gTimer_send_0xaa++;
 	   if(run_t.gFan_continueRun ==1){
