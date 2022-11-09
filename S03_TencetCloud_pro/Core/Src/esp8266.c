@@ -325,4 +325,25 @@ void Publish_Data_ToCloud(void)
     free(device_massage);
 }
 
+void Subsription_Data_FromCloud(void)
+{
+	uint8_t *device_massage;
+
+     device_massage = (uint8_t *)malloc(128);
+	if(esp8266data.esp8266_login_cloud_success==1){
+
+	  if(esp8266data.gTimer_subscription_timing > 5){
+	  	   esp8266data.gTimer_subscription_timing=0;
+		   esp8266data.esp8266_login_cloud_success=0;
+
+      sprintf((char *)device_massage, "AT+TCMQTTSUB=\"$thing/down/property/%s/%s\",0\r\n", PRODUCT_ID, DEVUICE_NAME);
+      HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000);
+
+	}
+	}
+
+    free(device_massage);
+
+
+}
 

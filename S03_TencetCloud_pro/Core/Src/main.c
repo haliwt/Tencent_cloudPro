@@ -110,7 +110,7 @@ int main(void)
   
     Wifi_Link_SmartPhone_Fun();
 	SmartPhone_LinkTengxunCloud();
-	Publish_Data_ToCloud();
+	Subsription_Data_FromCloud();
       
   }
   /* USER CODE END 3 */

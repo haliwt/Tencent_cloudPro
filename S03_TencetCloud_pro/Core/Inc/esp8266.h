@@ -45,6 +45,9 @@ extern ESP8266DATATypedef esp8266data;
 void Wifi_Link_SmartPhone_Fun(void);
 void SmartPhone_LinkTengxunCloud(void);
 
+void Subsription_Data_FromCloud(void);
+
+
 void Publish_Data_ToCloud(void);
 
 
