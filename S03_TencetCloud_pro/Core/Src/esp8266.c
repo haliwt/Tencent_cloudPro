@@ -256,7 +256,7 @@ void SmartPhone_LinkTengxunCloud(void)
 
 	if(esp8266data.esp8266_smartphone_flag ==1){
 		
-        if(esp8266data.esp8266_timer_1s >5){
+        if(esp8266data.esp8266_timer_1s >2){
 		   esp8266data.esp8266_timer_1s=0;
 		   esp8266data.esp8266_smartphone_flag=0; //return this function
 
@@ -275,7 +275,7 @@ void SmartPhone_LinkTengxunCloud(void)
 
          esp8266data.esp8266_dynamic_reg_flag=0;
 		 HAL_UART_Transmit(&huart2, "AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"), 5000); //动态注册 
-	     HAL_Delay(2000);
+	     HAL_Delay(1000);
 		 esp8266data.esp8266_link_cloud_flag =1;
          esp8266data.esp8266_timer_link_1s=0;
 
@@ -289,11 +289,40 @@ void SmartPhone_LinkTengxunCloud(void)
 
        HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
        HAL_Delay(2000);
+	   esp8266data.esp8266_login_cloud_success=1;
+	   esp8266data.gTimer_subscription_timing=0;
 
 	  }
 	}
  	 free(device_massage);
 
+}
+/****************************************************************************************************
+**
+*Function Name:void Publish_Data_ToCloud(void)
+*Function: dy
+*Input Ref: 
+*Return Ref:NO
+*
+****************************************************************************************************/
+void Publish_Data_ToCloud(void)
+{
+
+     uint8_t *device_massage;
+
+     device_massage = (uint8_t *)malloc(128);
+	if(esp8266data.esp8266_login_cloud_success==1){
+
+	  if(esp8266data.gTimer_subscription_timing > 5){
+	  	   esp8266data.gTimer_subscription_timing=0;
+
+      sprintf((char *)device_massage, "AT+TCMQTTSUB=\"$thing/down/property/%s/%s\",0\r\n", PRODUCT_ID, DEVUICE_NAME);
+      HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000);
+
+	}
+	}
+
+    free(device_massage);
 }
 
 
