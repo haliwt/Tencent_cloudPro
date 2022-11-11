@@ -2,12 +2,12 @@
 #define __ESP8266_H_
 #include "main.h"
 
-#define SSID                    "YUYIJIA_S03"
+#define SSID                    "UYIJIA01-a0001"
 #define PASSWD                  "12345678"
 
-#define PRODUCT_ID              "XE4FRQT2DP" //production ID 
-#define DEVUICE_NAME            "UYIJIA_S03"      //device Name:
-#define DEVICE_SECRET           "97pxHin7FtMBq8D4J4MRFENh" //"YJuZKqu9cwb2Xd87Ul/0Jg==" //Secret key 
+#define PRODUCT_ID              "EHQB1P53IH" //production ID 
+#define DEVUICE_NAME            "UYIJIA01-a0001"      //device Name:
+#define DEVICE_SECRET           "5xdQMgx7ZHznYyQK6wvdmolc" //"YJuZKqu9cwb2Xd87Ul/0Jg==" //Secret key 
 #define PRODUCT_REGION          "ap-guangzhou" //filed name 
 
 #define WIFI_IC_ENABLE()         HAL_GPIO_WritePin(WIFI_EN_GPIO_Port,WIFI_EN_Pin,GPIO_PIN_SET)

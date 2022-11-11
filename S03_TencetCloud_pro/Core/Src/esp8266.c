@@ -227,7 +227,7 @@ void Wifi_Link_SmartPhone_Fun(void)
 	  if(run_t.wifi_cwsap_flag ==1){
 	  	  run_t.wifi_cwsap_flag =0;
 
-         HAL_UART_Transmit(&huart2, "AT+CWSAP=\"YUYIJIA_S03\",\"12345678\",4,4\r\n", strlen("AT+CWSAP=\"YUYIJIA_S03\",\"12345678\",4,4\r\n"), 5000);
+         HAL_UART_Transmit(&huart2, "AT+CWSAP=\"UYIJIA01-a0001\",\"12345678\",4,4\r\n", strlen("AT+CWSAP=\"YUYIJIA_S03\",\"12345678\",4,4\r\n"), 5000);
          HAL_Delay(10000);
          esp8266data.esp8266_smartphone_flag =1;
 		 esp8266data.esp8266_timer_1s=0;
