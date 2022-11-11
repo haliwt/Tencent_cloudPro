@@ -13,6 +13,25 @@ static void InitWifiModule(void);
 
 static uint8_t wifi_inputBuf[20];
 
+/**
+ *pdata: pointer of data for send
+ *len:  len of data to be sent
+ *return: the len of data send success
+ * @brief hal api for at data send
+ */
+int at_send_data(uint8_t *pdata, uint16_t len)
+{
+	if(HAL_OK == HAL_UART_Transmit(&huart2, pdata, len, 0xFFFF))
+	{
+		return len;
+	}
+	else
+	{
+		return 0;
+	}	
+}
+
+
 //get usart of data
 uint8_t *Esp8266GetData(void)
 {
@@ -179,19 +198,24 @@ void Esp8266LinkloTExplorer(void)
 static void InitWifiModule(void)
 {
 	
+	if(run_t.wifi_init_flag==0)
+		{
+			run_t.wifi_init_flag++;
+		  //  HAL_UART_Abort(&huart2);
+			
+			WIFI_IC_ENABLE();
+	
+	
+			run_t.gTimer_wifi_1s=0;
+			at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
+			HAL_Delay(100);
+			at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
+			HAL_Delay(3000);
+			run_t.gTimer_wifi_1s=0;
+			
+		}
+		//HAL_UART_Abort(&huart2);
 
-	while(run_t.wifi_init_flag==0)
-	{
-		run_t.wifi_init_flag++;
-        HAL_UART_Abort(&huart2);
-		HAL_Delay(50);
-		WIFI_IC_ENABLE();
-	    HAL_UART_Transmit(&huart2, "AT+RST\r\n", strlen("AT+RST\r\n"), 5000);
-		HAL_Delay(500);
-		
-		
-	}
-	HAL_UART_Abort(&huart2);
 }
 
 /****************************************************************************************************
@@ -205,6 +229,10 @@ static void InitWifiModule(void)
 void Wifi_Link_SmartPhone_Fun(void)
 {
    static uint8_t wifi_cw=0xff,wifi_cwsap=0xff;
+   
+    uint8_t *device_massage;
+
+    device_massage = (uint8_t *)malloc(128);
 
    InitWifiModule();
     
@@ -227,9 +255,9 @@ void Wifi_Link_SmartPhone_Fun(void)
 	  if(run_t.wifi_cwsap_flag ==1){
 	  	  run_t.wifi_cwsap_flag =0;
 
-        // HAL_UART_Transmit(&huart2, "AT+CWSAP=\"UYIJIA01-a0001\",\"12345678\",4,4\r\n", strlen("AT+CWSAP=\"YUYIJIA_S03\",\"12345678\",4,4\r\n"), 5000);
-         HAL_UART_Transmit(&huart2, "AT+TCSAP=\"UYIJIA01-a0001\"\r\n", strlen("AT+TCSAP=\"UYIJIA01-a0001\"\r\n"), 5000);
-          HAL_Delay(10000);
+          sprintf((char *)device_massage, "AT+TCSAP=\"%s\"\r\n", DEVUICE_NAME);
+          HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000);
+          HAL_Delay(100);
          esp8266data.esp8266_smartphone_flag =1;
 		 esp8266data.esp8266_timer_1s=0;
 	  }
@@ -237,6 +265,7 @@ void Wifi_Link_SmartPhone_Fun(void)
 
    }
 
+	free(device_massage);
 
 }
 
@@ -257,7 +286,7 @@ void SmartPhone_LinkTengxunCloud(void)
 
 	if(esp8266data.esp8266_smartphone_flag ==1){
 		
-        if(esp8266data.esp8266_timer_1s >2){
+        if(esp8266data.esp8266_timer_1s >60){
 		   esp8266data.esp8266_timer_1s=0;
 		   esp8266data.esp8266_smartphone_flag=0; //return this function
 
