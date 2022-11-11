@@ -2,11 +2,11 @@
 #define __ESP8266_H_
 #include "main.h"
 
-#define SSID                    "UYIJIA01-a0001"
+#define SSID                    "UYIJIA01-a0002"
 #define PASSWD                  "12345678"
 
 #define PRODUCT_ID              "EHQB1P53IH" //production ID 
-#define DEVUICE_NAME            "UYIJIA01-a0001"      //device Name:
+#define DEVUICE_NAME            "UYIJIA01-a0002"      //device Name:
 #define DEVICE_SECRET           "5xdQMgx7ZHznYyQK6wvdmolc" //"YJuZKqu9cwb2Xd87Ul/0Jg==" //Secret key 
 #define PRODUCT_REGION          "ap-guangzhou" //filed name 
 
@@ -31,6 +31,7 @@ typedef struct ESP8266_DATA
 	
 	
 	unsigned char esp8266_dynamic_reg_flag;
+    unsigned char subsription_flag;
 
 	unsigned char esp8266_timer_link_1s;
 	unsigned char esp8266_timer_1s;
@@ -50,6 +51,7 @@ void Subsription_Data_FromCloud(void);
 
 void Publish_Data_ToCloud(void);
 
+void Parse_Cloud_Data(void);
 
 
 

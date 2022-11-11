@@ -42,13 +42,13 @@ typedef struct _RUN_T{
 	uint8_t sendtimes;
     uint8_t setup_timer_flag;
     uint8_t gmt_time_flag;
-	uint8_t sed_GMT_times;
-	uint8_t gTimer_send_0xaa;
+    uint8_t gTimer_send_0xaa;
       
 
       uint8_t  gAi;
       uint8_t  gPlasma;
       uint8_t  gDry;
+	  uint8_t  gFan;
 
 	uint8_t kill_key;
 	uint8_t kill_key_off;

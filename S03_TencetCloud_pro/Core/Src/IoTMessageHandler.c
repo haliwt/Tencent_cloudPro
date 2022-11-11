@@ -1,9 +1,8 @@
 #include "loTMSG.h"
 #include <string.h>
 #include <stdlib.h>
-
-
-
+#include "cmd_link.h"
+#include "run.h"
 #include "gpio.h"
 #define LOT_Debug 0
 
@@ -67,15 +66,30 @@ void cJsonMessageHandler(uint8_t *cJsonDATA)
         if (cJSON_params == NULL)
             goto __cJSON_Delete;
 
-        cJSON *cJSON_led1 = cJSON_GetObjectItem(cJSON_params, "led1");
+        cJSON *cJSON_open = cJSON_GetObjectItem(cJSON_params, "open"); //power
+	//	cJSON *cJSON_sonic = cJSON_GetObjectItem(cJSON_params, "sonic"); //ultrasonic
+	//	cJSON *cJSON_fan =  cJSON_GetObjectItem(cJSON_params,"find");//fan
 #if LOT_Debug
         printf("led1=%d\r\n", cJSON_led1->valueint);
 
 #endif
-//        if (cJSON_led1->valueint == 1)
-//             //HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
-//        else
-//           // HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
+        if (cJSON_open->valueint == 1)
+           run_t.gPower_flag = 1;// HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
+        else
+           run_t.gPower_flag =0;// HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
+
+//		if(cJSON_sonic->valueint==1) //ultrasonic
+//		  run_t.gPlasma =1;
+//		else 
+//		  run_t.gPlasma=0;
+//
+//		if(cJSON_fan->valueint==1)
+//		 run_t.gFan =1;
+//		else
+//		  run_t.gFan=0;
+		  
+		   
+		
     __cJSON_Delete:
         cJSON_Delete(_JsonRoot);
         memset(Sub_Data, 0, sizeof(Sub_Data));
