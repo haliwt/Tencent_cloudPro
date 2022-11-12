@@ -5,11 +5,13 @@
 #include <stdlib.h>
 #include "run.h"
 #include "loTMSG.h"
-
-#define esp8266_Debug   0
-#define RTOS_Debug    0
+#include "json_parser.h"
+#define esp8266_Debug 				  0
+#define RTOS_Debug   				 0
+#define SMARTCONFIG      			1
 ESP8266DATATypedef esp8266data;
 
+ uint8_t *sub_buf;
 
 static void InitWifiModule(void);
 
@@ -221,6 +223,120 @@ static void InitWifiModule(void)
 
 }
 
+#ifdef  SMARTCONFIG
+/****************************************************************************************************
+**
+*Function Name:void Wifi_Link_SmartConfig_Fun(void)
+*Function: 
+*Input Ref: 
+*Return Ref:NO
+*
+****************************************************************************************************/
+void Wifi_Link_SmartConfig_Fun(void)
+{
+       uint8_t *device_massage;
+    static uint8_t wifi_cw=0xff,wifi_cwsap=0xff;
+
+    device_massage = (uint8_t *)malloc(128);
+
+   InitWifiModule();
+    
+
+   if(run_t.wifi_init_flag ==1){
+     
+      run_t.gTimer_wifi_1s++;
+	  if(run_t.gTimer_wifi_1s>5){
+	  	  run_t.gTimer_wifi_1s=0;
+		 if(wifi_cw != run_t.wifi_cwmode_flag){
+		    wifi_cw = run_t.wifi_cwmode_flag;
+			
+         	HAL_UART_Transmit(&huart2, "AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"), 5000);
+        	HAL_Delay(500);
+			run_t.wifi_cwsap_flag =1;
+
+		 }
+	  }
+
+	  if(run_t.wifi_cwsap_flag ==1){
+	  	  run_t.wifi_cwsap_flag =0;
+
+	      sprintf((char *)device_massage, "AT+CWSAP=\"%s\",\"12345678\",4,4\r\n", DEVUICE_NAME);
+         HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000);
+
+        // HAL_UART_Transmit(&huart2, "AT+CWSAP=\"YUYIJIA_S03\",\"12345678\",4,4\r\n", strlen("AT+CWSAP=\"YUYIJIA_S03\",\"12345678\",4,4\r\n"), 5000);
+         HAL_Delay(10000);
+         esp8266data.esp8266_smartphone_flag =1;
+		 esp8266data.esp8266_timer_1s=0;
+	  }
+
+
+   }
+
+    free(device_massage);
+}
+
+
+/****************************************************************************************************
+**
+*Function Name:void SmartPhone_SmartConifig_LinkTengxunCloud(void)
+*Function: dy
+*Input Ref: 
+*Return Ref:NO
+*
+****************************************************************************************************/
+void SmartPhone_SmartConfig_LinkTengxunCloud(void)
+{
+   
+    uint8_t *device_massage;
+
+    device_massage = (uint8_t *)malloc(128);
+
+	if(esp8266data.esp8266_smartphone_flag ==1){
+		
+        if(esp8266data.esp8266_timer_1s >2){
+		   esp8266data.esp8266_timer_1s=0;
+		   esp8266data.esp8266_smartphone_flag=0; //return this function
+
+	      sprintf((char *)device_massage, "AT+TCPRDINFOSET=1,\"%s\",\"%s\",\"%s\"\r\n", PRODUCT_ID, DEVICE_SECRET,DEVUICE_NAME);
+	      HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000);
+          HAL_Delay(2000);
+
+		  esp8266data.esp8266_dynamic_reg_flag=1;
+		 
+        }
+		
+
+	}
+
+	if(esp8266data.esp8266_dynamic_reg_flag==1){
+
+         esp8266data.esp8266_dynamic_reg_flag=0;
+		 HAL_UART_Transmit(&huart2, "AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"), 5000); //动态注册 
+	     HAL_Delay(1000);
+		 esp8266data.esp8266_link_cloud_flag =1;
+         esp8266data.esp8266_timer_link_1s=0;
+
+     }
+
+	if(esp8266data.esp8266_link_cloud_flag==1){
+		
+       if(esp8266data.esp8266_timer_link_1s > 5){
+	   	esp8266data.esp8266_timer_link_1s=0;
+	     esp8266data.esp8266_link_cloud_flag=0;
+
+       HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
+       HAL_Delay(2000);
+	   esp8266data.esp8266_login_cloud_success=1;
+	   esp8266data.gTimer_subscription_timing=0;
+	  
+
+	  }
+	}
+ 	 free(device_massage);
+
+}
+#else
+//softAP link smartPhone
 /****************************************************************************************************
 **
 *Function Name:void Wifi_Link_SmartPhone_Fun(void)
@@ -271,6 +387,7 @@ void Wifi_Link_SmartPhone_Fun(void)
 	free(device_massage);
 
 }
+
 
 /****************************************************************************************************
 **
@@ -330,14 +447,15 @@ void SmartPhone_LinkTengxunCloud(void)
  	 free(device_massage);
 
 }
-/****************************************************************************************************
+#endif 
+/*******************************************************************************
 **
 *Function Name:void Publish_Data_ToCloud(void)
 *Function: dy
 *Input Ref: 
 *Return Ref:NO
 *
-****************************************************************************************************/
+********************************************************************************/
 void Publish_Data_ToCloud(void)
 {
 
@@ -359,7 +477,7 @@ void Publish_Data_ToCloud(void)
     free(device_massage);
 }
 
-void Subsription_Data_FromCloud(void)
+void Subscriber_Data_FromCloud(void)
 {
 	uint8_t *device_massage;
 
@@ -386,35 +504,173 @@ void Subsription_Data_FromCloud(void)
 
 void Parse_Cloud_Data(void)
 {
-     uint8_t *sub_buf;
+    
 
 	if(esp8266data.subsription_flag==1){
 
-	 if(esp8266data.gTimer_tencent_down_1s > 10){
-	  esp8266data.gTimer_tencent_down_1s =11;
-
-	sub_buf = Esp8266GetData();
-
-    if(strstr((const char *)sub_buf, "+TCMQTTRCVPUB")!= NULL)
-    {
-      strcpy((char *)TCMQTTRCVPUB, (const char *)sub_buf);
-	#if RTOS_Debug
-		      printf("Get SUB=%s", sub_buf);
-	#endif
-		      memset(sub_buf, 0, sizeof(sub_buf));
-		    }
-	#if RTOS_Debug
-		    printf("Get data...\r\n");
-	#endif
-            loTMessageHandler();
-      cJsonMessageHandler(Sub_Data);
+	
+      Receive_Data_FromCloud_Data(JSOBJECT,TCMQTTRCVPUB);
     
     }
    
-	}
+	
 	
 	 
 
   }
+/*******************************************************************************
+**
+*Function Name:void Subscribe_Rx_IntHandler(void)
+*Function: interrupt USART2 receive data fun
+*Input Ref: 
+*Return Ref:NO
+*
+********************************************************************************/
+void Subscribe_Rx_IntHandler(void)
+{
+   
+
+    switch(esp8266data.rx_data_state)
+		{
+		case 0:  //#0
+
+            
+			if(UART2_DATA.UART_DataBuf[0] == '"')  //hex :54 - "T" -fixed
+				esp8266data.rx_data_state=1; //=1
+		    else{
+               esp8266data.rx_counter=0;
+			   
+            }
+			break;
+
+	   case 1:
+		
+			if(UART2_DATA.UART_DataBuf[0] == 'p')  //hex :54 - "T" -fixed
+				esp8266data.rx_data_state=2; //=1
+		    else{
+               esp8266data.rx_counter=0;
+			   
+            }
+				
+			break;
+		case 2: //#1
+             if(UART2_DATA.UART_DataBuf[0] == 'a')  //hex :4B - "K" -fixed
+				esp8266data.rx_data_state=3; //=1
+			else{
+			   esp8266data.rx_data_state =0;
+			    esp8266data.rx_counter=0;
+			}
+			break;
+            
+        case 3:
+            if(UART2_DATA.UART_DataBuf[0] == 'r')  //hex :4B - "K" -fixed
+				esp8266data.rx_data_state=4; //=1
+			else{
+			  esp8266data.rx_data_state =0;
+			    esp8266data.rx_counter=0;
+			}
+        
+        break;
+        
+        case 4:
+            if(UART2_DATA.UART_DataBuf[0] == 'a')  //hex :4B - "K" -fixed
+				esp8266data.rx_data_state=5; //=1
+			else{
+			   esp8266data.rx_data_state =0;
+			    esp8266data.rx_counter=0;
+			}
+        
+        break;
+
+		case 5:
+		 if(UART2_DATA.UART_DataBuf[0] == 'm')  //hex :4B - "K" -fixed
+			esp8266data.rx_data_state=6; //=1
+		   else{
+			  esp8266data.rx_data_state=0;
+			   esp8266data.rx_counter=0;
+		   }
+			   
+		break;
+
+		
+		case 6:
+		 if(UART2_DATA.UART_DataBuf[0] == 's')  //hex :4B - "K" -fixed
+			esp8266data.rx_data_state=7; //=1
+		   else{
+			  esp8266data.rx_data_state =0;
+			   esp8266data.rx_counter=0;
+		   }
+			   
+		break;
+
+		case 7:
+		 if(UART2_DATA.UART_DataBuf[0] == '"')  //hex :4B - "K" -fixed
+			esp8266data.rx_data_state=8; //=1
+		   else{
+			  esp8266data.rx_data_state =0;
+			   esp8266data.rx_counter=0;
+		   }
+			   
+		break;
+
+		  case 8:
+		 if(UART2_DATA.UART_DataBuf[0] == ':')  //hex :4B - "K" -fixed
+			esp8266data.rx_data_state=9; //=1
+		   else{
+			  esp8266data.rx_data_state =0;
+			   esp8266data.rx_counter=0;
+		   }
+			   
+		break;
+
+
+		case 9:
+		 if(UART2_DATA.UART_DataBuf[0] == '{')  //hex :4B - "K" -fixed
+			esp8266data.rx_data_state=10; //=1
+		   else{
+			  esp8266data.rx_data_state =0;
+			   esp8266data.rx_counter=0;
+		   }
+			   
+		break;
+
+		case 10:
+		  
+		   
+		   UART2_DATA.UART_Data[esp8266data.rx_counter] = UART2_DATA.UART_DataBuf[0];
+				esp8266data.rx_counter++ ;
+					  
+			if(UART2_DATA.UART_DataBuf[0]=='}') // 0x0A = "\n"
+			{
+			   
+			    esp8266data.rx_data_success++;
+				if(esp8266data.rx_data_success==1){
+					esp8266data.rx_data_success++;
+				    strcpy(TCMQTTRCVPUB, UART2_DATA.UART_Data);
+				}
+				esp8266data.rx_data_state=0;
+				esp8266data.rx_counter=0;
+
+			  break;
+					
+			}
+			else{
+
+			   esp8266data.rx_data_state=10; //=1
+
+			}
+		 
+			   
+		break;
+
+
+
+        default:
+			
+			
+	    break;
+		}
+}
+
 
 

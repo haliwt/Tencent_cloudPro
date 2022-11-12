@@ -108,9 +108,15 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
   
-    Wifi_Link_SmartPhone_Fun();
-	SmartPhone_LinkTengxunCloud();
-	Subsription_Data_FromCloud();
+    //Wifi_Link_SmartPhone_Fun();
+	//SmartPhone_LinkTengxunCloud();
+    Wifi_Link_SmartConfig_Fun();
+    SmartPhone_SmartConfig_LinkTengxunCloud();
+
+
+	
+	Subscriber_Data_FromCloud();
+
     Parse_Cloud_Data();
       
   }

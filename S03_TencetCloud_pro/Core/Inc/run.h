@@ -49,6 +49,7 @@ typedef struct _RUN_T{
       uint8_t  gPlasma;
       uint8_t  gDry;
 	  uint8_t  gFan;
+	  uint8_t  gUlransonic;
 
 	uint8_t kill_key;
 	uint8_t kill_key_off;

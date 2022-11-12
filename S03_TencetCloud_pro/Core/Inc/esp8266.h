@@ -19,6 +19,8 @@ void Esp8266LinkAp(uint8_t *ssid,uint8_t *passwd);
 void Esp8266LinkloTExplorer(void);
 
 
+
+
 typedef struct ESP8266_DATA
 {
     unsigned char data[512];
@@ -32,6 +34,11 @@ typedef struct ESP8266_DATA
 	
 	unsigned char esp8266_dynamic_reg_flag;
     unsigned char subsription_flag;
+	unsigned char esp8266_data_rx_success;
+	unsigned char rx_data_success ;
+	unsigned char  rx_counter ;
+	unsigned char rx_data_state;
+	unsigned char getCloudValue ;
 
 	unsigned char esp8266_timer_link_1s;
 	unsigned char esp8266_timer_1s;
@@ -45,14 +52,26 @@ extern ESP8266DATATypedef esp8266data;
 
 
 void Wifi_Link_SmartPhone_Fun(void);
+
+
+void Wifi_Link_SmartConfig_Fun(void);
+void SmartPhone_SmartConfig_LinkTengxunCloud(void);
+
+
+
 void SmartPhone_LinkTengxunCloud(void);
 
-void Subsription_Data_FromCloud(void);
+void Subscriber_Data_FromCloud(void);
+
+void Subscribe_Rx_IntHandler(void);
+
 
 
 void Publish_Data_ToCloud(void);
 
 void Parse_Cloud_Data(void);
+
+void Subscribe_Rx_Handler(void);
 
 
 

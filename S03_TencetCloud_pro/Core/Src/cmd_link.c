@@ -2,6 +2,7 @@
 #include "usart.h"
 #include "run.h"
 #include "fan.h"
+#include "esp8266.h"
 
 
 
@@ -71,16 +72,27 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     //wifi usart2
     if(huart->Instance==USART2)
     {
-       UART2_DATA.UART_Data[UART2_DATA.UART_Cnt] = *UART2_DATA.UART_DataBuf;
-       UART2_DATA.UART_Cnt++;
-      
-        if(*UART2_DATA.UART_DataBuf==0X0A) // 0x0A = "\n"
-        {
-          UART2_DATA.UART_Flag = 1;
-        }
-      
-      HAL_UART_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,sizeof(UART2_DATA.UART_DataBuf));
-    }
+           
+          if(esp8266data.subsription_flag==0){
+               UART2_DATA.UART_Data[UART2_DATA.UART_Cnt] = UART2_DATA.UART_DataBuf[0];
+               UART2_DATA.UART_Cnt++;
+              
+                if(*UART2_DATA.UART_DataBuf==0X0A) // 0x0A = "\n"
+                {
+                  UART2_DATA.UART_Flag = 1;
+				 
+                }
+              
+           	
+         } 
+		 else{
+             
+			 Subscribe_Rx_IntHandler();
+
+		}
+        
+         HAL_UART_Receive_IT(&huart2,UART2_DATA.UART_DataBuf,sizeof(UART2_DATA.UART_DataBuf));
+	}
     
   
  }

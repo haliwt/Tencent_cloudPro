@@ -10,4 +10,6 @@ extern uint8_t Sub_Data[128];
 
 void loTMessageHandler(void);
 void cJsonMessageHandler(uint8_t *cJsonDATA);
+void Receive_Data_FromCloud_Data(int type, char *str);
+
 #endif
