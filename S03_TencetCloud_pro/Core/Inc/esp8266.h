@@ -39,6 +39,7 @@ typedef struct ESP8266_DATA
 	unsigned char  rx_counter ;
 	unsigned char rx_data_state;
 	unsigned char getCloudValue ;
+	unsigned char rx_data_len;
 
 	unsigned char esp8266_timer_link_1s;
 	unsigned char esp8266_timer_1s;

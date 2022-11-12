@@ -23,7 +23,7 @@ void Receive_Data_FromCloud_Data(int type, char *str)
 	uint8_t     iNameLen = 0, iValueLen = 0,iGetValue;
     char   *p_cName = 0, *p_cValue = 0,  *p_cPos = str;
 
-       iValueLen=strlen(str);
+       esp8266data.rx_data_len=strlen(str);
 
 	   if (type == JSOBJECT) {
         /* Get Key */
@@ -45,9 +45,11 @@ void Receive_Data_FromCloud_Data(int type, char *str)
        }
 
 	   
+       if(iNameLen>2){
+	     	esp8266data.rx_data_success=0;
+             esp8266data.getCloudValue =*(p_cPos + 1);
 
-      
-	  esp8266data.getCloudValue =*(p_cPos + 1);
+       	}
     
 
 	   
