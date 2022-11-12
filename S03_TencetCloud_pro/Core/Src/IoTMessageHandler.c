@@ -47,7 +47,8 @@ void Receive_Data_FromCloud_Data(int type, char *str)
 	   
        if(iNameLen>2){
 	     	esp8266data.rx_data_success=0;
-             esp8266data.getCloudValue =*(p_cPos + 1);
+            esp8266data.getCloudValue_decade =*(p_cPos + 1);
+		    esp8266data.getCloudValue_unit =*(p_cPos + 2);
 
        	}
     
