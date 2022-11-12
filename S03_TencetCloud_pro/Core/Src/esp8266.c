@@ -7,6 +7,7 @@
 #include "loTMSG.h"
 
 #define esp8266_Debug   0
+#define RTOS_Debug    0
 ESP8266DATATypedef esp8266data;
 
 
@@ -55,12 +56,12 @@ uint8_t *Esp8266GetData(void)
       esp8266data.flag =1; 
     }  
 
-    if(strstr((const char*)esp8266data.data,"+TCMQTTCONN:OK")){
-      esp8266data.flag=2; //esp8266data.flag =1 ->connect to tengxun cloud .
-    }
-    if(strstr((const char*)esp8266data.data,"+TCMQTTSTATE:0")){ //query MQTT order 
-     esp8266data.flag=11; // 0->MQTT已经断开,1->MQTT已经连接
-    }
+//    if(strstr((const char*)esp8266data.data,"+TCMQTTCONN:OK")){
+//      esp8266data.flag=2; //esp8266data.flag =1 ->connect to tengxun cloud .
+//    }
+//    if(strstr((const char*)esp8266data.data,"+TCMQTTSTATE:0")){ //query MQTT order 
+//     esp8266data.flag=11; // 0->MQTT已经断开,1->MQTT已经连接
+//    }
     
     if(esp8266data.flag>14) esp8266data.flag=15;
 
@@ -288,7 +289,7 @@ void SmartPhone_LinkTengxunCloud(void)
 
 	if(esp8266data.esp8266_smartphone_flag ==1){
 		
-        if(esp8266data.esp8266_timer_1s >150){
+        if(esp8266data.esp8266_timer_1s >30){
 		   esp8266data.esp8266_timer_1s=0;
 		   esp8266data.esp8266_smartphone_flag=0; //return this function
 
@@ -350,6 +351,7 @@ void Publish_Data_ToCloud(void)
 
       sprintf((char *)device_massage, "AT+TCMQTTSUB=\"$thing/down/property/%s/%s\",0\r\n", PRODUCT_ID, DEVUICE_NAME);
       HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000);
+	  esp8266data.esp8266_login_cloud_success=0;
 
 	}
 	}
@@ -371,6 +373,7 @@ void Subsription_Data_FromCloud(void)
       sprintf((char *)device_massage, "AT+TCMQTTSUB=\"$thing/down/property/%s/%s\",0\r\n", PRODUCT_ID, DEVUICE_NAME);
       HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000);
 	  esp8266data.subsription_flag =1;
+         esp8266data.gTimer_tencent_down_1s =0;
 
 	}
 	}
@@ -387,9 +390,12 @@ void Parse_Cloud_Data(void)
 
 	if(esp8266data.subsription_flag==1){
 
+	 if(esp8266data.gTimer_tencent_down_1s > 10){
+	  esp8266data.gTimer_tencent_down_1s =11;
+
 	sub_buf = Esp8266GetData();
 
-    if (strstr((const char *)sub_buf, "+TCMQTTRCVPUB") != NULL)
+    if(strstr((const char *)sub_buf, "+TCMQTTRCVPUB")!= NULL)
     {
       strcpy((char *)TCMQTTRCVPUB, (const char *)sub_buf);
 	#if RTOS_Debug
@@ -400,11 +406,14 @@ void Parse_Cloud_Data(void)
 	#if RTOS_Debug
 		    printf("Get data...\r\n");
 	#endif
+            loTMessageHandler();
+      cJsonMessageHandler(Sub_Data);
     
     }
    
-	  loTMessageHandler();
-        cJsonMessageHandler(Sub_Data);
+	}
+	
+	 
 
   }
 

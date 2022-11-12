@@ -36,6 +36,7 @@ typedef struct ESP8266_DATA
 	unsigned char esp8266_timer_link_1s;
 	unsigned char esp8266_timer_1s;
 	unsigned char gTimer_subscription_timing;
+	unsigned char gTimer_tencent_down_1s;
 	
 }ESP8266DATATypedef;
 
