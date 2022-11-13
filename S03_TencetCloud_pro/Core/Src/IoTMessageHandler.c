@@ -86,8 +86,8 @@ void Receive_Data_FromCloud_Data(int type, char *str)
 ********************************************************************************/
 void Parser_Cloud_ObjectName(uint8_t name_len)
 {
-    static uint8_t num;
-	uint8_t temp;
+    static uint8_t num,temp;
+	uint8_t fan_hundred;
 
     if(name_len==3){
 
@@ -150,11 +150,27 @@ void Parser_Cloud_ObjectName(uint8_t name_len)
                  
 					 esp8266data.getCloudValue_decade =TCMQTTRCVPUB[name_len+3] -'30';
                      esp8266data.getCloudValue_unit =TCMQTTRCVPUB[name_len+4] -'30';
+				     fan_hundred = TCMQTTRCVPUB[name_len+5] -'30';
+
+					 if(fan_hundred ==0) run_t.gFan =100;
+					 else{
+					 
+				      if((esp8266data.getCloudValue_decade >=0 && esp8266data.getCloudValue_decade <=9)
+					  	   &&(esp8266data.getCloudValue_unit>=0 && esp8266data.getCloudValue_unit<=9)){
+
+					 
                  
-                    temp = esp8266data.getCloudValue_decade*10;
-                 
-                    run_t.gFan=temp + esp8266data.getCloudValue_unit;
-                 
+	                    temp = esp8266data.getCloudValue_decade*10;
+	                 
+	                    run_t.gFan=temp + esp8266data.getCloudValue_unit;
+					
+
+					
+
+
+					 }
+					 
+					 	}
 					esp8266data.rx_data_success=0;
                  
 					num=0;
