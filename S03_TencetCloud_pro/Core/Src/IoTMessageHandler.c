@@ -14,14 +14,24 @@ uint8_t Sub_Data[128];
 char *pub_buf;
 
 
-//处理腾讯云下发的数据
+void Parser_Cloud_ObjectName(uint8_t name_len);
 
+
+//处理腾讯云下发的数据
+/*******************************************************************************
+	**
+	*Function Name:void Receive_Data_FromCloud_Data(int type, char *str)
+	*Function: receive data from tencent cloud
+	*Input Ref: module , str ->data
+	*Return Ref:NO
+	*
+********************************************************************************/
 void Receive_Data_FromCloud_Data(int type, char *str)
 {
 
   
-	uint8_t     iNameLen = 0, iValueLen = 0,iGetValue;
-    char   *p_cName = 0, *p_cValue = 0,  *p_cPos = str;
+	uint8_t   iNameLen = 0;
+    char  *p_cName = 0, *p_cPos = str;
 
        esp8266data.rx_data_len=strlen(str);
 
@@ -37,6 +47,7 @@ void Receive_Data_FromCloud_Data(int type, char *str)
             return ;
         }
         iNameLen = p_cPos - p_cName;
+		esp8266data.rx_data_name_len=iNameLen;
 
         /* Get Value */
         p_cPos = strchr(p_cPos, ':');
@@ -45,12 +56,18 @@ void Receive_Data_FromCloud_Data(int type, char *str)
        }
 
 	   
-       if(iNameLen>2){
-	     	esp8266data.rx_data_success=0;
-            esp8266data.getCloudValue_decade =*(p_cPos + 1);
-		    esp8266data.getCloudValue_unit =*(p_cPos + 2);
+       if(esp8266data.rx_data_name_len==3 ||esp8266data.rx_data_name_len==4 ||\
+	   	esp8266data.rx_data_name_len==5 || esp8266data.rx_data_name_len==11 ){
+
+	    Parser_Cloud_ObjectName(esp8266data.rx_data_name_len);
+
+	       // Parser_Cloud_ObjectName(esp8266data.rx_data_len,esp8266data.rx_data_name_len);
+	     //	esp8266data.rx_data_success=0;
+          //  esp8266data.getCloudValue_decade =*(p_cPos + 1);
+		  ///  esp8266data.getCloudValue_unit =*(p_cPos + 2);
 
        	}
+	
     
 
 	   
@@ -59,7 +76,210 @@ void Receive_Data_FromCloud_Data(int type, char *str)
 
 
 
+/*******************************************************************************
+	**
+	*Function Name:void Parser_Cloud_ObjectName(void)
+	*Function: dy
+	*Input Ref: 
+	*Return Ref:NO
+	*
+********************************************************************************/
+void Parser_Cloud_ObjectName(uint8_t name_len)
+{
+    static uint8_t num;
+	uint8_t temp;
 
+    if(name_len==3){
+
+	   switch(num){
+		
+			 case 0:
+				if(TCMQTTRCVPUB[1]=='p')
+                   num=1;
+              
+				 break;
+
+			case 1: //power on or off
+                   esp8266data.getCloudValue_decade =TCMQTTRCVPUB[name_len+3];
+			    
+            run_t.gDry= esp8266data.getCloudValue_decade;
+          
+				esp8266data.rx_data_success=0;
+				num=0;
+			break;
+
+			
+
+			default:
+				num=0;
+
+			break;
+
+			}
+
+         }
+
+
+
+
+	if(name_len ==4){
+
+	
+        switch(num){
+			 
+				  case 0:
+					 if(TCMQTTRCVPUB[1]=='o')
+						num=1;
+					else if(TCMQTTRCVPUB[1]=='f')
+						num=2;
+					   
+					 break;
+	  
+				 case 1: //open
+	                  esp8266data.getCloudValue_decade =TCMQTTRCVPUB[name_len+3];
+					 run_t.gPower_flag=esp8266data.getCloudValue_decade;
+                
+                      
+                    
+					 esp8266data.rx_data_success=0;
+					 num=0;
+				 break;
+	  
+				 case 2: //fan
+                 
+                 
+					 esp8266data.getCloudValue_decade =TCMQTTRCVPUB[name_len+3] -'30';
+                     esp8266data.getCloudValue_unit =TCMQTTRCVPUB[name_len+4] -'30';
+                 
+                    temp = esp8266data.getCloudValue_decade*10;
+                 
+                    run_t.gFan=temp + esp8266data.getCloudValue_unit;
+                 
+					esp8266data.rx_data_success=0;
+                 
+					num=0;
+	  
+				 break;
+	  
+				 default:
+					 num=0;
+	  
+				 break;
+	  
+				 }
+	
+	
+	
+      }
+
+
+	 if(name_len ==5){
+
+	
+        switch(num){
+			 
+				  case 0:
+					 if(TCMQTTRCVPUB[1]=='A') //Anion
+						num=1;
+					else if(TCMQTTRCVPUB[1]=='s')
+						num=2;
+					   
+					 break;
+	  
+				 case 1: //
+	                 run_t.gPlasma= esp8266data.getCloudValue_decade =TCMQTTRCVPUB[name_len+3];
+					esp8266data.rx_data_success=0;
+					num=0;
+					
+				 break;
+	  
+				 case 2:
+				 	 if(TCMQTTRCVPUB[2]=='t') //state
+						num=3;
+					else if(TCMQTTRCVPUB[2]=='o')  //sonic
+						num=4;
+					
+	  
+				 break;
+
+				 case 3:
+                     esp8266data.getCloudValue_decade =TCMQTTRCVPUB[name_len+3];
+				 	 run_t.gModel=  esp8266data.getCloudValue_decade;
+					 esp8266data.rx_data_success=0;
+					 num=0;
+
+				 break;
+
+				 case 4:
+
+				     
+                     esp8266data.getCloudValue_decade =TCMQTTRCVPUB[name_len+3];
+                     run_t.gUlransonic = esp8266data.getCloudValue_decade;
+					esp8266data.rx_data_success=0;
+					num=0;
+
+				 break;
+	  
+				 default:
+					 num=0;
+	  
+				 break;
+	  
+				 }
+	
+	
+	
+      }
+
+	
+      
+	if(name_len==11){
+	
+		   switch(num){
+			
+				 case 0:
+					if(TCMQTTRCVPUB[1]=='t')
+					   num=1;
+				  
+					 break;
+	
+				case 1: //power on or off
+
+				     esp8266data.getCloudValue_decade =TCMQTTRCVPUB[name_len+3]-'30'; 
+                     esp8266data.getCloudValue_unit =TCMQTTRCVPUB[name_len+4]-'30'; 
+
+					 temp = esp8266data.getCloudValue_decade *10;
+				    
+	
+					run_t.gTemperature= temp + esp8266data.getCloudValue_unit ;
+					
+					esp8266data.rx_data_success=0;
+					num=0;
+				break;
+	
+				
+	
+				default:
+					num=0;
+	
+				break;
+	
+				}
+	
+			 }
+	
+
+
+
+
+
+
+
+		
+    
+
+
+}
 
 
 
