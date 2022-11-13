@@ -165,10 +165,10 @@ void Parser_Cloud_ObjectName(uint8_t name_len)
 	                    run_t.gFan=temp + esp8266data.getCloudValue_unit;
 					
 
-					
-
-
-					 }
+					      }
+						  else
+							run_t.gFan = esp8266data.getCloudValue_decade;
+						   
 					 
 					 	}
 					esp8266data.rx_data_success=0;
