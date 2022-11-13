@@ -302,7 +302,7 @@ void Parser_Cloud_ObjectName(uint8_t name_len)
 }
 
 
-
+#if 0
 void loTMessageHandler(void)
 {
     char *pub_buf;
@@ -395,4 +395,4 @@ void cJsonMessageHandler(uint8_t *cJsonDATA)
         memset(Sub_Data, 0, sizeof(Sub_Data));
     }
 }
-
+#endif 

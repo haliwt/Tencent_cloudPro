@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "run.h"
-#include "loTMSG.h"
 #include "json_parser.h"
+#include "iot_tencent.h"
 #define esp8266_Debug 				  0
 #define RTOS_Debug   				 0
 #define SMARTCONFIG      			1
@@ -460,18 +460,21 @@ void Publish_Data_ToCloud(void)
 {
 
      uint8_t *device_massage;
+	if(esp8266data.publish_flag ==1){
+		 esp8266data.publish_flag ++;
 
-     device_massage = (uint8_t *)malloc(128);
-	if(esp8266data.esp8266_login_cloud_success==1){
+	     device_massage = (uint8_t *)malloc(128);
+		if(esp8266data.esp8266_login_cloud_success==1){
 
-	  if(esp8266data.gTimer_subscription_timing > 5){
-	  	   esp8266data.gTimer_subscription_timing=0;
+		  if(esp8266data.gTimer_subscription_timing > 5){
+		  	   esp8266data.gTimer_subscription_timing=0;
 
-      sprintf((char *)device_massage, "AT+TCMQTTSUB=\"$thing/down/property/%s/%s\",0\r\n", PRODUCT_ID, DEVUICE_NAME);
-      HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000);
-	  esp8266data.esp8266_login_cloud_success=0;
+	      sprintf((char *)device_massage, "AT+TCMQTTPUB=\"$thing/up/property/%s/%s\",0\r\n", PRODUCT_ID, DEVUICE_NAME);
+	      HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000);
+		  esp8266data.esp8266_login_cloud_success=0;
 
-	}
+		}
+		}
 	}
 
     free(device_massage);
@@ -508,7 +511,8 @@ void Parse_Cloud_Data(void)
 
 	if(esp8266data.subsription_flag==1){
 
-	
+	  esp8266data.publish_flag =1;
+	  esp8266data.esp8266_login_cloud_success=1;
       Receive_Data_FromCloud_Data(JSOBJECT,TCMQTTRCVPUB);
     
     }

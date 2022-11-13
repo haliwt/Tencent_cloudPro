@@ -116,8 +116,10 @@ int main(void)
 
 	
 	Subscriber_Data_FromCloud();
+	 Publish_Data_ToCloud();
 
     Parse_Cloud_Data();
+	
       
   }
   /* USER CODE END 3 */

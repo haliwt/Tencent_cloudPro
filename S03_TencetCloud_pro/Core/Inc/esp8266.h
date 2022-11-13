@@ -30,6 +30,7 @@ typedef struct ESP8266_DATA
 	unsigned char esp8266_smartphone_flag;
 	unsigned char esp8266_link_cloud_flag;
 	unsigned char esp8266_login_cloud_success;
+    unsigned char publish_flag;
 	
 	
 	unsigned char esp8266_dynamic_reg_flag;
