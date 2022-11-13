@@ -56,7 +56,7 @@ void Receive_Data_FromCloud_Data(int type, char *str)
        }
 
 	   
-       if(esp8266data.rx_data_name_len==3 ||esp8266data.rx_data_name_len==4 ||\
+       if(esp8266data.rx_data_name_len==3 ||esp8266data.rx_data_name_len==4 || \
 	   	esp8266data.rx_data_name_len==5 || esp8266data.rx_data_name_len==11 ){
 
 	    Parser_Cloud_ObjectName(esp8266data.rx_data_name_len);
@@ -198,6 +198,8 @@ void Parser_Cloud_ObjectName(uint8_t name_len)
 						num=3;
 					else if(TCMQTTRCVPUB[2]=='o')  //sonic
 						num=4;
+					else
+						 num=0;
 					
 	  
 				 break;
@@ -213,7 +215,7 @@ void Parser_Cloud_ObjectName(uint8_t name_len)
 				 case 4:
 
 				     
-                     esp8266data.getCloudValue_decade =TCMQTTRCVPUB[name_len+3];
+                     esp8266data.getCloudValue_decade =TCMQTTRCVPUB[name_len+4];
                      run_t.gUlransonic = esp8266data.getCloudValue_decade;
 					esp8266data.rx_data_success=0;
 					num=0;
@@ -230,6 +232,8 @@ void Parser_Cloud_ObjectName(uint8_t name_len)
 	
 	
       }
+
+	
 
 	
       
