@@ -118,13 +118,13 @@ int main(void)
 //	#else
 		Wifi_Link_SmartPhone_Fun();
 		SmartPhone_LinkTengxunCloud();
- 
+       Publish_Data_ToCloud();
 
 
    
-	//Subscriber_Data_FromCloud();
-	//Publish_Data_ToCloud();
-	// Parse_Cloud_Data();
+	//bscriber_Data_FromCloud();
+	 
+	///rse_Cloud_Data();
       
   }
   /* USER CODE END 3 */

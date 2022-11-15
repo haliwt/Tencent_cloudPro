@@ -76,14 +76,16 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     {
            
           if(esp8266data.subsription_flag==0){
-               UART2_DATA.UART_Data[UART2_DATA.UART_Cnt] = UART2_DATA.UART_DataBuf[0];
-               UART2_DATA.UART_Cnt++;
-              
-                if(*UART2_DATA.UART_DataBuf==0X0A) // 0x0A = "\n"
-                {
-                  UART2_DATA.UART_Flag = 1;
-				 
-                }
+
+		       Wifi_Rx_Input_Handler();
+//               UART2_DATA.UART_Data[UART2_DATA.UART_Cnt] = UART2_DATA.UART_DataBuf[0];
+//               UART2_DATA.UART_Cnt++;
+//              
+//                if(*UART2_DATA.UART_DataBuf==0X0A) // 0x0A = "\n"
+//                {
+//                  UART2_DATA.UART_Flag = 1;
+//				 
+//                }
               
            	
          } 

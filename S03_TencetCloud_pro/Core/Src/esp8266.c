@@ -445,7 +445,7 @@ void SmartPhone_LinkTengxunCloud(void)
 
        HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
        HAL_Delay(1000);
-	   esp8266data.esp8266_login_cloud_success=1;
+	//   esp8266data.esp8266_login_cloud_success=1;
 	   esp8266data.gTimer_subscription_timing=0;
 
 	  }
@@ -465,12 +465,7 @@ void SmartPhone_LinkTengxunCloud(void)
 void Publish_Data_ToCloud(void)
 {
 
-   //  uint8_t *device_pubmassage;
-	
-	// device_pubmassage = (uint8_t *)malloc(128);
-
-	   
-		if(esp8266data.esp8266_login_cloud_success==1){
+   if(esp8266data.esp8266_login_cloud_success==1){
           
 
 		  if(esp8266data.gTimer_subscription_timing > 30){
@@ -480,7 +475,8 @@ void Publish_Data_ToCloud(void)
            IOT_MQTT_Publish();
 	      //sprintf((char *)device_pubmassage,"AT+TCMQTTPUB=\"EHQB1P53IH/UYIJIA01-a0001/",0,"\"%s\":%d\r\n", TOPIC, TOPIC_VALUE);
 		 // HAL_UART_Transmit(&huart2, device_pubmassage, strlen((const char *)device_pubmassage), 5000);
-		
+		  
+		  esp8266data.subsription_flag=1;
 		}
 	}
 	
@@ -500,9 +496,9 @@ void Subscriber_Data_FromCloud(void)
 	uint8_t *device_massage;
 
     
-	if(esp8266data.esp8266_login_cloud_success==1 && esp8266data.subsription_flag ==1){
+	if(esp8266data.esp8266_login_cloud_success==1){
          device_massage = (uint8_t *)malloc(128);
-	  if(esp8266data.gTimer_subscription_timing > 10){
+	  if(esp8266data.gTimer_subscription_timing > 2){
 	  	  esp8266data.gTimer_subscription_timing=0;
 		
 
@@ -510,7 +506,7 @@ void Subscriber_Data_FromCloud(void)
      HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000);
 	 
          esp8266data.gTimer_tencent_down_1s =0;
-
+		
 	}
 	}
 
@@ -568,7 +564,7 @@ void Subscribe_Rx_IntHandler(void)
 				esp8266data.rx_data_state=2; //=1
 		    else{
                esp8266data.rx_counter=0;
-			   
+			   esp8266data.rx_data_state=0;
             }
 				
 			break;
@@ -690,6 +686,114 @@ void Subscribe_Rx_IntHandler(void)
 	    break;
 		}
 }
+/*******************************************************************************
+**
+*Function Name:void Subscribe_Rx_IntHandler(void)
+*Function: interrupt USART2 receive data fun
+*Input Ref: 
+*Return Ref:NO
+*
+********************************************************************************/
+void Wifi_Rx_Input_Handler(void)
+{
+     switch(esp8266data.rx_data_state)
+		{
+		case 0:  //#0
 
+            
+			if(UART2_DATA.UART_DataBuf[0] == '_')  //hex :54 - "T" -fixed
+				esp8266data.rx_data_state=1; //=1
+		    else{
+               esp8266data.rx_counter=0;
+			   
+            }
+			break;
+
+	   case 1:
+		
+			if(UART2_DATA.UART_DataBuf[0] == 'S')  //hex :54 - "T" -fixed
+				esp8266data.rx_data_state=2; //=1
+		    else{
+               esp8266data.rx_counter=0;
+			   esp8266data.rx_data_state=0;
+            }
+				
+			break;
+		case 2: //#1
+             if(UART2_DATA.UART_DataBuf[0] == 'U')  //hex :4B - "K" -fixed
+				esp8266data.rx_data_state=3; //=1
+			else{
+			   esp8266data.rx_data_state =0;
+			    esp8266data.rx_counter=0;
+			}
+			break;
+            
+        case 3:
+            if(UART2_DATA.UART_DataBuf[0] == 'C')  //hex :4B - "K" -fixed
+				esp8266data.rx_data_state=4; //=1
+			else{
+			  esp8266data.rx_data_state =0;
+			    esp8266data.rx_counter=0;
+			}
+        
+        break;
+        
+        case 4:
+            if(UART2_DATA.UART_DataBuf[0] == 'C')  //hex :4B - "K" -fixed
+				esp8266data.rx_data_state=5; //=1
+			else{
+			   esp8266data.rx_data_state =0;
+			    esp8266data.rx_counter=0;
+			}
+        
+        break;
+
+		case 5:
+		 if(UART2_DATA.UART_DataBuf[0] == 'E')  //hex :4B - "K" -fixed
+			esp8266data.rx_data_state=6; //=1
+		   else{
+			  esp8266data.rx_data_state=0;
+			   esp8266data.rx_counter=0;
+		   }
+			   
+		break;
+
+		
+		case 6:
+		 if(UART2_DATA.UART_DataBuf[0] == 'S')  //hex :4B - "K" -fixed
+			esp8266data.rx_data_state=7; //=1
+		   else{
+			  esp8266data.rx_data_state =0;
+			   esp8266data.rx_counter=0;
+		   }
+			   
+		break;
+
+		case 7:
+		 if(UART2_DATA.UART_DataBuf[0] == 'S')  //hex :4B - "K" -fixed
+			esp8266data.rx_data_state=8; //=1
+		   else{
+			  esp8266data.rx_data_state =0;
+			   esp8266data.rx_counter=0;
+		   }
+			   
+		break;
+
+		case 8:
+		   esp8266data.esp8266_login_cloud_success=1;
+		   esp8266data.rx_data_state=0;
+			esp8266data.rx_counter=0;
+
+	   break;
+					
+			
+			
+	    default:
+			
+			
+	    break;
+		}
+
+}
 
 
