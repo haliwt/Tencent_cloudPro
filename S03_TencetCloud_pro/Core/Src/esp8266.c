@@ -216,8 +216,9 @@ static void InitWifiModule(void)
 			at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
 			HAL_Delay(100);
 			at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
-			HAL_Delay(3000);
+			HAL_Delay(2000);
 			run_t.gTimer_wifi_1s=0;
+			
 			
 		}
 		//HAL_UART_Abort(&huart2);
@@ -250,7 +251,7 @@ void Wifi_Link_SmartConfig_Fun(void)
 	  	  run_t.gTimer_wifi_1s=0;
 		 if(wifi_cw != run_t.wifi_cwmode_flag){
 		    wifi_cw = run_t.wifi_cwmode_flag;
-			
+			WIFI_IC_ENABLE();
          	HAL_UART_Transmit(&huart2, "AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"), 5000);
         	HAL_Delay(500);
 			run_t.wifi_cwsap_flag =1;
@@ -260,7 +261,7 @@ void Wifi_Link_SmartConfig_Fun(void)
 
 	  if(run_t.wifi_cwsap_flag ==1){
 	  	  run_t.wifi_cwsap_flag =0;
-
+          WIFI_IC_ENABLE();
 	      sprintf((char *)device_massage, "AT+CWSAP=\"%s\",\"12345678\",4,4\r\n", DEVUICE_NAME);
          HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000);
 
@@ -359,15 +360,13 @@ void Wifi_Link_SmartPhone_Fun(void)
     
 
    if(run_t.wifi_init_flag ==1){
-     
-      run_t.gTimer_wifi_1s++;
-	  if(run_t.gTimer_wifi_1s>5){
-	  	  run_t.gTimer_wifi_1s=0;
-		 if(wifi_cw != run_t.wifi_cwmode_flag){
-		    wifi_cw = run_t.wifi_cwmode_flag;
-			
-         	HAL_UART_Transmit(&huart2, "AT+CWMODE=2\r\n", strlen("AT+CWMODE=2\r\n"), 5000);
-        	HAL_Delay(500);
+       
+		 if(run_t.gTimer_wifi_1s>2){
+		  run_t.wifi_init_flag=2;
+                   run_t.gTimer_wifi_1s=0;
+			WIFI_IC_ENABLE();
+         	HAL_UART_Transmit(&huart2, "AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"), 5000);
+        	HAL_Delay(1000);
 			run_t.wifi_cwsap_flag =1;
 
 		 }
@@ -384,7 +383,7 @@ void Wifi_Link_SmartPhone_Fun(void)
 	  }
 
 
-   }
+   
 
 	free(device_massage);
 
@@ -402,21 +401,24 @@ void Wifi_Link_SmartPhone_Fun(void)
 void SmartPhone_LinkTengxunCloud(void)
 {
    
-    uint8_t *device_massage;
+    uint8_t *device_submassage;
 
-    device_massage = (uint8_t *)malloc(128);
+    device_submassage = (uint8_t *)malloc(128);
 
 	if(esp8266data.esp8266_smartphone_flag ==1){
+		 
 		
-        if(esp8266data.esp8266_timer_1s >30){
+        if(esp8266data.esp8266_timer_1s >20){
+		
 		   esp8266data.esp8266_timer_1s=0;
 		   esp8266data.esp8266_smartphone_flag=0; //return this function
 
-	      sprintf((char *)device_massage, "AT+TCPRDINFOSET=1,\"%s\",\"%s\",\"%s\"\r\n", PRODUCT_ID, DEVICE_SECRET,DEVUICE_NAME);
-	      HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000);
-          HAL_Delay(2000);
+	      sprintf((char *)device_submassage, "AT+TCPRDINFOSET=1,\"%s\",\"%s\",\"%s\"\r\n", PRODUCT_ID, DEVICE_SECRET,DEVUICE_NAME);
+	      HAL_UART_Transmit(&huart2, device_submassage, strlen((const char *)device_submassage), 5000);
+          HAL_Delay(1000);
 
 		  esp8266data.esp8266_dynamic_reg_flag=1;
+            esp8266data.esp8266_timer_dynamic_1s=0;
 		 
         }
 		
@@ -424,29 +426,31 @@ void SmartPhone_LinkTengxunCloud(void)
 	}
 
 	if(esp8266data.esp8266_dynamic_reg_flag==1){
-
+        
+         if(esp8266data.esp8266_timer_dynamic_1s > 2){
+            esp8266data.esp8266_timer_dynamic_1s=0;
          esp8266data.esp8266_dynamic_reg_flag=0;
 		 HAL_UART_Transmit(&huart2, "AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"), 5000); //动态注册 
-	     HAL_Delay(2000);
+	     HAL_Delay(100);
 		 esp8266data.esp8266_link_cloud_flag =1;
          esp8266data.esp8266_timer_link_1s=0;
-
+         }
      }
 
 	if(esp8266data.esp8266_link_cloud_flag==1){
 		
-       if(esp8266data.esp8266_timer_link_1s > 5){
+       if(esp8266data.esp8266_timer_link_1s > 6){
 	   	esp8266data.esp8266_timer_link_1s=0;
 	     esp8266data.esp8266_link_cloud_flag=0;
 
        HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
-       HAL_Delay(2000);
+       HAL_Delay(1000);
 	   esp8266data.esp8266_login_cloud_success=1;
 	   esp8266data.gTimer_subscription_timing=0;
 
 	  }
 	}
- 	 free(device_massage);
+ 	 free(device_submassage);
 
 }
 #endif 

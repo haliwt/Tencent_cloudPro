@@ -121,15 +121,10 @@ int main(void)
  
 
 
-	
-
-	
-	 
-
-    Parse_Cloud_Data();
+   
 	//Subscriber_Data_FromCloud();
-	Publish_Data_ToCloud();
-	
+	//Publish_Data_ToCloud();
+	// Parse_Cloud_Data();
       
   }
   /* USER CODE END 3 */
