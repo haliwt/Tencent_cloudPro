@@ -6,9 +6,10 @@
 #include "run.h"
 #include "json_parser.h"
 #include "iot_tencent.h"
+#include "mqtt_iot.h"
 #define esp8266_Debug 				  0
 #define RTOS_Debug   				 0
-#define SMARTCONFIG      			1
+//#define SMARTCONFIG      			1
 ESP8266DATATypedef esp8266data;
 
  uint8_t *sub_buf;
@@ -24,7 +25,7 @@ static uint8_t wifi_inputBuf[20];
  *return: the len of data send success
  * @brief hal api for at data send
  */
-int at_send_data(uint8_t *pdata, uint16_t len)
+uint8_t at_send_data(uint8_t *pdata, uint16_t len)
 {
 	if(HAL_OK == HAL_UART_Transmit(&huart2, pdata, len, 0xFFFF))
 	{
@@ -327,6 +328,7 @@ void SmartPhone_SmartConfig_LinkTengxunCloud(void)
        HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
        HAL_Delay(2000);
 	   esp8266data.esp8266_login_cloud_success=1;
+        esp8266data.subsription_flag =1;
 	   esp8266data.gTimer_subscription_timing=0;
 	  
 
@@ -364,7 +366,7 @@ void Wifi_Link_SmartPhone_Fun(void)
 		 if(wifi_cw != run_t.wifi_cwmode_flag){
 		    wifi_cw = run_t.wifi_cwmode_flag;
 			
-         	HAL_UART_Transmit(&huart2, "AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"), 5000);
+         	HAL_UART_Transmit(&huart2, "AT+CWMODE=2\r\n", strlen("AT+CWMODE=2\r\n"), 5000);
         	HAL_Delay(500);
 			run_t.wifi_cwsap_flag =1;
 
@@ -376,7 +378,7 @@ void Wifi_Link_SmartPhone_Fun(void)
 
           sprintf((char *)device_massage, "AT+TCSAP=\"%s\"\r\n", DEVUICE_NAME);
           HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000);
-          HAL_Delay(100);
+          HAL_Delay(1000);
          esp8266data.esp8266_smartphone_flag =1;
 		 esp8266data.esp8266_timer_1s=0;
 	  }
@@ -425,7 +427,7 @@ void SmartPhone_LinkTengxunCloud(void)
 
          esp8266data.esp8266_dynamic_reg_flag=0;
 		 HAL_UART_Transmit(&huart2, "AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"), 5000); //动态注册 
-	     HAL_Delay(1000);
+	     HAL_Delay(2000);
 		 esp8266data.esp8266_link_cloud_flag =1;
          esp8266data.esp8266_timer_link_1s=0;
 
@@ -459,41 +461,50 @@ void SmartPhone_LinkTengxunCloud(void)
 void Publish_Data_ToCloud(void)
 {
 
-     uint8_t *device_massage;
-	if(esp8266data.publish_flag ==1){
-		 esp8266data.publish_flag ++;
+   //  uint8_t *device_pubmassage;
+	
+	// device_pubmassage = (uint8_t *)malloc(128);
 
-	     device_massage = (uint8_t *)malloc(128);
+	   
 		if(esp8266data.esp8266_login_cloud_success==1){
+          
 
-		  if(esp8266data.gTimer_subscription_timing > 5){
+		  if(esp8266data.gTimer_subscription_timing > 30){
 		  	   esp8266data.gTimer_subscription_timing=0;
+            esp8266data.subsription_flag =0;
 
-	      sprintf((char *)device_massage, "AT+TCMQTTPUB=\"$thing/up/property/%s/%s\",0\r\n", PRODUCT_ID, DEVUICE_NAME);
-	      HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000);
-		  esp8266data.esp8266_login_cloud_success=0;
-
-		}
+           IOT_MQTT_Publish();
+	      //sprintf((char *)device_pubmassage,"AT+TCMQTTPUB=\"EHQB1P53IH/UYIJIA01-a0001/",0,"\"%s\":%d\r\n", TOPIC, TOPIC_VALUE);
+		 // HAL_UART_Transmit(&huart2, device_pubmassage, strlen((const char *)device_pubmassage), 5000);
+		
 		}
 	}
+	
 
-    free(device_massage);
+   // free(device_pubmassage);
 }
-
+/*******************************************************************************
+**
+*Function Name:void Publish_Data_ToCloud(void)
+*Function: dy
+*Input Ref: 
+*Return Ref:NO
+*
+********************************************************************************/
 void Subscriber_Data_FromCloud(void)
 {
 	uint8_t *device_massage;
 
-     device_massage = (uint8_t *)malloc(128);
-	if(esp8266data.esp8266_login_cloud_success==1){
+    
+	if(esp8266data.esp8266_login_cloud_success==1 && esp8266data.subsription_flag ==1){
+         device_massage = (uint8_t *)malloc(128);
+	  if(esp8266data.gTimer_subscription_timing > 10){
+	  	  esp8266data.gTimer_subscription_timing=0;
+		
 
-	  if(esp8266data.gTimer_subscription_timing > 5){
-	  	   esp8266data.gTimer_subscription_timing=0;
-		   esp8266data.esp8266_login_cloud_success=0;
-
-      sprintf((char *)device_massage, "AT+TCMQTTSUB=\"$thing/down/property/%s/%s\",0\r\n", PRODUCT_ID, DEVUICE_NAME);
-      HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000);
-	  esp8266data.subsription_flag =1;
+     sprintf((char *)device_massage, "AT+TCMQTTSUB=\"$thing/down/property/%s/%s\",0\r\n", PRODUCT_ID, DEVUICE_NAME);
+     HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000);
+	 
          esp8266data.gTimer_tencent_down_1s =0;
 
 	}

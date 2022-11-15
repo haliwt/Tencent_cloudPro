@@ -27,6 +27,7 @@
 #include "delay.h"
 #include "esp8266.h"
 #include "cmd_link.h"
+#include "mqtt_iot.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -84,6 +85,7 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
    delay_init(24);
+  Mqtt_Value_Init();
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -108,17 +110,25 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
   
-    //Wifi_Link_SmartPhone_Fun();
-	//SmartPhone_LinkTengxunCloud();
-    Wifi_Link_SmartConfig_Fun();
-    SmartPhone_SmartConfig_LinkTengxunCloud();
+  
+
+//	#ifdef SMARTCONFIG 
+//	    Wifi_Link_SmartConfig_Fun();
+//	    SmartPhone_SmartConfig_LinkTengxunCloud();
+//	#else
+		Wifi_Link_SmartPhone_Fun();
+		SmartPhone_LinkTengxunCloud();
+ 
 
 
 	
-	Subscriber_Data_FromCloud();
-	 Publish_Data_ToCloud();
+
+	
+	 
 
     Parse_Cloud_Data();
+	//Subscriber_Data_FromCloud();
+	Publish_Data_ToCloud();
 	
       
   }

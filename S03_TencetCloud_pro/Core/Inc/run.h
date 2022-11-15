@@ -66,7 +66,7 @@ typedef struct _RUN_T{
     uint8_t wifi_init_flag;
     uint8_t wifi_cwsap_flag;
 	uint8_t wifi_cwmode_flag;
-	
+	uint8_t mqtt_error_flag ;
 
 	uint8_t  globe_sub_flag;
 	uint8_t set_temperature_on;

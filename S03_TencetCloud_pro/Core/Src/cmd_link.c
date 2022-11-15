@@ -6,7 +6,7 @@
 
 
 
-#define MAX_BUFFER_SIZE  8
+#define MAX_BUFFER_SIZE  30
 
 uint8_t  inputBuf[4];
 uint8_t  inputCmd[2];
@@ -19,6 +19,8 @@ uint8_t rx_wifi_data[7];
 static uint8_t transferSize;
 static uint8_t outputBuf[MAX_BUFFER_SIZE];
 volatile static uint8_t transOngoingFlag;
+volatile static uint8_t usart2_transOngoingFlag;
+
 
 
 /********************************************************************************
@@ -265,6 +267,36 @@ void SendData_Real_GMT(uint8_t hdata,uint8_t mdata,uint8_t sdata)
 	}
 
 }
+/********************************************************************************
+**
+*Function Name:void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+*Function :UART callback function  for UART interrupt for transmit data
+*Input Ref: structure UART_HandleTypeDef pointer
+*Return Ref:NO
+*
+*******************************************************************************/
+void Eesp8266_TxData_ToSmartPhone(void)
+{
+   
+    outputBuf[0]='M'; //4D
+	outputBuf[1]='A'; //41
+	outputBuf[2]='B'; //44	// 'C' ->control 
+//	outputBuf[3]=hdata; //	
+//	outputBuf[4]=mdata; //
+//	outputBuf[5] =sdata;
+	//for(i=3;i<6;i++) crc ^= outputBuf[i];
+	//outputBuf[i]=crc;
+	transferSize=6;
+	if(transferSize)
+	{
+		while(transOngoingFlag); //UART interrupt transmit flag ,disable one more send data.
+		transOngoingFlag=1;
+		HAL_UART_Transmit_IT(&huart1,outputBuf,transferSize);
+	}
+
+
+
+}
 
 /********************************************************************************
 **
@@ -281,11 +313,11 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 		transOngoingFlag=0; //UART Transmit interrupt flag =0 ,RUN
 	}
 
-//	if(huart== &huart2){
+	if(huart== &huart2){
 
+       usart2_transOngoingFlag =0;
 
-
-//	}
+	}
 
 }
 

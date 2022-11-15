@@ -2,11 +2,17 @@
 #define __ESP8266_H_
 #include "main.h"
 
-#define SSID                    "UYIJIA01-a0002"
-#define PASSWD                  "12345678"
+//#define SSID                    "UYIJIA01-a0004"
+//#define PASSWD                  "12345678"
+
+
+#define TOPIC                  "open"
+
+#define TOPIC_VALUE            1
+
 
 #define PRODUCT_ID              "EHQB1P53IH" //production ID 
-#define DEVUICE_NAME            "UYIJIA01-a0002"      //device Name:
+#define DEVUICE_NAME            "UYIJIA01-a0005"      //device Name:
 #define DEVICE_SECRET           "5xdQMgx7ZHznYyQK6wvdmolc" //"YJuZKqu9cwb2Xd87Ul/0Jg==" //Secret key 
 #define PRODUCT_REGION          "ap-guangzhou" //filed name 
 
@@ -78,7 +84,7 @@ void Parse_Cloud_Data(void);
 
 void Subscribe_Rx_Handler(void);
 
-
+uint8_t at_send_data(uint8_t *pdata, uint16_t len);
 
 
 #endif 
