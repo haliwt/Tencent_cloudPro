@@ -49,6 +49,7 @@ typedef struct ESP8266_DATA
 	unsigned char getCloudValue_decade;
 	unsigned char rx_data_len;
 	unsigned char rx_data_name_len;
+	unsigned char rx_link_cloud_flag;
 	
 
 	unsigned char esp8266_timer_link_1s;

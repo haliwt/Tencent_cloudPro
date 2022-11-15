@@ -442,6 +442,7 @@ void SmartPhone_LinkTengxunCloud(void)
        if(esp8266data.esp8266_timer_link_1s > 6){
 	   	esp8266data.esp8266_timer_link_1s=0;
 	     esp8266data.esp8266_link_cloud_flag=0;
+	   esp8266data.rx_link_cloud_flag =1;
 
        HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
        HAL_Delay(1000);
