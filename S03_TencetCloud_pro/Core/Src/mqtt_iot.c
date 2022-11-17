@@ -185,12 +185,11 @@ static void property_report_Temp_Humidity(void)
 void IOT_MQTT_Publish(void)
 {
    
-   //property_topic_publish();
-   //property_report();
+    property_topic_publish();
+    property_report();
 
    
-    property_topic_publish(); 
-    property_report_Temp_Humidity();
+  
     
     
 }
@@ -204,5 +203,16 @@ AT+TCMQTTPUB="$thing/up/property/4ZWKRTZ28S/UYIJIA_S01_T",0,"{\"method\":\"repor
 
 
 #endif 
+
+
+void MqttData_ToCloud_TempHumidity(void)
+
+{
+
+	property_topic_publish(); 
+	property_report_Temp_Humidity();
+
+
+}
 
 

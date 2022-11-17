@@ -36,6 +36,9 @@ typedef enum _QoS {
 void IOT_MQTT_Publish(void);
 void Mqtt_Value_Init(void);
 
+void MqttData_ToCloud_TempHumidity(void);
+
+
 /**
  * @brief Active triggering of mqtt reconnection
  *

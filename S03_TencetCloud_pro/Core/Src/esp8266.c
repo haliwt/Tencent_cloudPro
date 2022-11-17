@@ -478,15 +478,20 @@ void Publish_Data_ToCloud(void)
    if(esp8266data.esp8266_login_cloud_success==1){
           
 
-		  if(esp8266data.gTimer_subscription_timing > 15){
+		  if(esp8266data.gTimer_subscription_timing > 9){
 		  	   esp8266data.gTimer_subscription_timing=0;
             esp8266data.subsription_flag =0;
 
            IOT_MQTT_Publish();
-	      //sprintf((char *)device_pubmassage,"AT+TCMQTTPUB=\"EHQB1P53IH/UYIJIA01-a0001/",0,"\"%s\":%d\r\n", TOPIC, TOPIC_VALUE);
-		 // HAL_UART_Transmit(&huart2, device_pubmassage, strlen((const char *)device_pubmassage), 5000);
+	    
 		  
 		  esp8266data.subsription_flag=1;
+		}
+	    if(esp8266data.gTimer_subscription_timing > 4 && esp8266data.gTimer_subscription_timing < 6){
+             
+
+		     MqttData_ToCloud_TempHumidity();
+
 		}
 	}
 	
