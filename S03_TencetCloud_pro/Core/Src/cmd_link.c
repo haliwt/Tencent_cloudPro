@@ -77,15 +77,16 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
            
           if(esp8266data.rx_link_cloud_flag ==1){
 
-		       Wifi_Rx_Input_Handler();
-//               UART2_DATA.UART_Data[UART2_DATA.UART_Cnt] = UART2_DATA.UART_DataBuf[0];
-//               UART2_DATA.UART_Cnt++;
-//              
-//                if(*UART2_DATA.UART_DataBuf==0X0A) // 0x0A = "\n"
-//                {
-//                  UART2_DATA.UART_Flag = 1;
-//				 
-//                }
+		     
+               UART2_DATA.UART_Data[UART2_DATA.UART_Cnt] = UART2_DATA.UART_DataBuf[0];
+               UART2_DATA.UART_Cnt++;
+              
+                if(*UART2_DATA.UART_DataBuf==0X0A) // 0x0A = "\n"
+                {
+                   UART2_DATA.UART_Flag = 1;
+				   Wifi_Rx_Input_Handler();
+				 
+                }
               
            	
          } 
@@ -277,28 +278,7 @@ void SendData_Real_GMT(uint8_t hdata,uint8_t mdata,uint8_t sdata)
 *Return Ref:NO
 *
 *******************************************************************************/
-void Eesp8266_TxData_ToSmartPhone(void)
-{
-   
-    outputBuf[0]='M'; //4D
-	outputBuf[1]='A'; //41
-	outputBuf[2]='B'; //44	// 'C' ->control 
-//	outputBuf[3]=hdata; //	
-//	outputBuf[4]=mdata; //
-//	outputBuf[5] =sdata;
-	//for(i=3;i<6;i++) crc ^= outputBuf[i];
-	//outputBuf[i]=crc;
-	transferSize=6;
-	if(transferSize)
-	{
-		while(transOngoingFlag); //UART interrupt transmit flag ,disable one more send data.
-		transOngoingFlag=1;
-		HAL_UART_Transmit_IT(&huart1,outputBuf,transferSize);
-	}
 
-
-
-}
 
 /********************************************************************************
 **

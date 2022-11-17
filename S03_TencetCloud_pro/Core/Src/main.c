@@ -107,24 +107,22 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+   
     /* USER CODE BEGIN 3 */
   
   
 
-//	#ifdef SMARTCONFIG 
-//	    Wifi_Link_SmartConfig_Fun();
-//	    SmartPhone_SmartConfig_LinkTengxunCloud();
-//	#else
+	#ifdef SMARTCONFIG 
+	    Wifi_Link_SmartConfig_Fun();
+	    SmartPhone_SmartConfig_LinkTengxunCloud();
+	#else
 		Wifi_Link_SmartPhone_Fun();
 		SmartPhone_LinkTengxunCloud();
        Publish_Data_ToCloud();
+   #endif 
 
 
-   
-	//bscriber_Data_FromCloud();
-	 
-	///rse_Cloud_Data();
+	Publish_Data_ToCloud();
       
   }
   /* USER CODE END 3 */

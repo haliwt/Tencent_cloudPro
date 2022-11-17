@@ -2,18 +2,19 @@
 #define __ESP8266_H_
 #include "main.h"
 
-//#define SSID                    "UYIJIA01-a0004"
-//#define PASSWD                  "12345678"
+#define SSID                    "UYIKIA"
+#define PASSWD                  "20329263"
 
 
 #define TOPIC                  "open"
 
 #define TOPIC_VALUE            1
+#define SMARTCONFIG      			1
 
 
 #define PRODUCT_ID              "EHQB1P53IH" //production ID 
 #define DEVUICE_NAME            "UYIJIA01-a0005"      //device Name:
-#define DEVICE_SECRET           "5xdQMgx7ZHznYyQK6wvdmolc" //"YJuZKqu9cwb2Xd87Ul/0Jg==" //Secret key 
+#define DEVICE_SECRET           "5xdQMgx7ZHznYyQK6wvdmolc"//"5xdQMgx7ZHznYyQK6wvdmolc"  //Secret key 
 #define PRODUCT_REGION          "ap-guangzhou" //filed name 
 
 #define WIFI_IC_ENABLE()         HAL_GPIO_WritePin(WIFI_EN_GPIO_Port,WIFI_EN_Pin,GPIO_PIN_SET)
@@ -50,6 +51,7 @@ typedef struct ESP8266_DATA
 	unsigned char rx_data_len;
 	unsigned char rx_data_name_len;
 	unsigned char rx_link_cloud_flag;
+    unsigned char cmp_flag;
 	
 
 	unsigned char esp8266_timer_link_1s;
