@@ -16,6 +16,10 @@ ESP8266DATATypedef esp8266data;
 
  char *CloudInfo="+TCMQTTCONN:OK";
 char *usart2_tx;
+
+
+
+
 static void InitWifiModule(void);
 
 
@@ -470,11 +474,11 @@ void SmartPhone_LinkTengxunCloud(void)
 ********************************************************************************/
 void Publish_Data_ToCloud(void)
 {
-
+    
    if(esp8266data.esp8266_login_cloud_success==1){
           
 
-		  if(esp8266data.gTimer_subscription_timing > 30){
+		  if(esp8266data.gTimer_subscription_timing > 15){
 		  	   esp8266data.gTimer_subscription_timing=0;
             esp8266data.subsription_flag =0;
 
@@ -711,187 +715,9 @@ void Wifi_Rx_Input_Handler(void)
               esp8266data.esp8266_login_cloud_success=1;
            }
 		   UART2_DATA.UART_Flag = 0;
+           UART2_DATA.UART_Cnt=0;
          
-          #if 0
-    
-          switch(state){
-           
-              case 0:
-                  if(UART2_DATA.UART_Data[0]=='+')
-                     state=1;
-                  else{
-                       UART2_DATA.UART_Flag = 0;
-                      UART2_DATA.UART_Cnt=0;
-                      state=0;
-                  
-                  }
-                  
-              break;
-              case 1:
-                   if(UART2_DATA.UART_Data[1]=='T')
-                     state=2;
-                   else{
-                      UART2_DATA.UART_Flag = 0;
-                      UART2_DATA.UART_Cnt=0;
-                      state=0;
-                   }
-              break;
-                
-              case 2:
-                   if(UART2_DATA.UART_Data[2]=='C')
-                     state=3;
-                   else{
-                      UART2_DATA.UART_Flag = 0;
-                      UART2_DATA.UART_Cnt=0;
-                      state=0;
-                   }
-              break;
-                   
-              case 3:
-                   if(UART2_DATA.UART_Data[3]=='M')
-                     state=4;
-                   else{
-                      UART2_DATA.UART_Flag = 0;
-                      UART2_DATA.UART_Cnt=0;
-                      state=0;
-                   }
-              break;
-                   
-             case 4:
-                   if(UART2_DATA.UART_Data[4]=='Q')
-                     state=5;
-                   else{
-                      UART2_DATA.UART_Flag = 0;
-                      UART2_DATA.UART_Cnt=0;
-                      state=0;
-                   }
-              break;
-                   
-             case 5:
-                   if(UART2_DATA.UART_Data[5]=='T')
-                     state=6;
-                   else{
-                      UART2_DATA.UART_Flag = 0;
-                      UART2_DATA.UART_Cnt=0;
-                      state=0;
-                   }
-              break;
-                   
-                   
-              case 6:
-                   if(UART2_DATA.UART_Data[6]=='T')
-                     state=7;
-                   else{
-                      UART2_DATA.UART_Flag = 0;
-                      UART2_DATA.UART_Cnt=0;
-                      state=0;
-                   }
-              break;
-                   
-             case 7:
-                   if(UART2_DATA.UART_Data[7]=='C')
-                     state=8;
-                   else{
-                      UART2_DATA.UART_Flag = 0;
-                      UART2_DATA.UART_Cnt=0;
-                      state=0;
-                   }
-              break;
-                   
-              case 8:
-                   if(UART2_DATA.UART_Data[8]=='O')
-                     state=9;
-                   else{
-                      UART2_DATA.UART_Flag = 0;
-                      UART2_DATA.UART_Cnt=0;
-                      state=0;
-                   }
-              break;
-                   
-             case 9:
-                   if(UART2_DATA.UART_Data[9]=='N')
-                     state=10;
-                   else{
-                      UART2_DATA.UART_Flag = 0;
-                      UART2_DATA.UART_Cnt=0;
-                      state=0;
-                   }
-              break;
-                   
-                case 10:
-                   if(UART2_DATA.UART_Data[10]=='N')
-                     state=10;
-                   else{
-                      UART2_DATA.UART_Flag = 0;
-                      UART2_DATA.UART_Cnt=0;
-                      state=0;
-                   }
-              break;
-                   
-              case 11:
-                  if(UART2_DATA.UART_Data[11]==':')
-                     state=12;
-                   else{
-                      UART2_DATA.UART_Flag = 0;
-                      UART2_DATA.UART_Cnt=0;
-                      state=0;
-                   }
-              break;
-                   
-              case 12:
-                  if(UART2_DATA.UART_Data[12]=='O')
-                     state=13;
-                   else{
-                      UART2_DATA.UART_Flag = 0;
-                      UART2_DATA.UART_Cnt=0;
-                      state=0;
-                   }
-              break;
-                   
-             case 13:
-                  if(UART2_DATA.UART_Data[13]=='K'){
-                     
-                       esp8266data.esp8266_login_cloud_success=1;
-                      UART2_DATA.UART_Flag = 0;
-                      UART2_DATA.UART_Cnt=0;
-                      state=0;
-                   }
-              break;
-              
-             default:
-                 
-             break;
-              
-              
-          
-          
-          
-          }
-	     #endif 
-//           cmp=strcmp(usart2_tx,CloudInfo);
-
-//           if(cmp==0){
-//              UART2_DATA.UART_Flag = 1;
-//		      esp8266data.cmp_flag=0;
-//		      UART2_DATA.UART_Cnt=0;
-//		      esp8266data.esp8266_login_cloud_success=1;
-//              
-//  
-//		   }
-//		   else if(cmp<0){
-//               
-//                esp8266data.cmp_flag=2;
-//			 UART2_DATA.UART_Flag = 0;
-//		      UART2_DATA.UART_Cnt=0;
-
-//		   }
-//           else{ //>0
-//              esp8266data.cmp_flag=1;
-//               UART2_DATA.UART_Flag = 0;
-//			 
-//		      UART2_DATA.UART_Cnt=0;
-//           
-//           }
+        
 		   	
 }
 
