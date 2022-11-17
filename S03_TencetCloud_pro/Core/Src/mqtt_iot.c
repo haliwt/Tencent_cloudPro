@@ -38,6 +38,7 @@ static void property_report(void);
 
 static void property_topic_publish(void);
 
+static void property_report_Temp_Humidity(void);
 
 
 #ifdef AUTH_MODE_CERT
@@ -94,11 +95,12 @@ void Mqtt_Value_Init(void)
 {
     
    	sg_info.open=1;
-   	sg_info.find=1;
-   	sg_info.nowtemperature=27;
-   	sg_info.state=1;
+    sg_info.state=1;
     sg_info.ptc=1; 
     sg_info.anion=1;
+
+	sg_info.find=54;
+   	sg_info.nowtemperature=27;
     sg_info.temperature=36;
     sg_info.humidity=64;
 
@@ -116,7 +118,7 @@ static void property_topic_publish(void)
 
 
    at_send_data(topic, size);
-
+ 
    
 }
 
@@ -126,16 +128,36 @@ static void property_report(void)
 {
     char       message[256]    = {0};
     int        message_len     = 0;
- //   static int sg_report_index = 0;
+
 
    
 
-   message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"%s\\\"\\,\\\"params\\\":{\\\"open\\\":%d\\,\\\"Anion\\\":%d\\,\\\"ptc\\\":%d\\,\\\"sonic\\\":%d\\,\\\"find\\\":%d\\,\\\"nowtemperature\\\":%d\\,\\\"temperature\\\":%d\\,\\\"Humidity\\\":%d}}\"\r\n",
-                             TOKEN_ID,sg_info.open,sg_info.anion,sg_info.ptc,sg_info.sonic,sg_info.find,sg_info.nowtemperature,sg_info.temperature,sg_info.humidity);
+   message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"%s\\\"\\,\\\"params\\\":{\\\"open\\\":%d\\,\\\"Anion\\\":%d\\,\\\"ptc\\\":%d\\,\\\"sonic\\\":%d\\,\\\"find\\\":%d\\,\\\"state\\\":%d\\}}\"\r\n",
+                             TOKEN_ID,sg_info.open,sg_info.anion,sg_info.ptc,sg_info.sonic,sg_info.find,sg_info.state);
                                
  
 	at_send_data(message, message_len);
    
+}
+
+static void property_report_Temp_Humidity(void)
+{
+
+	   char	message[128]    = {0};
+	   int	message_len	  = 0;
+	
+	
+	  
+	
+	  message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"%s\\\"\\,\\\"params\\\":{\\\"nowtemperature\\\":%d\\,\\\"temperature\\\":%d\\,\\\"Humidity\\\":%d}}\"\r\n",
+								TOKEN_ID,sg_info.nowtemperature,sg_info.temperature,sg_info.humidity);
+								  
+	
+	   at_send_data(message, message_len);
+
+
+
+
 }
 
 
@@ -162,10 +184,13 @@ static void property_report(void)
 ********************************************************************************/
 void IOT_MQTT_Publish(void)
 {
+   
    property_topic_publish();
    property_report();
-    
- //  HAL_UART_Transmit(&huart2, tx_data, strlen((const char *)tx_data), 0xffff);
+
+   
+   // property_topic_publish(); 
+   // property_report_Temp_Humidity();
     
     
 }
