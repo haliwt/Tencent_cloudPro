@@ -185,12 +185,12 @@ static void property_report_Temp_Humidity(void)
 void IOT_MQTT_Publish(void)
 {
    
-   property_topic_publish();
-   property_report();
+   //property_topic_publish();
+   //property_report();
 
    
-   // property_topic_publish(); 
-   // property_report_Temp_Humidity();
+    property_topic_publish(); 
+    property_report_Temp_Humidity();
     
     
 }
