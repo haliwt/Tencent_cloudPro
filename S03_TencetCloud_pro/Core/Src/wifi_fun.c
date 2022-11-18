@@ -4,7 +4,6 @@
 #include "fan.h"
 #include "tim.h"
 #include "special_power.h"
-//#include "wifi.h"
 #include "single_mode.h"
 
 WIFI_FUN   wifi_t;
@@ -76,7 +75,7 @@ void Wifi_Mode(void)
 {
    
   if(wifi_t.wifi_sensor ==0){  
-   if(wifi_work_state ==  WIFI_CONN_CLOUD){ //当WIFI连接成功，
+  // if(wifi_work_state ==  WIFI_CONN_CLOUD){ //当WIFI连接成功，
 
    if(wifi_t.wifi_power ==1){
 
@@ -100,8 +99,8 @@ void Wifi_Mode(void)
           run_t.gFan_counter=0;
           wifi_t.WifiMode =0;
 		  run_t.SingleMode =0; //WT.EIDT 2022.09.02
-		  mcu_dp_bool_update(DPID_KILL,0); //BOOL型数据上报;
-          mcu_dp_bool_update(DPID_HEAT,0); //BOOL型数据上报;
+		//  mcu_dp_bool_update(DPID_KILL,0); //BOOL型数据上报;
+         // mcu_dp_bool_update(DPID_HEAT,0); //BOOL型数据上报;
           SendWifiCmd_To_Order(0x81);
 		  
            
@@ -117,8 +116,8 @@ void Wifi_Mode(void)
       
     }
   }
-  	}
 }
+
 /***********************************************
    *
    *Function Name: void Wifi_RunCmd(void)
@@ -168,39 +167,39 @@ static void wifiPowerOn_After_data_update(void)
 ***********************************************/
 void wifiDisplayTemperature_Humidity(void)
 {
-  mcu_dp_value_update(DPID_DISPTEMP,wifi_t.dispTemperatureValue); //VALUE型数据上报;
-  mcu_dp_value_update(DPID_DISPHUM,wifi_t.dispHumidityValue); //VALUE型数据上报;
+ // mcu_dp_value_update(DPID_DISPTEMP,wifi_t.dispTemperatureValue); //VALUE型数据上报;
+ // mcu_dp_value_update(DPID_DISPHUM,wifi_t.dispHumidityValue); //VALUE型数据上报;
 
 }
 
 void wifiUpdate_Power_Status(uint8_t pvalue)
 {
 
-   mcu_dp_bool_update(DPID_START,pvalue); //BOOL型数据上报;
+  // mcu_dp_bool_update(DPID_START,pvalue); //BOOL型数据上报;
 }
 void wifiUpdate_Kill_Status(uint8_t kvalue)
 {
-   mcu_dp_bool_update(DPID_KILL,kvalue); //BOOL型数据上报;
+  // mcu_dp_bool_update(DPID_KILL,kvalue); //BOOL型数据上报;
 }
 void wifiUpdate_AI_Status(uint8_t aiv)
 {
-  mcu_dp_enum_update(DPID_MODE,aiv); //枚举型数据上报;
+ // mcu_dp_enum_update(DPID_MODE,aiv); //枚举型数据上报;
 }
 void wifiUpdate_Dry_Status(uint8_t dvalue)
 {
-    mcu_dp_bool_update(DPID_HEAT,dvalue); //BOOL型数据上报;
+   // mcu_dp_bool_update(DPID_HEAT,dvalue); //BOOL型数据上报;
 }
 
 
 void wifiUpdate_SetTimeValue(uint8_t tv)
 {
-   mcu_dp_value_update(DPID_SETTIME,tv); //VALUE型数据上报;
+  // mcu_dp_value_update(DPID_SETTIME,tv); //VALUE型数据上报;
 
 }
 
 void wifiUpdate_SetTemperatureValue(uint8_t temp)
 {
-   mcu_dp_value_update(DPID_SETTEMP,temp); //VALUE型数据上报;
+  // mcu_dp_value_update(DPID_SETTEMP,temp); //VALUE型数据上报;
 }
 
 
