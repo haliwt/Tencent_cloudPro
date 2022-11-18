@@ -1,7 +1,7 @@
 
 #ifndef __MQTT_IOT_H_
 #define __MQTT_IOT_H_
-
+#include "main.h"
 
 
 
@@ -33,10 +33,14 @@ typedef enum _QoS {
 
 
 //int IOT_MQTT_Publish(void *pClient, char *topicName, PublishParams *pParams);
-void IOT_MQTT_Publish(void);
+
 void Mqtt_Value_Init(void);
 
-void MqttData_ToCloud_TempHumidity(void);
+void MqttData_Publish_State(void);
+
+void MqttData_Publis_ReadTempHum(uint8_t tempvalue,uint8_t humvalue);
+void MqttData_Publis_SetTempFan(uint8_t temp,uint8_t hum);
+
 
 
 /**

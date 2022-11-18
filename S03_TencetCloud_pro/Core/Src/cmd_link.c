@@ -84,7 +84,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
                 if(*UART2_DATA.UART_DataBuf==0X0A) // 0x0A = "\n"
                 {
                    UART2_DATA.UART_Flag = 1;
-				   Wifi_Rx_Input_Handler();
+				   Wifi_Rx_InputInfo_Handler();
 				 
                 }
               

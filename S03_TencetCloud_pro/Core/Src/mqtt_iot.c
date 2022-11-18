@@ -14,7 +14,7 @@
 
 
 //char *tx_data={"AT+TCMQTTPUB=\"$thing/up/property/EHQB1P53IH/UYIJIA01-a0005\",0,\"{\"method\":\"report\"\,\"clientToken\":\"up01\"\,\"params\":\"{\"open\":1\,\"temperature\":26}}\"\r\n"};
-char *tx_data={"AT+TCMQTTPUB=\"$thing/up/property/EHQB1P53IH/UYIJIA01-a0005\",0,\"{\\\"method\\\":\\\"report\\\"\\\,\\\"clientToken\\\":\\\"up01\\\"\\,\\\"params\\\":{\\\"open\\\":1\\,\\\"temperature\\\":26}}\"\r\n"};
+//char *tx_data={"AT+TCMQTTPUB=\"$thing/up/property/EHQB1P53IH/UYIJIA01-a0005\",0,\"{\\\"method\\\":\\\"report\\\"\\\,\\\"clientToken\\\":\\\"up01\\\"\\,\\\"params\\\":{\\\"open\\\":1\\,\\\"temperature\\\":26}}\"\r\n"};
 
 /* MAX size of client ID */
 #define MAX_SIZE_OF_CLIENT_ID                 (80)
@@ -34,11 +34,16 @@ char *tx_data={"AT+TCMQTTPUB=\"$thing/up/property/EHQB1P53IH/UYIJIA01-a0005\",0,
 
 
 
-static void property_report(void);
+
 
 static void property_topic_publish(void);
+static void property_report_state(void);
 
-static void property_report_Temp_Humidity(void);
+
+static void property_report_ReadTempHum(uint8_t tempvalue,uint8_t humvalue);
+
+static void property_report_SetTempFan(uint8_t temp, uint8_t fan);
+
 
 
 #ifdef AUTH_MODE_CERT
@@ -90,7 +95,7 @@ static serviceInfo    sg_info;
 static DeviceInfo    sg_equipInfo;
 
 // led attributes, corresponding to struct LedInfo
-static char *sg_property_name[] = {"opne", "sonic", "find", "nowtemperature","state","ptc","Anion","temperature","Humidity"};
+//static char *sg_property_name[] = {"opne", "sonic", "find", "nowtemperature","state","ptc","Anion","temperature","Humidity"};
 void Mqtt_Value_Init(void)
 {
     
@@ -107,7 +112,15 @@ void Mqtt_Value_Init(void)
 
 
 }
-
+/********************************************************************************
+	*
+	*Function Name:static void property_report_Temp_Humidity(void)
+	*Function :send data to tencent cloud only read temperature and humidity of data
+	*Input Ref: only read temperature value and humidiy value
+	*           
+	*Return Ref:
+	*
+********************************************************************************/
 static void property_topic_publish(void)
 {
     char topic[256] = {0};
@@ -123,8 +136,16 @@ static void property_topic_publish(void)
 }
 
 
-
-static void property_report(void)
+/********************************************************************************
+	*
+	*Function Name:static void property_report_state(void)
+	*Function : publis to tencent cloud data 
+	*Input Ref: 
+	*           
+	*Return Ref:
+	*
+********************************************************************************/
+static void property_report_state(void)
 {
     char       message[256]    = {0};
     int        message_len     = 0;
@@ -132,15 +153,23 @@ static void property_report(void)
 
    
 
-   message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"%s\\\"\\,\\\"params\\\":{\\\"open\\\":%d\\,\\\"Anion\\\":%d\\,\\\"ptc\\\":%d\\,\\\"sonic\\\":%d\\,\\\"find\\\":%d\\,\\\"state\\\":%d\\}}\"\r\n",
-                             TOKEN_ID,sg_info.open,sg_info.anion,sg_info.ptc,sg_info.sonic,sg_info.find,sg_info.state);
+   message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"%s\\\"\\,\\\"params\\\":{\\\"open\\\":%d\\,\\\"Anion\\\":%d\\,\\\"ptc\\\":%d\\,\\\"sonic\\\":%d\\,\\\"state\\\":%d\\}}\"\r\n",
+                             TOKEN_ID,sg_info.open,sg_info.anion,sg_info.ptc,sg_info.sonic,sg_info.state);
                                
  
 	at_send_data(message, message_len);
    
 }
-
-static void property_report_Temp_Humidity(void)
+/********************************************************************************
+	*
+	*Function Name:static void property_report_Temp_Humidity(void)
+	*Function :send data to tencent cloud only read temperature and humidity of data
+	*Input Ref: only read temperature value and humidiy value
+	*           
+	*Return Ref:
+	*
+********************************************************************************/
+static void property_report_ReadTempHum(uint8_t tempvalue,uint8_t humvalue)
 {
 
 	   char	message[128]    = {0};
@@ -149,8 +178,8 @@ static void property_report_Temp_Humidity(void)
 	
 	  
 	
-	  message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"%s\\\"\\,\\\"params\\\":{\\\"nowtemperature\\\":%d\\,\\\"temperature\\\":%d\\,\\\"Humidity\\\":%d}}\"\r\n",
-								TOKEN_ID,sg_info.nowtemperature,sg_info.temperature,sg_info.humidity);
+	  message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"%s\\\"\\,\\\"params\\\":{\\\"temperature\\\":%d\\,\\\"Humidity\\\":%d}}\"\r\n",
+								TOKEN_ID,tempvalue,humvalue);
 								  
 	
 	   at_send_data(message, message_len);
@@ -159,20 +188,31 @@ static void property_report_Temp_Humidity(void)
 
 
 }
+/********************************************************************************
+	*
+	*Function Name:static void property_report_SetTempFan(void)
+	*Function : sensor of data to tencent cloud  temperature and humidity of data
+	*Input Ref: only read temperature value and humidiy value
+	*           
+	*Return Ref:
+	*
+********************************************************************************/
+static void property_report_SetTempFan(uint8_t temp, uint8_t fan)
+{
+     char	message[128]    = {0};
+	 int	message_len	  = 0;
+	
+	
+	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"%s\\\"\\,\\\"params\\\":{\\\"nowtemperature\\\":%d\\,\\\"find\\\":%d}}\"\r\n",
+								TOKEN_ID,temp,fan);
+								  
+	
+	  at_send_data(message, message_len);
 
 
-//static void property_get_status(void *pClient)
-//{
-//    char       message[256]        = {0};
-//    int        message_len         = 0;
-//    static int sg_get_status_index = 0;
 
-//    sg_get_status_index++;
-//    message_len = snprintf(message, sizeof(message), "{\"method\":\"get_status\", \"clientToken\":\"%s-%d\"}",
-//                               sg_devInfo.product_id, sg_get_status_index);
-//    property_topic_publish(message, message_len);
-//}
 
+}
 /********************************************************************************
 	*
 	*Function Name:void IOT_MQTT_Publish(pClient, topic, &pubParams)
@@ -182,35 +222,37 @@ static void property_report_Temp_Humidity(void)
 	*Return Ref:
 	*
 ********************************************************************************/
-void IOT_MQTT_Publish(void)
+void   MqttData_Publish_State(void)
 {
    
     property_topic_publish();
-    property_report();
+    property_report_state();
 
    
-  
-    
-    
-}
+ }
 
-
-#if 0
-AT+TCMQTTPUB="$thing/up/property/4ZWKRTZ28S/UYIJIA_S01_T",0,
-"{\"method\":\"report\"\,\"clientToken\":\"123\"\,\"params\":{\"display_temperature\":26\,\"humidity_value\":82\,\"display_timing\":1 }} "
-
-AT+TCMQTTPUB="$thing/up/property/4ZWKRTZ28S/UYIJIA_S01_T",0,"{\"method\":\"report\"\,\"clientToken\":\"123\"\,\"params\":{\"display_temperature\":26\,\"humidity_value\":82\,\"display_timing\":1 }} "
-
-
-#endif 
-
-
-void MqttData_ToCloud_TempHumidity(void)
-
+/********************************************************************************
+	*
+	*Function Name:void MqttData_Publis_TempHumidity(void)
+	*Function : publis data to tencent cloud 
+	*Input Ref: pClient ->client data array ,topic->tencent register topic name,
+	*           &pubParams -> topic of reference
+	*Return Ref:
+	*
+********************************************************************************/
+void MqttData_Publis_ReadTempHum(uint8_t tempvalue,uint8_t humvalue)
 {
 
 	property_topic_publish(); 
-	property_report_Temp_Humidity();
+	property_report_ReadTempHum(tempvalue,humvalue);
+
+
+}
+
+void MqttData_Publis_SetTempFan(uint8_t temp,uint8_t hum)
+{
+	property_topic_publish(); 
+    property_report_SetTempFan(temp,hum);
 
 
 }

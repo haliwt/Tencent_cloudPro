@@ -21,6 +21,7 @@ char *usart2_tx;
 
 
 static void InitWifiModule(void);
+static void Parse_Rx_Cloud_Data(void);
 
 
 static uint8_t wifi_inputBuf[20];
@@ -31,7 +32,7 @@ static uint8_t wifi_inputBuf[20];
  *return: the len of data send success
  * @brief hal api for at data send
  */
-uint8_t at_send_data(uint8_t *pdata, uint16_t len)
+uint8_t at_send_data(uint8_t* pdata, uint16_t len)
 {
 	if(HAL_OK == HAL_UART_Transmit(&huart2, pdata, len, 10000))
 	{
@@ -43,7 +44,7 @@ uint8_t at_send_data(uint8_t *pdata, uint16_t len)
 	}	
 }
 
-
+#if 0
 //get usart of data
 uint8_t *Esp8266GetData(void)
 {
@@ -198,7 +199,7 @@ void Esp8266LinkloTExplorer(void)
   free(device_massage);
 }
 
-
+#endif 
 /****************************************************************************************************
 **
 *Function Name:static void initBtleModule(void)
@@ -242,7 +243,7 @@ static void InitWifiModule(void)
 void Wifi_Link_SmartConfig_Fun(void)
 {
        uint8_t *device_massage;
-    static uint8_t wifi_cw=0xff,wifi_cwsap=0xff;
+  
 
     device_massage = (uint8_t *)malloc(128);
 
@@ -253,14 +254,13 @@ void Wifi_Link_SmartConfig_Fun(void)
     
 	  if(run_t.gTimer_wifi_1s>5){
 	  	  run_t.gTimer_wifi_1s=0;
-		 if(wifi_cw != run_t.wifi_cwmode_flag){
-		    wifi_cw = run_t.wifi_cwmode_flag;
+	
 			WIFI_IC_ENABLE();
          	HAL_UART_Transmit(&huart2, "AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"), 5000);
         	HAL_Delay(500);
 			run_t.wifi_cwsap_flag =1;
 
-		 }
+		 
 	  }
 
 	  if(run_t.wifi_cwsap_flag ==1){
@@ -323,7 +323,7 @@ void SmartPhone_SmartConfig_LinkTengxunCloud(void)
 	     HAL_Delay(1000);
 		 esp8266data.esp8266_link_cloud_flag =1;
          esp8266data.esp8266_timer_link_1s=0;
-		  esp8266data.rx_link_cloud_flag=1;
+		 esp8266data.rx_link_cloud_flag=1;
 
      }
 
@@ -338,7 +338,7 @@ void SmartPhone_SmartConfig_LinkTengxunCloud(void)
        HAL_Delay(1000);
 	 
 	   esp8266data.gTimer_subscription_timing=0;
-        esp8266data.subscribe_flag=1; //Enable receive subscribe data from tencent cloud
+        
 	  
 
 	  }
@@ -486,7 +486,7 @@ void Publish_Data_ToCloud(void)
 			esp8266data.gTimer_subscription_timing=0;
             esp8266data.subscribe_flag =1; //allow subscribe enable
 
-           IOT_MQTT_Publish();
+           MqttData_Publish_State();
 	    
 		  
 		  
@@ -494,9 +494,11 @@ void Publish_Data_ToCloud(void)
 	    if(esp8266data.gTimer_publish_timing >  10 && esp8266data.gTimer_publish_timing < 12){
              
 
-		     MqttData_ToCloud_TempHumidity();
+		    MqttData_Publis_ReadTempHum(run_t.gDht11_temperature,run_t.gDht11_humidity  );
 
 		}
+
+		
 	}
 	
 
@@ -534,12 +536,12 @@ void Subscriber_Data_FromCloud(void)
 	}
 
    
-
+   Parse_Rx_Cloud_Data();
 
 }
 
 
-void Parse_Cloud_Data(void)
+static void Parse_Rx_Cloud_Data(void)
 {
     
 
@@ -550,12 +552,7 @@ void Parse_Cloud_Data(void)
       
     
     }
-   
-	
-	
-	 
-
-  }
+}
 /*******************************************************************************
 **
 *Function Name:void Subscribe_Rx_IntHandler(void)
@@ -709,22 +706,6 @@ void Subscribe_Rx_IntHandler(void)
  
 
 }
-//void Wifi_SubscribeCloud_Data(void)
-//{
-//   
-//          strcpy((char *)TCMQTTRCVPUB, (const char *)UART2_DATA.UART_Data);
-//          esp8266data.data_size = UART2_DATA.UART_Cnt;
-//    
-//            if(strstr((const char*)esp8266data.data,"params")){
-//              esp8266data.subscribe_cloud_success=1;
-//			   
-//			  
-//           }
-//		   UART2_DATA.UART_Flag = 0;
-//           UART2_DATA.UART_Cnt=0;
-//         
-
-//}
 /*******************************************************************************
 **
 *Function Name:void Subscribe_Rx_IntHandler(void)
@@ -733,7 +714,7 @@ void Subscribe_Rx_IntHandler(void)
 *Return Ref:NO
 *
 ********************************************************************************/
-void Wifi_Rx_Input_Handler(void)
+void Wifi_Rx_InputInfo_Handler(void)
 {
     
     
@@ -742,6 +723,7 @@ void Wifi_Rx_Input_Handler(void)
     
             if(strstr((const char*)esp8266data.data,"+TCMQTTCONN:OK")){
               esp8266data.esp8266_login_cloud_success=1;
+			  esp8266data.subscribe_flag =1;
 			   esp8266data.rx_link_cloud_flag=0;
 			  
            }

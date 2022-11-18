@@ -89,12 +89,13 @@ void Subscribe_Rx_IntHandler(void);
 
 void Publish_Data_ToCloud(void);
 
-void Parse_Cloud_Data(void);
+
 
 void Subscribe_Rx_Handler(void);
 
 uint8_t at_send_data(uint8_t *pdata, uint16_t len);
-void Wifi_Rx_Input_Handler();
+void Wifi_Rx_InputInfo_Handler(void);
+
 
 
 #endif 
