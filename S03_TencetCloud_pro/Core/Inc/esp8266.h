@@ -60,6 +60,7 @@ typedef struct ESP8266_DATA
 	unsigned char gTimer_subscription_timing;
 	unsigned char gTimer_tencent_down_1s;
     uint8_t esp8266_timer_dynamic_1s;
+	uint8_t gTimer_publish_timing;
 	
 }ESP8266DATATypedef;
 

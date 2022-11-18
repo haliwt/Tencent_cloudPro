@@ -477,16 +477,18 @@ void Publish_Data_ToCloud(void)
    if(esp8266data.esp8266_login_cloud_success==1){
           
 
-		  if(esp8266data.gTimer_subscription_timing > 9 && esp8266data.gTimer_subscription_timing< 11){
-		  	   
-            esp8266data.subscribe_flag =1;
+		  if(esp8266data.gTimer_publish_timing > 20){
+		  	
+		  	esp8266data.gTimer_publish_timing=0;
+			esp8266data.gTimer_subscription_timing=0;
+            esp8266data.subscribe_flag =1; //allow subscribe enable
 
            IOT_MQTT_Publish();
 	    
 		  
 		  
 		}
-	    if(esp8266data.gTimer_subscription_timing > 2 && esp8266data.gTimer_subscription_timing < 4){
+	    if(esp8266data.gTimer_publish_timing >  10 && esp8266data.gTimer_publish_timing < 12){
              
 
 		     MqttData_ToCloud_TempHumidity();
@@ -537,12 +539,11 @@ void Parse_Cloud_Data(void)
 {
     
 
-	if(  esp8266data.subscribe_rx_flag==1){
+	if(  esp8266data.subscribe_flag==1){
 
-	  if(esp8266data.gTimer_tencent_down_1s >6){
-         esp8266data.gTimer_tencent_down_1s=0;
-         Receive_Data_FromCloud_Data(JSOBJECT,TCMQTTRCVPUB);
-      }
+	 
+        Receive_Data_FromCloud_Data(JSOBJECT,TCMQTTRCVPUB);
+      
     
     }
    

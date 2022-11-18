@@ -676,6 +676,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	   esp8266data.gTimer_subscription_timing++;
 	   esp8266data.gTimer_tencent_down_1s++;
        esp8266data.esp8266_timer_dynamic_1s++;
+	   esp8266data.gTimer_publish_timing++;
 	   run_t.gTimer_send_0xaa++;
 	   if(run_t.gFan_continueRun ==1){
 	   	   tm1++;
