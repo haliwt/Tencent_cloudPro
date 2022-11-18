@@ -122,7 +122,7 @@ int main(void)
    #endif 
 
 
-	Publish_Data_ToCloud();
+	//Publish_Data_ToCloud();
     Subscriber_Data_FromCloud();
 	Parse_Cloud_Data();
       

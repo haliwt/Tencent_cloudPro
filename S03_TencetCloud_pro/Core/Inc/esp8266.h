@@ -38,11 +38,13 @@ typedef struct ESP8266_DATA
 	unsigned char esp8266_link_cloud_flag;
 	unsigned char esp8266_login_cloud_success;
     unsigned char publish_flag;
+	unsigned char subscribe_cloud_success;
 	
 	
 	unsigned char esp8266_dynamic_reg_flag;
     unsigned char subscribe_flag;
 	unsigned char subscribe_rx_flag;
+    unsigned char subscribe_rxCloud_flag;
 	unsigned char esp8266_data_rx_success;
 	unsigned char rx_data_success ;
 	unsigned char  rx_counter ;
@@ -53,6 +55,7 @@ typedef struct ESP8266_DATA
 	unsigned char rx_data_name_len;
 	unsigned char rx_link_cloud_flag;
     unsigned char cmp_flag;
+    
 	
 
 	unsigned char esp8266_timer_link_1s;

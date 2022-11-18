@@ -91,8 +91,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
            	
          } 
 		 else{
+
+		    
+			    Subscribe_Rx_IntHandler();
+
              
-			 Subscribe_Rx_IntHandler();
 
 		}
         

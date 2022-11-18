@@ -310,7 +310,7 @@ void SmartPhone_SmartConfig_LinkTengxunCloud(void)
 		  esp8266data.esp8266_dynamic_reg_flag=1;
 		   esp8266data.esp8266_link_cloud_flag=1;
 		   esp8266data.esp8266_timer_link_1s=0;
-            esp8266data.rx_link_cloud_flag=1;
+           
         }
 		
 
@@ -323,6 +323,7 @@ void SmartPhone_SmartConfig_LinkTengxunCloud(void)
 	     HAL_Delay(1000);
 		 esp8266data.esp8266_link_cloud_flag =1;
          esp8266data.esp8266_timer_link_1s=0;
+		  esp8266data.rx_link_cloud_flag=1;
 
      }
 
@@ -337,6 +338,7 @@ void SmartPhone_SmartConfig_LinkTengxunCloud(void)
        HAL_Delay(1000);
 	 
 	   esp8266data.gTimer_subscription_timing=0;
+        esp8266data.subscribe_flag=1; //Enable receive subscribe data from tencent cloud
 	  
 
 	  }
@@ -450,12 +452,13 @@ void SmartPhone_LinkTengxunCloud(void)
        if(esp8266data.esp8266_timer_link_1s > 6){
 	   	esp8266data.esp8266_timer_link_1s=0;
 	     esp8266data.esp8266_link_cloud_flag=0;
-	   
+	      
 
        HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
        HAL_Delay(1000);
 	//   esp8266data.esp8266_login_cloud_success=1;
 	   esp8266data.gTimer_subscription_timing=0;
+	
 
 	  }
 	}
@@ -512,7 +515,7 @@ void Subscriber_Data_FromCloud(void)
 	uint8_t *device_massage;
 
     
-	if(  esp8266data.subscribe_flag ==1){
+	if(esp8266data.subscribe_flag ==1){
          device_massage = (uint8_t *)malloc(128);
 	  if(esp8266data.gTimer_subscription_timing > 5){
 	  	  esp8266data.gTimer_subscription_timing=0;
@@ -523,7 +526,8 @@ void Subscriber_Data_FromCloud(void)
 	 
          esp8266data.gTimer_tencent_down_1s =0;
          esp8266data.subscribe_rx_flag=1;
-		
+          esp8266data.subscribe_flag =0;
+		esp8266data.subscribe_rxCloud_flag=1;
 	}
       
      free(device_massage);
@@ -539,7 +543,7 @@ void Parse_Cloud_Data(void)
 {
     
 
-	if(  esp8266data.subscribe_flag==1){
+	if(  esp8266data.subscribe_rxCloud_flag==1){
 
 	 
         Receive_Data_FromCloud_Data(JSOBJECT,TCMQTTRCVPUB);
@@ -562,8 +566,6 @@ void Parse_Cloud_Data(void)
 ********************************************************************************/
 void Subscribe_Rx_IntHandler(void)
 {
-   
-
     switch(esp8266data.rx_data_state)
 		{
 		case 0:  //#0
@@ -583,7 +585,7 @@ void Subscribe_Rx_IntHandler(void)
 				esp8266data.rx_data_state=2; //=1
 		    else{
                esp8266data.rx_counter=0;
-			   esp8266data.rx_data_state=0;
+			   
             }
 				
 			break;
@@ -704,7 +706,25 @@ void Subscribe_Rx_IntHandler(void)
 			
 	    break;
 		}
+ 
+
 }
+//void Wifi_SubscribeCloud_Data(void)
+//{
+//   
+//          strcpy((char *)TCMQTTRCVPUB, (const char *)UART2_DATA.UART_Data);
+//          esp8266data.data_size = UART2_DATA.UART_Cnt;
+//    
+//            if(strstr((const char*)esp8266data.data,"params")){
+//              esp8266data.subscribe_cloud_success=1;
+//			   
+//			  
+//           }
+//		   UART2_DATA.UART_Flag = 0;
+//           UART2_DATA.UART_Cnt=0;
+//         
+
+//}
 /*******************************************************************************
 **
 *Function Name:void Subscribe_Rx_IntHandler(void)
@@ -715,13 +735,15 @@ void Subscribe_Rx_IntHandler(void)
 ********************************************************************************/
 void Wifi_Rx_Input_Handler(void)
 {
-     static uint8_t state;
+    
     
           strcpy((char *)esp8266data.data, (const char *)UART2_DATA.UART_Data);
           esp8266data.data_size = UART2_DATA.UART_Cnt;
     
             if(strstr((const char*)esp8266data.data,"+TCMQTTCONN:OK")){
               esp8266data.esp8266_login_cloud_success=1;
+			   esp8266data.rx_link_cloud_flag=0;
+			  
            }
 		   UART2_DATA.UART_Flag = 0;
            UART2_DATA.UART_Cnt=0;
