@@ -41,7 +41,8 @@ typedef struct ESP8266_DATA
 	
 	
 	unsigned char esp8266_dynamic_reg_flag;
-    unsigned char subsription_flag;
+    unsigned char subscribe_flag;
+	unsigned char subscribe_rx_flag;
 	unsigned char esp8266_data_rx_success;
 	unsigned char rx_data_success ;
 	unsigned char  rx_counter ;

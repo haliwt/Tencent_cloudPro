@@ -335,8 +335,7 @@ void SmartPhone_SmartConfig_LinkTengxunCloud(void)
 
        HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
        HAL_Delay(1000);
-	  // esp8266data.esp8266_login_cloud_success=1;
-        esp8266data.subsription_flag =1;
+	 
 	   esp8266data.gTimer_subscription_timing=0;
 	  
 
@@ -478,16 +477,16 @@ void Publish_Data_ToCloud(void)
    if(esp8266data.esp8266_login_cloud_success==1){
           
 
-		  if(esp8266data.gTimer_subscription_timing > 9){
-		  	   esp8266data.gTimer_subscription_timing=0;
-            esp8266data.subsription_flag =0;
+		  if(esp8266data.gTimer_subscription_timing > 9 && esp8266data.gTimer_subscription_timing< 11){
+		  	   
+            esp8266data.subscribe_flag =1;
 
            IOT_MQTT_Publish();
 	    
 		  
-		  esp8266data.subsription_flag=1;
+		  
 		}
-	    if(esp8266data.gTimer_subscription_timing > 4 && esp8266data.gTimer_subscription_timing < 6){
+	    if(esp8266data.gTimer_subscription_timing > 2 && esp8266data.gTimer_subscription_timing < 4){
              
 
 		     MqttData_ToCloud_TempHumidity();
@@ -511,9 +510,9 @@ void Subscriber_Data_FromCloud(void)
 	uint8_t *device_massage;
 
     
-	if(esp8266data.esp8266_login_cloud_success==1){
+	if(  esp8266data.subscribe_flag ==1){
          device_massage = (uint8_t *)malloc(128);
-	  if(esp8266data.gTimer_subscription_timing > 2){
+	  if(esp8266data.gTimer_subscription_timing > 5){
 	  	  esp8266data.gTimer_subscription_timing=0;
 		
 
@@ -521,11 +520,14 @@ void Subscriber_Data_FromCloud(void)
      HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000);
 	 
          esp8266data.gTimer_tencent_down_1s =0;
+         esp8266data.subscribe_rx_flag=1;
 		
 	}
+      
+     free(device_massage);
 	}
 
-    free(device_massage);
+   
 
 
 }
@@ -535,11 +537,12 @@ void Parse_Cloud_Data(void)
 {
     
 
-	if(esp8266data.subsription_flag==1){
+	if(  esp8266data.subscribe_rx_flag==1){
 
-	  esp8266data.publish_flag =1;
-	  esp8266data.esp8266_login_cloud_success=1;
-      Receive_Data_FromCloud_Data(JSOBJECT,TCMQTTRCVPUB);
+	  if(esp8266data.gTimer_tencent_down_1s >6){
+         esp8266data.gTimer_tencent_down_1s=0;
+         Receive_Data_FromCloud_Data(JSOBJECT,TCMQTTRCVPUB);
+      }
     
     }
    
