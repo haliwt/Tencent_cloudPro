@@ -2,7 +2,7 @@
 #include "main.h"
 #include "tim.h"
 #include "run.h"
-
+#include "delay.h"
 
 static void Delay_BuzzerUs(uint8_t t);
 
@@ -21,39 +21,33 @@ void FAN_Stop(void)
 }
 
 
-static void Delay_BuzzerUs(uint8_t t)
-{
-
-    uint16_t j;
-	for(j=0;j<t;j++)
-	{
-	   for(int i = 0; i <100; i++)//better for(int i = 0; i < 100; i++)	 //for(int i = 0; i < 20; i++)	  
-		{
-			__asm("NOP");//等待1个指令周期，系统主频24M
-		   
-		}
-	}
-
-
-  
-
-}
+//static void Delay_BuzzerUs(uint8_t t)
+//{
+//
+//    uint16_t j;
+//	for(j=0;j<t;j++)
+//	{
+//	   for(int i = 0; i <100; i++)//better for(int i = 0; i < 100; i++)	 //for(int i = 0; i < 20; i++)	  
+//		{
+//			__asm("NOP");//等待1个指令周期，系统主频24M
+//		   
+//		}
+//	}
+//
+//
+//  
+//
+//}
 
 void Buzzer_On(void)
 {
-  static uint8_t i;
-  #if 1
-  for(i=0;i<50;i++){//
-//        BUZZER_SetHigh();
-//        Delay_BuzzerUs(10);//HAL_Delay(1);
-//        BUZZER_SetLow() ;
+  uint8_t m;
+  while(m--){
+
 		BUZZER_TOGGLE() ; 
-        Delay_BuzzerUs(10);//HAL_Delay(1);
-        
+        delay_us(400);
+  	}    
        
-		
-  }
-  #endif 
  }
 
 void ShutDown_AllFunction(void)

@@ -39,7 +39,10 @@ void Mqtt_Value_Init(void);
 void MqttData_Publish_State(void);
 
 void MqttData_Publis_ReadTempHum(uint8_t tempvalue,uint8_t humvalue);
-void MqttData_Publis_SetTempFan(uint8_t temp,uint8_t hum);
+
+void MqttData_Publis_SetFan(uint8_t fan);
+
+void MqttData_Publis_SetTemp(uint8_t temp);
 
 
 

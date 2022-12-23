@@ -37,6 +37,7 @@ typedef struct _RUN_T{
     uint8_t gFan_continueRun;
 	uint8_t SingleMode;
 	uint8_t Single_cmd;
+	
   
     uint8_t decodeFlag;
 	uint8_t sendtimes;
@@ -55,6 +56,7 @@ typedef struct _RUN_T{
 	uint8_t kill_key;
 	uint8_t kill_key_off;
 
+
 	uint8_t dry_key;
 	uint8_t dry_key_off;
 
@@ -63,7 +65,7 @@ typedef struct _RUN_T{
 	
 	uint8_t wifi_key;
 	uint8_t wifi_key_off;
-    uint8_t wifi_init_flag;
+    uint8_t wifi_config_net_lable;
     uint8_t wifi_cwsap_flag;
 	uint8_t wifi_cwmode_flag;
 	uint8_t mqtt_error_flag ;
@@ -94,16 +96,19 @@ extern RUN_T run_t;
 
 
 
-void RunCommand_Mode(uint8_t sig);
+
 void RunCommand_Order(void);
 
 void Decode_RunCmd(void);
 void Initial_Ref(void);
 
 void AI_Function(uint8_t sig);
-void Single_ReceiveCmd(uint8_t cmd);
 
-void Wifi_ReceiveCmd(uint8_t cmd);
+void Single_RunCmd(uint8_t sig);
+
+void Single_Mode(void);
+
+void Single_ReceiveCmd(uint8_t cmd);
 
 
 #endif 

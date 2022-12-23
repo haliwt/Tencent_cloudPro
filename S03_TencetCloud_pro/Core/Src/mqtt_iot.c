@@ -42,7 +42,9 @@ static void property_report_state(void);
 
 static void property_report_ReadTempHum(uint8_t tempvalue,uint8_t humvalue);
 
-static void property_report_SetTempFan(uint8_t temp, uint8_t fan);
+static void property_report_SetTemp(uint8_t temp);
+static void property_report_SetFan(uint8_t fan);
+
 
 
 
@@ -197,14 +199,14 @@ static void property_report_ReadTempHum(uint8_t tempvalue,uint8_t humvalue)
 	*Return Ref:
 	*
 ********************************************************************************/
-static void property_report_SetTempFan(uint8_t temp, uint8_t fan)
+static void property_report_SetTemp(uint8_t temp)
 {
      char	message[128]    = {0};
 	 int	message_len	  = 0;
 	
 	
-	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"%s\\\"\\,\\\"params\\\":{\\\"nowtemperature\\\":%d\\,\\\"find\\\":%d}}\"\r\n",
-								TOKEN_ID,temp,fan);
+	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"%s\\\"\\,\\\"params\\\":{\\\"nowtemperature\\\":%d}}\"\r\n",
+								TOKEN_ID,temp);
 								  
 	
 	  at_send_data(message, message_len);
@@ -213,6 +215,32 @@ static void property_report_SetTempFan(uint8_t temp, uint8_t fan)
 
 
 }
+/********************************************************************************
+	*
+	*Function Name:static void property_report_SetTempFan(void)
+	*Function : sensor of data to tencent cloud  temperature and humidity of data
+	*Input Ref: only read temperature value and humidiy value
+	*           
+	*Return Ref:
+	*
+********************************************************************************/
+static void property_report_SetFan(uint8_t fan)
+{
+     char	message[128]    = {0};
+	 int	message_len	  = 0;
+	
+	
+	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"%s\\\"\\,\\\"params\\\":{\\\"find\\\":%d}}\"\r\n",
+								TOKEN_ID,fan);
+								  
+	
+	  at_send_data(message, message_len);
+
+
+
+
+}
+
 /********************************************************************************
 	*
 	*Function Name:void IOT_MQTT_Publish(pClient, topic, &pubParams)
@@ -249,12 +277,23 @@ void MqttData_Publis_ReadTempHum(uint8_t tempvalue,uint8_t humvalue)
 
 }
 
-void MqttData_Publis_SetTempFan(uint8_t temp,uint8_t hum)
+void MqttData_Publis_SetFan(uint8_t fan)
 {
 	property_topic_publish(); 
-    property_report_SetTempFan(temp,hum);
+    property_report_SetFan(fan);
 
 
 }
+
+
+void MqttData_Publis_SetTemp(uint8_t temp)
+{
+	property_topic_publish(); 
+    property_report_SetTemp(temp);
+
+
+}
+
+
 
 

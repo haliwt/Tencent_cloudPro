@@ -13,7 +13,7 @@
 
 
 #define PRODUCT_ID              "EHQB1P53IH" //production ID 
-#define DEVUICE_NAME            "UYIJIA01-a0005"      //device Name:
+#define DEVUICE_NAME            "UYIJIA01-a00005"      //device Name:
 #define DEVICE_SECRET           "5xdQMgx7ZHznYyQK6wvdmolc"//"5xdQMgx7ZHznYyQK6wvdmolc"  //Secret key 
 #define PRODUCT_REGION          "ap-guangzhou" //filed name 
 
@@ -24,8 +24,18 @@
 uint8_t *Esp8266GetData(void);
 void Esp8266LinkAp(uint8_t *ssid,uint8_t *passwd);
 void Esp8266LinkloTExplorer(void);
+void Wifi_SoftAP_Config_Handler(void);
 
 
+typedef enum _esp8266_set{
+
+	wifi_set_cwmode=0x01,
+	wifi_set_softap,
+	wifi_set_tcdevreg,
+	wifi_set_tcsap
+
+
+}esp8266_set;
 
 
 typedef struct ESP8266_DATA
@@ -71,7 +81,8 @@ extern ESP8266DATATypedef esp8266data;
 
 
 
-void Wifi_Link_SmartPhone_Fun(void);
+void Wifi_Link_SmartConfig_Handler(void);
+
 
 
 void Wifi_Link_SmartConfig_Fun(void);

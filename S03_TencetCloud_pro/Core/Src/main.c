@@ -28,6 +28,7 @@
 #include "esp8266.h"
 #include "cmd_link.h"
 #include "mqtt_iot.h"
+#include "run.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -102,6 +103,8 @@ int main(void)
    UART_Start_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,sizeof(UART2_DATA.UART_DataBuf));
   /* USER CODE END 2 */
 
+
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -109,21 +112,31 @@ int main(void)
     /* USER CODE END WHILE */
    
     /* USER CODE BEGIN 3 */
+
+	
+   //   Wifi_Mode();
+     
+//	  Decode_Function();
+//      Single_Mode();
+//      RunCommand_Order();
+	
   
-  
+  #if 1
 
 	#ifdef SMARTCONFIG 
-	    Wifi_Link_SmartConfig_Fun();
-	    SmartPhone_SmartConfig_LinkTengxunCloud();
+	  Wifi_Link_SmartConfig_Handler();
 	#else
-		Wifi_Link_SmartPhone_Fun();
+		Wifi_SoftAP_Config_Handler();
 		SmartPhone_LinkTengxunCloud();
        	Publish_Data_ToCloud();
    #endif 
 
-
-	//Publish_Data_ToCloud();
-    Subscriber_Data_FromCloud();
+	
+  if(run_t.wifi_config_net_lable==0xff){
+		Publish_Data_ToCloud();
+   		Subscriber_Data_FromCloud();
+  	}
+   #endif 
 	
       
   }

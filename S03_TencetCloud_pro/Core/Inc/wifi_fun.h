@@ -15,12 +15,12 @@ typedef enum{
 typedef struct _WIFI_FUN{
 
     uint8_t wifi_power;
-    uint8_t wifiPowerOn_flag;
+  
     uint8_t wifi_RunMode;
-	uint8_t getNet_flag;
+
 	uint8_t WifiMode;
-	 uint8_t wifi_cmd;
-    uint8_t wifi_sensor;
+	uint8_t wifi_cmd;
+    uint8_t wifi_enable_flag;
 
 
 	uint8_t wifi_ai;
@@ -29,6 +29,7 @@ typedef struct _WIFI_FUN{
 	uint8_t wifi_kill;
 	uint8_t wifi_counter; 
 	uint8_t wifi_detect;
+	uint8_t wifi_sensor;
 
 	uint8_t real_hours;
 	uint8_t real_minutes;
@@ -37,8 +38,8 @@ typedef struct _WIFI_FUN{
 	uint8_t setTimesValue;
 	uint8_t dispTimesValue;
 	uint8_t SetTemperatureValue;
-	uint8_t dispTemperatureValue;
-	uint8_t dispHumidityValue;
+
+
 
     uint8_t getTime_flag;
 	uint8_t gTimer_500ms;

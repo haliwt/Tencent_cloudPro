@@ -100,7 +100,7 @@ void Parser_Cloud_ObjectName(uint8_t name_len)
               
 				 break;
 
-			case 1: //power on or off
+			case 1: //dry
                    esp8266data.getCloudValue_decade =TCMQTTRCVPUB[name_len+3];
 			    
             run_t.gDry= esp8266data.getCloudValue_decade;
@@ -196,9 +196,9 @@ void Parser_Cloud_ObjectName(uint8_t name_len)
         switch(num){
 			 
 				  case 0:
-					 if(TCMQTTRCVPUB[1]=='A') //Anion
+					 if(TCMQTTRCVPUB[1]=='A') //Anion-plasma
 						num=1;
-					else if(TCMQTTRCVPUB[1]=='s')
+					else if(TCMQTTRCVPUB[1]=='s') //state
 						num=2;
 					   
 					 break;

@@ -4,7 +4,7 @@
 #include "fan.h"
 #include "tim.h"
 #include "special_power.h"
-#include "single_mode.h"
+#include "esp8266.h"
 
 WIFI_FUN   wifi_t;
 
@@ -74,49 +74,40 @@ void SetTemperatureHost(void(*temperatureHandler)(void))
 void Wifi_Mode(void)
 {
    
-  if(wifi_t.wifi_sensor ==0){  
-  // if(wifi_work_state ==  WIFI_CONN_CLOUD){ //当WIFI连接成功，
+if(esp8266data.esp8266_login_cloud_success==1){ //当WIFI连接成功，
 
-   if(wifi_t.wifi_power ==1){
+   if( run_t.gPower_flag ==1){ //from smartPhone receive signal ->smartPhone operation 
 
       wifi_t.wifi_power = 0xf0;
       if(run_t.SingleMode !=1){
            PowerOn(); //default AI 
-           SendWifiCmd_To_Order(0x80);
+           SendWifiCmd_To_Order(0x80); //send displayPanel operation Power On action.
       }
-      wifi_t.wifiPowerOn_flag =1;
+  
       wifi_t.WifiMode =1;
       wifiPowerOn_After_data_update();
      
            
    }
 
-   if(wifi_t.wifi_power ==2 ){
+   if(run_t.gPower_flag ==0 ){ //from smartPhone operation and receive data form tencent cloud .
           wifi_t.wifi_power = 0xff;
 			 PowerOff();
-          wifi_t.wifiPowerOn_flag=0;
+      
           run_t.gFan_continueRun =1;
           run_t.gFan_counter=0;
           wifi_t.WifiMode =0;
 		  run_t.SingleMode =0; //WT.EIDT 2022.09.02
-		//  mcu_dp_bool_update(DPID_KILL,0); //BOOL型数据上报;
-         // mcu_dp_bool_update(DPID_HEAT,0); //BOOL型数据上报;
           SendWifiCmd_To_Order(0x81);
 		  
            
     }
-    if(wifi_t.wifiPowerOn_flag==1){
-       if(wifi_t.wifi_counter ==0){
-           wifi_t.wifi_counter ++;
-          Wifi_ReceiveCmd(wifi_t.wifi_RunMode); //Wifi_ReceiveCmd(wifi_t.wifi_RunMode);//Single_Usart_ReceiveData(wifi_t.wifi_RunMode);
-       }
-	   if(run_t.globe_setPriority==0){
-           Wifi_RunCmd(wifi_t.wifi_cmd);
-       }
+   
+     
       
-    }
+    
   }
-}
+  }
 
 /***********************************************
    *
@@ -144,18 +135,7 @@ static void Wifi_RunCmd(uint8_t sig)
 static void wifiPowerOn_After_data_update(void)
 {
 
-//    mcu_dp_bool_update(DPID_START,1); //BOOL型数据上报;
-//    mcu_dp_enum_update(DPID_MODE,0); //枚举型数据上报;
-//    mcu_dp_fault_update(DPID_FAULT,0); //故障型数据上报;
-//    mcu_dp_value_update(DPID_DISPTEMP,wifi_t.dispTemperatureValue); //VALUE型数据上报;
-//    
-//    mcu_dp_bool_update(DPID_KILL,1); //BOOL型数据上报;
-//    mcu_dp_bool_update(DPID_HEAT,1); //BOOL型数据上报;
-//    
-//    mcu_dp_value_update(DPID_SETTIME,0); //VALUE型数据上报;
-//    mcu_dp_value_update(DPID_DISPHUM,wifi_t.dispHumidityValue); //VALUE型数据上报;
-//    mcu_dp_value_update(DPID_SETTEMP,0); //VALUE型数据上报;
-//    mcu_dp_value_update(DPID_DISPTIME,0); //VALUE型数据上报;
+
 
 }
 /***********************************************
@@ -168,7 +148,7 @@ static void wifiPowerOn_After_data_update(void)
 void wifiDisplayTemperature_Humidity(void)
 {
  // mcu_dp_value_update(DPID_DISPTEMP,wifi_t.dispTemperatureValue); //VALUE型数据上报;
- // mcu_dp_value_update(DPID_DISPHUM,wifi_t.dispHumidityValue); //VALUE型数据上报;
+ /// mcu_dp_value_update(DPID_DISPHUM,wifi_t.dispHumidityValue); //VALUE型数据上报;
 
 }
 
