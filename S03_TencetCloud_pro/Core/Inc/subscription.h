@@ -2,7 +2,7 @@
 #define __SUBSCRIPTION.H_
 #include "main.h"
 
-typedef enum subSignal { /* enumeration for CParser signals */
+typedef enum _subSignal{ /* enumeration for CParser signals */
    OPEN_SIG=0x01, 
    STATE_SIG, 
    PTC_SIG,
@@ -12,10 +12,12 @@ typedef enum subSignal { /* enumeration for CParser signals */
    FIND_SIG,
    HUM_SIG,
    NOWTEMP_SIG
-};
-typedef enum subState {                     /* enumeration for CParser states */
+}subSignal;
+
+typedef enum _subState {                     /* enumeration for CParser states */
    STANDBY, START, WORKS, RUN,END
-};
+}subState;
+
 typedef struct Subscription Subscription1;  
 struct Subscription1 {
    enum subState substate__;                /* the scalar state-variable */
@@ -37,7 +39,7 @@ void Subscription_Handler(void);
 
 
 
-typedef enum JSONTYPE {
+typedef enum _JSONTYPE {
    JSNONE = -1,
    JSSTRING = 0,
    JSOBJECT,
@@ -46,7 +48,7 @@ typedef enum JSONTYPE {
    JSBOOLEAN,
    JSNULL,
    JSTYPEMAX
-};
+}JSONTYPE;
 
 extern uint8_t TCMQTTRCVPUB[256];
 extern uint8_t Sub_Topic[128];
@@ -55,6 +57,7 @@ extern uint8_t Sub_Data[128];
 void Receive_Data_FromCloud_Data(int type, char *str);
 void Wifi_Rx_InputInfo_Handler(void);
 
-void Subscriber_Data_FromCloud_Handler();
 
+void Subscriber_Data_FromCloud_Handler(void);
+void Subscribe_Rx_Interrupt_Handler(void);
 #endif 
