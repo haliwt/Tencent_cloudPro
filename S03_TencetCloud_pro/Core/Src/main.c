@@ -29,6 +29,9 @@
 #include "cmd_link.h"
 #include "mqtt_iot.h"
 #include "run.h"
+#include "subscription.h"
+#include "publish.h"
+#include "interrupt_manager.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -133,8 +136,8 @@ int main(void)
 
 	
   if(run_t.wifi_config_net_lable==0xff){
-		Publish_Data_ToCloud();
-   		Subscriber_Data_FromCloud();
+		Publish_Data_ToCloud_Handler();
+   		Subscriber_Data_FromCloud_Handler();
   	}
    #endif 
 	

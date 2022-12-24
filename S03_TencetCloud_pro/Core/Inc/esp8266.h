@@ -1,6 +1,7 @@
 #ifndef __ESP8266_H_
 #define __ESP8266_H_
 #include "main.h"
+#include "gpio.h"
 
 #define SSID                    "UYIKIA"
 #define PASSWD                  "20329263"
@@ -21,13 +22,7 @@
 #define WIFI_IC_DISABLE()        HAL_GPIO_WritePin(WIFI_EN_GPIO_Port,WIFI_EN_Pin,GPIO_PIN_RESET)
 
 
-uint8_t *Esp8266GetData(void);
-void Esp8266LinkAp(uint8_t *ssid,uint8_t *passwd);
-void Esp8266LinkloTExplorer(void);
-void Wifi_SoftAP_Config_Handler(void);
-
-
-typedef enum _esp8266_set{
+typedef enum _esp8266_para{
 
 	wifi_set_cwmode=0x01,
 	wifi_set_softap,
@@ -35,7 +30,7 @@ typedef enum _esp8266_set{
 	wifi_set_tcsap
 
 
-}esp8266_set;
+}esp8266_para;
 
 
 typedef struct ESP8266_DATA
@@ -78,35 +73,11 @@ typedef struct ESP8266_DATA
 }ESP8266DATATypedef;
 
 extern ESP8266DATATypedef esp8266data;
-
-
-
-void Wifi_Link_SmartConfig_Handler(void);
-
-
-
-void Wifi_Link_SmartConfig_Fun(void);
-void SmartPhone_SmartConfig_LinkTengxunCloud(void);
-
-
-
-void SmartPhone_LinkTengxunCloud(void);
-
-void Subscriber_Data_FromCloud(void);
-
-void Subscribe_Rx_IntHandler(void);
-
-
-
-void Publish_Data_ToCloud(void);
-
-
-
-void Subscribe_Rx_Handler(void);
+void Wifi_Link_SmartConfig_Handler();
 
 uint8_t at_send_data(uint8_t *pdata, uint16_t len);
 void Wifi_Rx_InputInfo_Handler(void);
 
-
+void Wifi_SoftAP_Config_Handler(void);
 
 #endif 

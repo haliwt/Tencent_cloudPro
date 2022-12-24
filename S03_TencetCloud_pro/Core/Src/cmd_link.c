@@ -3,6 +3,7 @@
 #include "run.h"
 #include "fan.h"
 #include "esp8266.h"
+#include "interrupt_manager.h"
 
 
 
@@ -18,9 +19,9 @@ uint8_t rx_wifi_data[7];
 
 static uint8_t transferSize;
 static uint8_t outputBuf[MAX_BUFFER_SIZE];
-volatile static uint8_t transOngoingFlag;
-volatile static uint8_t usart2_transOngoingFlag;
 
+volatile uint8_t transOngoingFlag;
+volatile uint8_t usart2_transOngoingFlag;
 
 
 /********************************************************************************
