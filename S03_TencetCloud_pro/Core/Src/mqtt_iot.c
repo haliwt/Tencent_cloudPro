@@ -92,9 +92,9 @@ typedef struct {
   
 } serviceInfo;
 
-static serviceInfo   sg_devInfo;
+
 static serviceInfo    sg_info;
-static DeviceInfo    sg_equipInfo;
+
 
 // led attributes, corresponding to struct LedInfo
 //static char *sg_property_name[] = {"opne", "sonic", "find", "nowtemperature","state","ptc","Anion","temperature","Humidity"};
@@ -132,7 +132,7 @@ static void property_topic_publish(void)
 
 
 
-   at_send_data(topic, size);
+   at_send_data((uint8_t *)topic, size);
  
    
 }
@@ -159,7 +159,7 @@ static void property_report_state(void)
                              TOKEN_ID,sg_info.open,sg_info.anion,sg_info.ptc,sg_info.sonic,sg_info.state);
                                
  
-	at_send_data(message, message_len);
+	at_send_data((uint8_t *)message, message_len);
    
 }
 /********************************************************************************
@@ -184,7 +184,7 @@ static void property_report_ReadTempHum(uint8_t tempvalue,uint8_t humvalue)
 								TOKEN_ID,tempvalue,humvalue);
 								  
 	
-	   at_send_data(message, message_len);
+	   at_send_data((uint8_t *)message, message_len);
 
 
 
@@ -209,7 +209,7 @@ static void property_report_SetTemp(uint8_t temp)
 								TOKEN_ID,temp);
 								  
 	
-	  at_send_data(message, message_len);
+	  at_send_data((uint8_t *)message, message_len);
 
 
 
@@ -234,7 +234,7 @@ static void property_report_SetFan(uint8_t fan)
 								TOKEN_ID,fan);
 								  
 	
-	  at_send_data(message, message_len);
+	  at_send_data((uint8_t *)message, message_len);
 
 
 

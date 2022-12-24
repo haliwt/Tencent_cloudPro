@@ -35,38 +35,38 @@ typedef enum _esp8266_para{
 
 typedef struct ESP8266_DATA
 {
-    unsigned char data[512];
-    unsigned int  data_size;
-    unsigned char flag;
-	unsigned char wifi_RunState;
-	unsigned char esp8266_smartphone_flag;
-	unsigned char esp8266_link_cloud_flag;
-	unsigned char esp8266_login_cloud_success;
-    unsigned char publish_flag;
-	unsigned char subscribe_cloud_success;
+    uint8_t data[512];
+    uint8_t  data_size;
+    uint8_t flag;
+	uint8_t wifi_RunState;
+	uint8_t esp8266_smartphone_flag;
+	uint8_t esp8266_link_cloud_flag;
+	uint8_t esp8266_login_cloud_success;
+    uint8_t publish_flag;
+	uint8_t subscribe_cloud_success;
 	
 	
-	unsigned char esp8266_dynamic_reg_flag;
-    unsigned char subscribe_flag;
-	unsigned char subscribe_rx_flag;
-    unsigned char subscribe_rxCloud_flag;
-	unsigned char esp8266_data_rx_success;
-	unsigned char rx_data_success ;
-	unsigned char  rx_counter ;
-	unsigned char rx_data_state;
-	unsigned char getCloudValue_unit ;
-	unsigned char getCloudValue_decade;
-	unsigned char rx_data_len;
-	unsigned char rx_data_name_len;
-	unsigned char rx_link_cloud_flag;
-    unsigned char cmp_flag;
+	uint8_t esp8266_dynamic_reg_flag;
+    uint8_t subscribe_flag;
+	uint8_t subscribe_rx_flag;
+    uint8_t subscribe_rxCloud_flag;
+	uint8_t esp8266_data_rx_success;
+	uint8_t rx_data_success ;
+	uint8_t  rx_counter ;
+	uint8_t  rx_data_state;
+	uint8_t getCloudValue_unit ;
+	uint8_t getCloudValue_decade;
+	uint8_t rx_data_len;
+	uint8_t rx_data_name_len;
+	uint8_t rx_link_cloud_flag;
+    uint8_t cmp_flag;
     
 	
 
-	unsigned char esp8266_timer_link_1s;
-	unsigned char esp8266_timer_1s;
-	unsigned char gTimer_subscription_timing;
-	unsigned char gTimer_tencent_down_1s;
+	uint8_t esp8266_timer_link_1s;
+	uint8_t esp8266_timer_1s;
+	uint8_t gTimer_subscription_timing;
+	uint8_t gTimer_tencent_down_1s;
     uint8_t esp8266_timer_dynamic_1s;
 	uint8_t gTimer_publish_timing;
 	
