@@ -20,7 +20,7 @@ typedef enum _subState {                     /* enumeration for CParser states *
 
 typedef struct Subscription Subscription1;  
 struct Subscription1 {
-   enum subState substate__;                /* the scalar state-variable */
+   subState substate__;                /* the scalar state-variable */
    uint8_t commentCtr__;                 /* comment character counter */
    /* ... */                          /* other CParser1 attributes */
 };
