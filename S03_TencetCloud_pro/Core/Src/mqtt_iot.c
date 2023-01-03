@@ -129,15 +129,10 @@ static void property_topic_publish(void)
     int  size;
 
     size = snprintf(topic, 256, "AT+TCMQTTPUB=\"$thing/up/property/%s/%s\",0,", PRODUCT_ID,DEVUICE_NAME);
-
-
-
-   at_send_data((uint8_t *)topic, size);
+    at_send_data((uint8_t *)topic, size);
  
    
 }
-
-
 /********************************************************************************
 	*
 	*Function Name:static void property_report_state(void)
@@ -151,10 +146,6 @@ static void property_report_state(void)
 {
     char       message[256]    = {0};
     int        message_len     = 0;
-
-
-   
-
    message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"%s\\\"\\,\\\"params\\\":{\\\"open\\\":%d\\,\\\"Anion\\\":%d\\,\\\"ptc\\\":%d\\,\\\"sonic\\\":%d\\,\\\"state\\\":%d\\}}\"\r\n",
                              TOKEN_ID,sg_info.open,sg_info.anion,sg_info.ptc,sg_info.sonic,sg_info.state);
                                
@@ -176,19 +167,10 @@ static void property_report_ReadTempHum(uint8_t tempvalue,uint8_t humvalue)
 
 	   char	message[128]    = {0};
 	   int	message_len	  = 0;
-	
-	
-	  
-	
-	  message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"%s\\\"\\,\\\"params\\\":{\\\"temperature\\\":%d\\,\\\"Humidity\\\":%d}}\"\r\n",
+	   message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"%s\\\"\\,\\\"params\\\":{\\\"temperature\\\":%d\\,\\\"Humidity\\\":%d}}\"\r\n",
 								TOKEN_ID,tempvalue,humvalue);
 								  
-	
-	   at_send_data((uint8_t *)message, message_len);
-
-
-
-
+		at_send_data((uint8_t *)message, message_len);
 }
 /********************************************************************************
 	*
@@ -208,11 +190,7 @@ static void property_report_SetTemp(uint8_t temp)
 	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"%s\\\"\\,\\\"params\\\":{\\\"nowtemperature\\\":%d}}\"\r\n",
 								TOKEN_ID,temp);
 								  
-	
-	  at_send_data((uint8_t *)message, message_len);
-
-
-
+	at_send_data((uint8_t *)message, message_len);
 
 }
 /********************************************************************************
@@ -232,12 +210,7 @@ static void property_report_SetFan(uint8_t fan)
 	
 	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"%s\\\"\\,\\\"params\\\":{\\\"find\\\":%d}}\"\r\n",
 								TOKEN_ID,fan);
-								  
-	
-	  at_send_data((uint8_t *)message, message_len);
-
-
-
+	at_send_data((uint8_t *)message, message_len);
 
 }
 
@@ -252,13 +225,9 @@ static void property_report_SetFan(uint8_t fan)
 ********************************************************************************/
 void   MqttData_Publish_State(void)
 {
-   
     property_topic_publish();
     property_report_state();
-
-   
- }
-
+}
 /********************************************************************************
 	*
 	*Function Name:void MqttData_Publis_TempHumidity(void)
@@ -282,10 +251,7 @@ void MqttData_Publis_SetFan(uint8_t fan)
 	property_topic_publish(); 
     property_report_SetFan(fan);
 
-
 }
-
-
 void MqttData_Publis_SetTemp(uint8_t temp)
 {
 	property_topic_publish(); 

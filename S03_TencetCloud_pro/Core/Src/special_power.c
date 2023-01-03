@@ -12,7 +12,7 @@ void SetPowerOn_ForDoing(void)
 {
     Buzzer_On();
     run_t.gFan_counter=0;
-    run_t.gPower_flag = 1; //turn on power
+     run_t.gPower_flag = POWER_ON;
     run_t.gFan_continueRun =0;
     run_t.gPower_On=1;
     run_t.SingleMode = 1;
@@ -35,7 +35,7 @@ void SetPowerOff_ForDoing(void)
 	run_t.gPower_flag = 0;
 	run_t.gFan_counter=0;
 	run_t.gFan_continueRun =1; //the fan still run 60s
-	run_t.gPower_On=0;
+	run_t.gPower_On == POWER_OFF;
 
    
     

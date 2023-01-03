@@ -82,20 +82,15 @@ void Decode_RunCmd(void)
        if(cmdType_2 == 0x00){ //power off
           
 		
-		  run_t.gPower_On=0;
+		  run_t.gPower_On=POWER_OFF;
 		  run_t.SingleMode = 0;
 	
 		   
       } 
-       else if(cmdType_2 ==1){ //power on
-       
-
-	    
-	        run_t.gPower_On=1;
-		    run_t.SingleMode = 1;
-         
-
-	   }       
+      else if(cmdType_2 ==1){ //power on
+       run_t.gPower_On=POWER_ON;
+	   run_t.SingleMode = 1;
+      }       
       
           
       break;
@@ -104,14 +99,9 @@ void Decode_RunCmd(void)
         
         if(run_t.gPower_On==1){
 			
-			
-			if(run_t.SingleMode  ==1 ){
-          
-        	     Single_Usart_ReceiveData(cmdType_2);
-                
-            }
-			
-        }
+		  Single_ReceiveCmd(cmdType_2);
+            
+		}
 
       break;
 
@@ -461,10 +451,7 @@ void AI_Function(uint8_t sig)
          
             run_t.gPlasma =0;
             run_t.gDry =0;
-          //  wifiUpdate_AI_Status(0);//wifi APP turn on
-          //  wifiUpdate_Kill_Status(1); //update kill turn on   to smart phone APP
-		//	wifiUpdate_Dry_Status(1);  //update dry turn on to smart phone APP
-      
+  
                 
                 FAN_CCW_RUN();
                 PLASMA_SetHigh(); //
@@ -510,9 +497,7 @@ void AI_Function(uint8_t sig)
 			   run_t.gFan_counter = 0;
 
                Buzzer_On(); 
-			 //  wifiUpdate_AI_Status(1);//wifi APP turn off
-             //  wifiUpdate_Kill_Status(0); //update kill turn off   to smart phone APP
-			 //  wifiUpdate_Dry_Status(0);  //update dry turn on off smart phone APP
+		
 			   
               
 
@@ -535,9 +520,7 @@ void AI_Function(uint8_t sig)
 				   run_t.gFan_continueRun =0;
 
 			    Buzzer_On(); 
-			  // wifiUpdate_AI_Status(0);//wifi APP turn off
-              // wifiUpdate_Kill_Status(1); //update kill turn off   to smart phone APP
-			  /// wifiUpdate_Dry_Status(1);  //update dry turn on off smart phone APP
+		
 
 				FAN_CCW_RUN();
                 PLASMA_SetHigh(); //
@@ -572,150 +555,36 @@ void RunCommand_Order(void)
     static uint8_t wifikey=0xff,retimes=0,time0=0,send_0xaa;
 	uint8_t sendtemperature[4];
 
-   if(run_t.gPower_On==0)times=0;
-	
-   if(run_t.gPower_On==1){
+	switch(run_t.gPower_On){
 
-    if(run_t.sendtimes> 5 || retimes < 50) { // display humidity and temperature value
-		run_t.sendtimes=0;
-
-        retimes++;
-     
-       
-		if(run_t.gPower_flag ==1){
-			
-            if(run_t.SingleMode ==1 ){// the don't be detected wifi signal
-                Display_DHT11_Value(&DHT11);
-            
-             }
-		
-      }
-    
-      if( wifi_t.timer_wifi_send_cmd > 6){
-		     wifi_t.timer_wifi_send_cmd =0;
-       
-      
-            if(esp8266data.esp8266_login_cloud_success==1){ //has wifi 
-		       
-                sendtemperature[0]=wifi_t.setTimesValue;
-				sendtemperature[2]=wifi_t.SetTemperatureValue;
-
-				if(time0<2 && wifi_t.setTimesValue>0 ){
-
-					if(sendtemperature[1] !=sendtemperature[0]){
-						   
-						  sendtemperature[1] =sendtemperature[0];
-	                     if(run_t.SingleMode ==1){
-						 // mcu_dp_value_update(DPID_SETTIME,wifi_t.setTimesValue); //VALUE型数据上报;
-						//MqttData_Publis_SetTempFan(sendtemperature[1],0x32); //to tencent cloud data
-						MqttData_Publis_SetTemp(sendtemperature[1]);
-	                    SendWifiData_To_PanelTime(wifi_t.setTimesValue);//to displayPanle setTimesValue
-						  run_t.gmt_time_flag  = 1;
-						  
-	                     }
-					}
-                }
-                else{
-                
-                if(sendtemperature[2]> 20){
-			    if(sendtemperature[3] !=sendtemperature[2]){
-				      sendtemperature[3] =sendtemperature[2];
-				      if(run_t.SingleMode ==1){
-					  	  //mcu_dp_value_update(DPID_SETTEMP,wifi_t.SetTemperatureValue); //VALUE型数据上报;
-					  	//MqttData_Publis_SetTempFan(sendtemperature[3],0x32); //to tencent cloud data
-						MqttData_Publis_SetTemp(sendtemperature[1]);
-						SendWifiData_To_PanelTemp(wifi_t.SetTemperatureValue);
-
-				      }
-		      
-			    }
-			    }
-			   }
-		   
-
-		 }
-        }
-
-     #if 0
+	case POWER_ON:
+		SetPowerOn_ForDoing();
+	    Display_DHT11_Value(&DHT11);
 	  
-      /*------------------GMT ------------------*/
-      if(wifi_work_state == WIFI_CONN_CLOUD && run_t.gmt_time_flag == 0 ){
-         if( wifi_t.getGreenTime !=0xff && wifi_t.getGreenTime !=0xFE ){
-          wifi_t.getGreenTime =1;
-           mcu_get_green_time();
-	      
-        }
-		if(wifi_t.getGreenTime == 0xff && wifi_t.getGreenTime !=0xFE && wifi_t.getGreenTime !=0){
-            
-            run_t.sed_GMT_times = 1;
-             wifi_t.getGreenTime =0xFE;
-           // Decode_GMT(rx_wifi_data);
-              
-             wifi_t.real_hours = rx_wifi_data[4] + 8;
-			if(wifi_t.real_hours > 24){
-				wifi_t.real_hours = wifi_t.real_hours -24 ;
+	    run_t.gPower_On = 0x0A;
+     
+	break;
 
-			}
-			wifi_t.real_minutes = rx_wifi_data[5];
-			wifi_t.real_seconds = rx_wifi_data[6];
-         
-            SendData_Real_GMT(wifi_t.real_hours ,wifi_t.real_minutes,rx_wifi_data[6]); //gmt[4]->hours, gmt[5]->minutes
-		    
-		}
-        else{
-              if(wifi_t.gTimer_gmt > 2){ //10 minute 
-                wifi_t.gTimer_gmt = 0;    
-                wifi_t.getGreenTime =0;
-             }
-            
-        }
-    }
-  #endif 
-    //检测WIFI 是否连接成功
+	case POWER_OFF:
+		SetPowerOff_ForDoing();
+		run_t.gFan_continueRun=1;
+	break;
+
+	
+
    
-	if(esp8266data.esp8266_login_cloud_success==0){//don't wifi 
-
-	     if(wifikey != wifi_t.wifi_detect){
-		 	 wifikey = wifi_t.wifi_detect;
-		
-		    //mcu_set_wifi_mode(0);//wifi be detector AP mode,slowly
-
-	     }
-            
-		 if(wifi_t.gTimer_500ms ==0){ //to displayPanel wifi icon slowly blank ,don't wifi 
-				
-					  SendWifiData_To_Cmd(0x00);
-			       
-	                
-		}
-		else if(wifi_t.gTimer_500ms>0){
-					 if(wifi_t.gTimer_500ms >1)wifi_t.gTimer_500ms=0;
-				
-					  Display_DHT11_Value(&DHT11);
-					   
-	                 
-			}
-       }
-	//has wifi 
-     if((esp8266data.esp8266_login_cloud_success==1)   && (run_t.gTimer_send_0xaa > 10 || send_0xaa < 4 )){
-	 	run_t.gTimer_send_0xaa=0;
-        wifi_t.wifi_detect++;
-	    send_0xaa++;
-		
-		 SendWifiData_To_Cmd(0xaa);	
-         if(send_0xaa > 50){
-           send_0xaa =0 ;
-         //wifiDisplayTemperature_Humidity();//to tencent cloud data
-          MqttData_Publis_ReadTempHum(run_t.gDht11_temperature,run_t.gDht11_humidity);
-        
-        }
-		
-     }
+    }
+	
     
-       
+  
+    if(run_t.gTimer_1s>10){
+		run_t.gTimer_1s=0;
+				
+		Display_DHT11_Value(&DHT11);
+					   
+	 }
 	
-	
-	 if(run_t.gFan_continueRun ==1 && (run_t.gPower_On ==1)){
+	if(run_t.gFan_continueRun ==1 && run_t.gPower_On == POWER_OFF){
           
                 if(run_t.gFan_counter < 61){
           
@@ -730,16 +599,35 @@ void RunCommand_Order(void)
 				   FAN_Stop();
 	           }
 	  }
-	  if((run_t.gPower_On !=0 ) && run_t.gFan_continueRun ==0){
+	  if((run_t.gPower_On == 0x0A ) && run_t.gFan_continueRun ==0){
 
 	      FAN_CCW_RUN();
       }
       
       
  }
+#if 0
+	   //has wifi 
+		if((esp8266data.esp8266_login_cloud_success==1)   && (run_t.gTimer_send_0xaa > 10 || send_0xaa < 4 )){
+		   run_t.gTimer_send_0xaa=0;
+		   wifi_t.wifi_detect++;
+		   send_0xaa++;
+		   
+			SendWifiData_To_Cmd(0xaa); 
+			if(send_0xaa > 50){
+			  send_0xaa =0 ;
+			//wifiDisplayTemperature_Humidity();//to tencent cloud data
+			 MqttData_Publis_ReadTempHum(run_t.gDht11_temperature,run_t.gDht11_humidity);
+		   
+		   }
+		   
+		}
+	   
+		  
+
 
    //Fan at power of function 
-  if((run_t.gPower_On ==0 ) && run_t.gFan_continueRun ==1){ //Fan be stop flag :0 -Fan works 
+  if((run_t.gPower_flag == 0 ) && run_t.gFan_continueRun ==1){ //Fan be stop flag :0 -Fan works 
         
          if(run_t.gFan_counter < 61){
          
@@ -756,7 +644,8 @@ void RunCommand_Order(void)
    }
 
 }
-}
+  #endif 
+
 
 
 

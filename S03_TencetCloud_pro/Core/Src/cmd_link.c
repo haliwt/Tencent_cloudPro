@@ -137,7 +137,7 @@ void SendData_To_TouchKey(uint8_t hum,uint8_t temp)
 {
 
 	//crc=0x55;
-	outputBuf[0]='M'; //4D
+	outputBuf[0]='M'; //master
 	outputBuf[1]='A'; //41
 	outputBuf[2]='D'; //44	// 'D' data
 	outputBuf[3]=hum; //	// 'R' rotator motor for select filter
@@ -186,7 +186,7 @@ void SendWifiData_To_PanelTemp(uint8_t dat1)
 	//crc=0x55;
 		outputBuf[0]='M'; //4D
 		outputBuf[1]='A'; //41
-		outputBuf[2]='P'; //44	// 'T' time
+		outputBuf[2]='P'; // 'T' time
 		outputBuf[3]=dat1; //	
 		outputBuf[4]=0; // 
 		
@@ -235,9 +235,9 @@ void SendWifiCmd_To_Order(uint8_t odata)
 {
   
 	//crc=0x55;
-			outputBuf[0]='M'; //4D
-			outputBuf[1]='A'; //41
-			outputBuf[2]='C'; //44	// 'C' ->control 
+			outputBuf[0]='M'; //mainboard
+			outputBuf[1]='A'; //A ->
+			outputBuf[2]='C'; //'C' ->control 
 			outputBuf[3]=odata; //	
 			outputBuf[4]=0x0; //
 			//for(i=3;i<6;i++) crc ^= outputBuf[i];

@@ -9,7 +9,7 @@ typedef enum{
    wifi_heat= 0x02,wifi_notheat=0x12
 
 
-}wifi_mode;
+}wifi_mode_t;
 
 
 typedef struct _WIFI_FUN{

@@ -117,14 +117,12 @@ int main(void)
     /* USER CODE BEGIN 3 */
 
 	
-   //   Wifi_Mode();
-     
-//	  Decode_Function();
-//      Single_Mode();
-//      RunCommand_Order();
+    
+      Decode_Function();
+      RunCommand_Order();
 	
   
-  #if 1
+  #if 0
 
 	#ifdef SMARTCONFIG 
 	  Wifi_Link_SmartConfig_Handler();
@@ -139,6 +137,8 @@ int main(void)
 		Publish_Data_ToCloud_Handler();
    		Subscriber_Data_FromCloud_Handler();
   	}
+   
+
    #endif 
 	
       

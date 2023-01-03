@@ -156,10 +156,7 @@ void Receive_Data_FromCloud_Data(int type, char *str)
 
            Parser_Cloud_ObjectName(esp8266data.rx_data_name_len);
 
-          // Parser_Cloud_ObjectName(esp8266data.rx_data_len,esp8266data.rx_data_name_len);
-        //  esp8266data.rx_data_success=0;
-          //  esp8266data.getCloudValue_decade =*(p_cPos + 1);
-        //  esp8266data.getCloudValue_unit =*(p_cPos + 2);
+      
 
          }
    }
@@ -226,9 +223,9 @@ void Parser_Cloud_ObjectName(uint8_t name_len)
          break;
 
          case 2: //fan
-         esp8266data.getCloudValue_decade =TCMQTTRCVPUB[name_len+3] -'30';
-         esp8266data.getCloudValue_unit =TCMQTTRCVPUB[name_len+4] -'30';
-         fan_hundred = TCMQTTRCVPUB[name_len+5] -'30';
+         esp8266data.getCloudValue_decade =TCMQTTRCVPUB[name_len+3] -30;
+         esp8266data.getCloudValue_unit =TCMQTTRCVPUB[name_len+4] -30;
+         fan_hundred = TCMQTTRCVPUB[name_len+5] -30;
 
          if(fan_hundred ==0) run_t.gFan =100;
          else{
@@ -329,8 +326,8 @@ void Parser_Cloud_ObjectName(uint8_t name_len)
    
             case 1: //power on or off
 
-                 esp8266data.getCloudValue_decade =TCMQTTRCVPUB[name_len+3]-'30'; 
-                     esp8266data.getCloudValue_unit =TCMQTTRCVPUB[name_len+4]-'30'; 
+                 esp8266data.getCloudValue_decade =TCMQTTRCVPUB[name_len+3]-30; 
+                     esp8266data.getCloudValue_unit =TCMQTTRCVPUB[name_len+4]-30; 
 
                 temp = esp8266data.getCloudValue_decade *10;
                 
@@ -397,7 +394,7 @@ static void Parse_Rx_Cloud_Data(void)
    if(  esp8266data.subscribe_rxCloud_flag==1){
 
     
-        Receive_Data_FromCloud_Data(JSOBJECT,TCMQTTRCVPUB);
+        Receive_Data_FromCloud_Data(JSOBJECT,(char *)TCMQTTRCVPUB);
       
     
     }
@@ -528,7 +525,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
              esp8266data.rx_data_success++;
             if(esp8266data.rx_data_success==1){
                esp8266data.rx_data_success++;
-                strcpy(TCMQTTRCVPUB, UART2_DATA.UART_Data);
+                strcpy((char *)TCMQTTRCVPUB, (char *)UART2_DATA.UART_Data);
             }
             esp8266data.rx_data_state=0;
             esp8266data.rx_counter=0;

@@ -1,5 +1,5 @@
-#ifndef __SUBSCRIPTION.H_
-#define __SUBSCRIPTION.H_
+#ifndef __SUBSCRIPTION_H_
+#define __SUBSCRIPTION_H_
 #include "main.h"
 
 typedef enum _subSignal{ /* enumeration for CParser signals */
