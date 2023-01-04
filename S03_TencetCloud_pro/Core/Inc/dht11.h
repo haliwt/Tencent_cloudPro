@@ -46,7 +46,7 @@ extern DHT11_Data_TypeDef DHT11;
 /* º¯ÊýÉùÃ÷ ------------------------------------------------------------------*/
 //void DHT11_Init( void );
 //uint8_t DHT11_Read_TempAndHumidity(DHT11_Data_TypeDef * DHT11_Data);
-void Display_DHT11_Value(DHT11_Data_TypeDef *DHT11);
+void Update_DHT11_Value(DHT11_Data_TypeDef *DHT11);
 
 #endif 
 

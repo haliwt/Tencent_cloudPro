@@ -26,6 +26,7 @@ typedef enum{
 
    POWER_ON =0x01,
    POWER_OFF,
+   POWER_CONNECTOR_WIFI,
    PTC_ON,
    PTC_OFF,
    KILL_ON,
@@ -49,7 +50,7 @@ typedef struct _RUN_T{
 	uint8_t gDht11_temperature;
 
     uint8_t gFan_continueRun;
-	uint8_t SingleMode;
+
 	uint8_t Single_cmd;
 	
   

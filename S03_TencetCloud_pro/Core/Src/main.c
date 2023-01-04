@@ -32,6 +32,7 @@
 #include "subscription.h"
 #include "publish.h"
 #include "interrupt_manager.h"
+#include "wifi_fun.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -106,7 +107,7 @@ int main(void)
    UART_Start_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,sizeof(UART2_DATA.UART_DataBuf));
   /* USER CODE END 2 */
 
-
+   
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -121,25 +122,21 @@ int main(void)
       Decode_Function();
       RunCommand_Order();
 	
-  
-  #if 0
+    if(wifi_t.wifi_connector_tencent_cloud ==1){
 
-	#ifdef SMARTCONFIG 
-	  Wifi_Link_SmartConfig_Handler();
-	#else
-		Wifi_SoftAP_Config_Handler();
-		SmartPhone_LinkTengxunCloud();
-       	Publish_Data_ToCloud();
-   #endif 
+      	Wifi_SoftAP_Config_Handler();
+	  	SmartPhone_LinkTengxunCloud();
+	    
+     }
 
 	
-  if(run_t.wifi_config_net_lable==0xff){
+   if(esp8266data.esp8266_login_cloud_success==1){
 		Publish_Data_ToCloud_Handler();
    		Subscriber_Data_FromCloud_Handler();
   	}
    
 
-   #endif 
+   
 	
       
   }

@@ -18,7 +18,7 @@ char *pub_buf;
 void Parser_Cloud_ObjectName(uint8_t name_len);
 
 //static Subscription1 subscription;
-static void SubscriptionDispatch(Subscription1 *me, unsigned const sig);
+//static void SubscriptionDispatch(Subscription1 *me, unsigned const sig);
 static void Parse_Rx_Cloud_Data(void);
 
 //void Subscription_Handler(void)
@@ -552,6 +552,8 @@ void Subscribe_Rx_Interrupt_Handler(void)
  
 
 }
+
+
 /*******************************************************************************
 **
 *Function Name:void Subscribe_Rx_IntHandler(void)
@@ -566,15 +568,25 @@ void Wifi_Rx_InputInfo_Handler(void)
     
           strcpy((char *)esp8266data.data, (const char *)UART2_DATA.UART_Data);
           esp8266data.data_size = UART2_DATA.UART_Cnt;
-    
-            if(strstr((const char*)esp8266data.data,"+TCMQTTCONN:OK")){
-              esp8266data.esp8266_login_cloud_success=1;
-           esp8266data.subscribe_flag =1;
-            esp8266data.rx_link_cloud_flag=0;
+
+
+		   if(wifi_t.soft_ap_config_flag==1){
+
+               if(strstr((const char*)esp8266data.data,"+TCSAP:WIFI_CONNECT_SUCCESS")){
+              		esp8266data.soft_ap_config_success=1;
+					wifi_t.soft_ap_config_flag=0;
+               	}
+
+			}
+            else{
+				  if(strstr((const char*)esp8266data.data,"+TCMQTTCONN:OK")){
+	              esp8266data.esp8266_login_cloud_success=1;
+	              esp8266data.rx_link_cloud_flag=0;
+			  }
            
            }
          UART2_DATA.UART_Flag = 0;
-           UART2_DATA.UART_Cnt=0;
+         UART2_DATA.UART_Cnt=0;
          
         
             

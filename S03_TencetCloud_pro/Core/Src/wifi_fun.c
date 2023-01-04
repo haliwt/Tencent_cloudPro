@@ -79,10 +79,9 @@ if(esp8266data.esp8266_login_cloud_success==1){ //当WIFI连接成功，
    if( run_t.gPower_flag ==1){ //from smartPhone receive signal ->smartPhone operation 
 
       wifi_t.wifi_power = 0xf0;
-      if(run_t.SingleMode !=1){
-           PowerOn(); //default AI 
-           SendWifiCmd_To_Order(0x80); //send displayPanel operation Power On action.
-      }
+      PowerOn(); //default AI 
+      SendWifiCmd_To_Order(0x80); //send displayPanel operation Power On action.
+      
   
       wifi_t.WifiMode =1;
       wifiPowerOn_After_data_update();
@@ -97,7 +96,6 @@ if(esp8266data.esp8266_login_cloud_success==1){ //当WIFI连接成功，
           run_t.gFan_continueRun =1;
           run_t.gFan_counter=0;
           wifi_t.WifiMode =0;
-		  run_t.SingleMode =0; //WT.EIDT 2022.09.02
           SendWifiCmd_To_Order(0x81);
 		  
            

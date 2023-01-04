@@ -15,7 +15,6 @@ void SetPowerOn_ForDoing(void)
      run_t.gPower_flag = POWER_ON;
     run_t.gFan_continueRun =0;
     run_t.gPower_On=1;
-    run_t.SingleMode = 1;
 	run_t.gmt_time_flag=0;
 
 	

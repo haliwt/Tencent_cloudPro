@@ -51,13 +51,13 @@ void Single_Mode(void)
 {
    uint8_t ref;
  
-      if(run_t.SingleMode ==1){
+   
         Single_ReceiveCmd(run_t.Single_cmd);//Single_Usart_ReceiveData(ref);//Single_RunCmd(run_t.Single_cmd);
 	     Single_RunCmd(run_t.Single_cmd);
 	  
       
 
-    }
+    
 }
 
 
@@ -83,15 +83,19 @@ void Decode_RunCmd(void)
           
 		
 		  run_t.gPower_On=POWER_OFF;
-		  run_t.SingleMode = 0;
+		
 	
 		   
       } 
       else if(cmdType_2 ==1){ //power on
        run_t.gPower_On=POWER_ON;
-	   run_t.SingleMode = 1;
+	   
       }       
-      
+      else if(cmdType_2==2){
+
+        run_t.gPower_On=POWER_CONNECTOR_WIFI;
+
+      }
           
       break;
       
@@ -108,27 +112,14 @@ void Decode_RunCmd(void)
 	  case 'H': //remember setup time timing
 	      if(run_t.gPower_On==1){
 				 
-			if(run_t.SingleMode  ==1 ){
-
-			     if(cmdType_2 != 0xff){
-
-				 	//mcu_dp_value_update(DPID_DISPTIME,cmdType_2); //VALUE型数据上报; --
-			     }
-				// else
-                     
-					// mcu_dp_value_update(DPID_DISPTIME,0); //VALUE型数据上报; --
-			}
+			
         }
 	   break;
 
 	  case 'I': // set up time timing how many ?
 	  	  if(run_t.gPower_On==1){
 				 
-			if(run_t.SingleMode  ==1 ){
-              //   wifi_t.getGreenTime = 1; //don't display GMT 
-			   //  mcu_dp_value_update(DPID_SETTIME,cmdType_2); //VALUE型数据上报;
-			     
-			}
+			
         }
 
 
@@ -137,13 +128,13 @@ void Decode_RunCmd(void)
 	  case 'T': //set up temperature
 	  	if(run_t.gPower_On==1){
 				 
-			if(run_t.SingleMode  ==1 ){
+			
 
 			   // mcu_dp_value_update(DPID_SETTEMP,cmdType_2); //VALUE型数据上报;
 			   MqttData_Publis_SetTemp(cmdType_2);
 			
 			     
-			}
+			
         }
 
 	  break;
@@ -175,12 +166,12 @@ void Single_ReceiveCmd(uint8_t cmd)
 	
 		 case 0x11: //wifi key command turn off
 		  
-			   wifi_t.wifi_sensor =1;
+			  
 	
 		 break;
 	
 		case 0x01://wifi key command turn on
-			  wifi_t.wifi_sensor = 0;
+			 
 		break;
 	
 		//AI key
@@ -552,22 +543,25 @@ void AI_Function(uint8_t sig)
 void RunCommand_Order(void)
 {
     
-    static uint8_t wifikey=0xff,retimes=0,time0=0,send_0xaa;
-	uint8_t sendtemperature[4];
-
-	switch(run_t.gPower_On){
+   switch(run_t.gPower_On){
 
 	case POWER_ON:
 		SetPowerOn_ForDoing();
-	    Display_DHT11_Value(&DHT11);
-	  
+	    Update_DHT11_Value(&DHT11);
+	     wifi_t.wifi_connector_tencent_cloud=1;
 	    run_t.gPower_On = 0x0A;
      
 	break;
 
+	case POWER_CONNECTOR_WIFI:
+		wifi_t.wifi_connector_tencent_cloud=1;
+		run_t.gPower_On = 0x0A;
+
+	break;
+
 	case POWER_OFF:
 		SetPowerOff_ForDoing();
-		run_t.gFan_continueRun=1;
+		
 	break;
 
 	
@@ -580,13 +574,14 @@ void RunCommand_Order(void)
     if(run_t.gTimer_1s>10){
 		run_t.gTimer_1s=0;
 				
-		Display_DHT11_Value(&DHT11);
+		Update_DHT11_Value(&DHT11);
 					   
 	 }
+
 	
-	if(run_t.gFan_continueRun ==1 && run_t.gPower_On == POWER_OFF){
+	if(run_t.gFan_continueRun ==1 && run_t.gPower_flag == POWER_OFF){
           
-                if(run_t.gFan_counter < 61){
+                if(run_t.gFan_counter < 60){
           
                        FAN_CCW_RUN();
                   }       
@@ -599,13 +594,15 @@ void RunCommand_Order(void)
 				   FAN_Stop();
 	           }
 	  }
-	  if((run_t.gPower_On == 0x0A ) && run_t.gFan_continueRun ==0){
+	  if((run_t.gPower_On !=POWER_OFF ) && run_t.gFan_continueRun ==0){
 
 	      FAN_CCW_RUN();
       }
+
       
       
  }
+
 #if 0
 	   //has wifi 
 		if((esp8266data.esp8266_login_cloud_success==1)   && (run_t.gTimer_send_0xaa > 10 || send_0xaa < 4 )){

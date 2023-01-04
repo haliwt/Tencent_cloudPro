@@ -10,11 +10,11 @@
 #define TOPIC                  "open"
 
 #define TOPIC_VALUE            1
-#define SMARTCONFIG      			1
+//#define SMARTCONFIG      			0
 
 
 #define PRODUCT_ID              "EHQB1P53IH" //production ID 
-#define DEVUICE_NAME            "UYIJIA01-a00005"      //device Name:
+#define DEVUICE_NAME            "UYIJIA01-ab0005"      //device Name:
 #define DEVICE_SECRET           "5xdQMgx7ZHznYyQK6wvdmolc"//"5xdQMgx7ZHznYyQK6wvdmolc"  //Secret key 
 #define PRODUCT_REGION          "ap-guangzhou" //filed name 
 
@@ -24,10 +24,12 @@
 
 typedef enum _esp8266_para{
 
-	wifi_set_cwmode=0x01,
+	wifi_set_restor=0x00,
+	wifi_set_cwmode,
 	wifi_set_softap,
 	wifi_set_tcdevreg,
-	wifi_set_tcsap
+	wifi_set_tcsap,
+	wifi_login_tencent
 
 
 }esp8266_para;
@@ -41,6 +43,7 @@ typedef struct ESP8266_DATA
 	uint8_t wifi_RunState;
 	uint8_t esp8266_smartphone_flag;
 	uint8_t esp8266_link_cloud_flag;
+	uint8_t soft_ap_config_success;
 	uint8_t esp8266_login_cloud_success;
     uint8_t publish_flag;
 	uint8_t subscribe_cloud_success;
@@ -60,6 +63,7 @@ typedef struct ESP8266_DATA
 	uint8_t rx_data_name_len;
 	uint8_t rx_link_cloud_flag;
     uint8_t cmp_flag;
+	
     
 	
 
