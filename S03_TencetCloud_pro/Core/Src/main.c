@@ -131,12 +131,19 @@ int main(void)
 
 	
    if(esp8266data.esp8266_login_cloud_success==1){
-   	    if(esp8266data.gTimer_publish_timing>10){
-			esp8266data.gTimer_publish_timing=0;
-            esp8266data.rx_link_cloud_flag =1;
+   	    if(esp8266data.gTimer_publish_timing>6){
+			
+           esp8266data.gTimer_publish_timing=0;
 			Publish_Data_ToCloud_Handler();
-            Subscriber_Data_FromCloud_Handler();
+           
    	    }
+
+		 if(esp8266data.gTimer_subscription_timing>8){
+		 	esp8266data.gTimer_subscription_timing=0;
+		    // esp8266data.rx_link_cloud_flag =1;
+			 Subscriber_Data_FromCloud_Handler();
+
+		 }
    		
   	}
    

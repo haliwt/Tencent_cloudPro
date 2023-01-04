@@ -33,7 +33,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	  
   
 	   esp8266data.gTimer_publish_timing++;
-	   
+	   esp8266data.gTimer_subscription_timing++;
 	  
 	   if(run_t.gFan_continueRun ==1){
 	   	   tm1++;

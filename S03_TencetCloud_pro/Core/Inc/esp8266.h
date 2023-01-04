@@ -14,7 +14,7 @@
 
 
 #define PRODUCT_ID              "EHQB1P53IH" //production ID 
-#define DEVUICE_NAME            "UYIJIA01-ab0005"      //device Name:
+#define DEVUICE_NAME            "UYIJIA01-a00005"      //device Name:
 #define DEVICE_SECRET           "5xdQMgx7ZHznYyQK6wvdmolc"//"5xdQMgx7ZHznYyQK6wvdmolc"  //Secret key 
 #define PRODUCT_REGION          "ap-guangzhou" //filed name 
 
@@ -64,7 +64,7 @@ typedef struct ESP8266_DATA
 	uint8_t rx_link_cloud_flag;
     uint8_t cmp_flag;
 	uint8_t send_tencent_cloud_data_lable;
-    
+    uint8_t subscrible_receive_data_label;
 	
 
 	uint8_t esp8266_timer_link_1s;

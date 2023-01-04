@@ -363,24 +363,23 @@ void Subscriber_Data_FromCloud_Handler()
 {
    uint8_t *device_massage;
 
-    
-   if(esp8266data.subscribe_flag ==1){
-         device_massage = (uint8_t *)malloc(128);
-     if(esp8266data.gTimer_subscription_timing > 5){
-        esp8266data.gTimer_subscription_timing=0;
+   switch(esp8266data.subscrible_receive_data_label){
+
+	 case subscrible_data:
+     device_massage = (uint8_t *)malloc(128);
+  
+     esp8266data.gTimer_subscription_timing=0;
       
 
-     sprintf((char *)device_massage, "AT+TCMQTTSUB=\"$thing/down/property/%s/%s\",0\r\n", PRODUCT_ID, DEVUICE_NAME);
-     HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000);
-    
-         esp8266data.gTimer_tencent_down_1s =0;
-         esp8266data.subscribe_rx_flag=1;
-          esp8266data.subscribe_flag =0;
-      esp8266data.subscribe_rxCloud_flag=1;
-   }
-      
+     sprintf((char *)device_massage,"AT+TCMQTTSUB=\"$thing/down/property/%s/%s\",0\r\n", PRODUCT_ID, DEVUICE_NAME);
+     HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000); 
      free(device_massage);
-   }
+     break;
+
+
+
+   }   
+ 
 
    
    Parse_Rx_Cloud_Data();
@@ -389,15 +388,10 @@ void Subscriber_Data_FromCloud_Handler()
 
 static void Parse_Rx_Cloud_Data(void)
 {
-    
-
-   if(  esp8266data.subscribe_rxCloud_flag==1){
-
-    
-        Receive_Data_FromCloud_Data(JSOBJECT,(char *)TCMQTTRCVPUB);
+    Receive_Data_FromCloud_Data(JSOBJECT,(char *)TCMQTTRCVPUB);
       
     
-    }
+    
 }
 /*******************************************************************************
 **
