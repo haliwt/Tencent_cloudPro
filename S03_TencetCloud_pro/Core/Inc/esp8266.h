@@ -63,7 +63,7 @@ typedef struct ESP8266_DATA
 	uint8_t rx_data_name_len;
 	uint8_t rx_link_cloud_flag;
     uint8_t cmp_flag;
-	
+	uint8_t send_tencent_cloud_data_lable;
     
 	
 

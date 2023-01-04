@@ -33,6 +33,8 @@ typedef enum _QoS {
 
 
 //int IOT_MQTT_Publish(void *pClient, char *topicName, PublishParams *pParams);
+void MqttData_Publish_Init(void);
+
 
 void Mqtt_Value_Init(void);
 

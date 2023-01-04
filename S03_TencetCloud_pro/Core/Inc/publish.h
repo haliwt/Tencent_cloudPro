@@ -2,8 +2,9 @@
 #define __PUBLISH_H_
 #include "main.h"
 
-enum Signal {                   /* enumeration for CParser signals */
-   CHAR_SIG, STAR_SIG, SLASH_SIG
+enum pub_Signal {                   /* enumeration for CParser signals */
+  tencent_cloud_init,
+  tencent_cloud_real_times,
 };
 enum State {                     /* enumeration for CParser states */
    CODE, SLASH, COMMENT, STAR

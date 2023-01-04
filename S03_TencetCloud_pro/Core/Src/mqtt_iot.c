@@ -35,7 +35,7 @@
 
 
 
-
+static void Publish_Init_Data(void);
 static void property_topic_publish(void);
 static void property_report_state(void);
 
@@ -125,10 +125,10 @@ void Mqtt_Value_Init(void)
 ********************************************************************************/
 static void property_topic_publish(void)
 {
-    char topic[256] = {0};
+    char topic[128] = {0};
     int  size;
 
-    size = snprintf(topic, 256, "AT+TCMQTTPUB=\"$thing/up/property/%s/%s\",0,", PRODUCT_ID,DEVUICE_NAME);
+    size = snprintf(topic, sizeof(topic), "AT+TCMQTTPUB=\"$thing/up/property/%s/%s\",0,", PRODUCT_ID,DEVUICE_NAME);
     at_send_data((uint8_t *)topic, size);
  
    
@@ -227,6 +227,30 @@ void   MqttData_Publish_State(void)
 {
     property_topic_publish();
     property_report_state();
+}
+
+void MqttData_Publish_Init(void)
+{
+     Publish_Init_Data();
+
+}
+
+static void Publish_Init_Data(void)
+{
+
+    //uint8_t *device_massage;
+     char	message[256]    = {0};
+	 int	message_len	  = 0;
+	
+
+	// sprintf((char *)device_massage,"AT+TCMQTTPUB=\"$thing/up/property/EHQB1P53IH/%s\",0,\"{\"method\":\"report\"\,\"clientToken\":\"up01\"\,\"params\":{\"open\":1\,\"temperature\":25\,\"find\":80\,\"Anion\":1\,\"ptc\":1\,\"sonic\":1\,\"nowtemperature\":28\,\"Humidity\":69}}\"",
+							//	DEVUICE_NAME);
+   message_len=  snprintf(message,sizeof(message),"AT+TCMQTTPUB=\"$thing/up/property/EHQB1P53IH/%s\",0,\"{\"method\":\"report\"\,\"clientToken\":\"up01\"\,\"params\":{\"open\":1\,\"temperature\":25\,\"find\":80\,\"Anion\":1\,\"ptc\":1\,\"sonic\":1\,\"nowtemperature\":28\,\"Humidity\":69}}\"",
+								DEVUICE_NAME);
+								  
+	at_send_data((uint8_t *)message, message_len);
+
+
 }
 /********************************************************************************
 	*

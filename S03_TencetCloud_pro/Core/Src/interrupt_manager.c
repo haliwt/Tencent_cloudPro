@@ -30,11 +30,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	   wifi_t.timer_wifi_send_cmd++;
 	   esp8266data.esp8266_timer_1s++;
 	   run_t.gTimer_send_0xaa++;
-	   
-	   esp8266data.esp8266_timer_link_1s++;
-	   esp8266data.gTimer_subscription_timing++;
-	   esp8266data.gTimer_tencent_down_1s++;
-       esp8266data.esp8266_timer_dynamic_1s++;
+	  
+  
 	   esp8266data.gTimer_publish_timing++;
 	   
 	  
