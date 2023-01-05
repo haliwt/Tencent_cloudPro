@@ -288,7 +288,8 @@ void AI_Function(uint8_t sig)
 		 
 	       SterIlization(0); //turn on
 	       //SendWifiCmd_To_Order(0x04);
-		   MqttData_Publish_State();
+		   //MqttData_Publish_State();
+           // MqttData_Publish_Init();
 		   
             }
 	   
@@ -547,7 +548,7 @@ void RunCommand_Order(void)
 
 	case POWER_ON:
 		SetPowerOn_ForDoing();
-	    Update_DHT11_Value(&DHT11);
+	    Update_DHT11_Value();
 	     wifi_t.wifi_connector_tencent_cloud=1;
 	    run_t.gPower_On = 0x0A;
      
@@ -574,7 +575,7 @@ void RunCommand_Order(void)
     if(run_t.gTimer_1s>10){
 		run_t.gTimer_1s=0;
 				
-		Update_DHT11_Value(&DHT11);
+		Update_DHT11_Value();
 					   
 	 }
 

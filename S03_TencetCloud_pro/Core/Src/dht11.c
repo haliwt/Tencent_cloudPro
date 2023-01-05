@@ -4,12 +4,17 @@
 #include "wifi_fun.h"
 #include "delay.h"
 
+
+#define Bit_RESET 0
+#define Bit_SET   1
+
+
 static void DHT11_Mode_IPU(void);
 static void DHT11_Mode_Out_PP(void);
 static uint8_t DHT11_ReadByte(void);
 DHT11_Data_TypeDef DHT11;
-#define Bit_RESET 0
-#define Bit_SET   1
+void static Dht11_Read_TempHumidity_Handler(DHT11_Data_TypeDef * pdth11);
+
 
 //µÈ´ýus¼¶±ð
 //void delay_us(unsigned long i)
@@ -173,21 +178,39 @@ uint8_t DHT11_Read_TempAndHumidity(DHT11_Data_TypeDef *DHT11_Data)
 		return ERROR;
 }
 
-void Update_DHT11_Value(DHT11_Data_TypeDef *DHT11)
+
+void static Dht11_Read_TempHumidity_Handler(DHT11_Data_TypeDef * pdth11)
+{
+	if(DHT11_Read_TempAndHumidity(pdth11) == 0){
+		   
+		   run_t.gDht11_humidity = (pdth11->humi_high8bit);
+		   
+		   run_t.gDht11_temperature = (pdth11->temp_high8bit);
+	   
+	 }
+
+}
+
+void Update_DHT11_Value(void)
 {
     
   
-    if(DHT11_Read_TempAndHumidity(DHT11) == 0){
-        
-        run_t.gDht11_humidity = (DHT11->humi_high8bit);
-		
-        run_t.gDht11_temperature = (DHT11->temp_high8bit);
-	
-    }
+   Dht11_Read_TempHumidity_Handler(&DHT11);
 	
 
 	sendData_Real_TimeHum(run_t.gDht11_humidity ,run_t.gDht11_temperature);
+	
     
+}
+
+void Update_Dht11_Totencent_Value(void)
+{
+
+
+	Dht11_Read_TempHumidity_Handler(&DHT11);
+
+	MqttData_Publis_ReadTempHum(run_t.gDht11_temperature,run_t.gDht11_humidity  );
+
 }
 
 

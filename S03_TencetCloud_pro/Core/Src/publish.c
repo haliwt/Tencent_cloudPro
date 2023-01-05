@@ -2,6 +2,7 @@
 #include "esp8266.h"
 #include "mqtt_iot.h"
 #include "run.h"
+#include "dht11.h"
 
 /*******************************************************************************
 **
@@ -20,26 +21,20 @@ void Publish_Data_ToCloud_Handler(void)
 
         case tencent_cloud_init:
 			 MqttData_Publish_Init();
-			 
+	         
+			 esp8266data.send_tencent_cloud_data_lable=tencent_cloud_real_times;
 	    break;
 
 		case tencent_cloud_real_times:
-			 MqttData_Publis_ReadTempHum(run_t.gDht11_temperature,run_t.gDht11_humidity  );
+		     Update_Dht11_Totencent_Value();
+			
 
 		break;
 
 
-		
-
-		
+		}
 
 
-	   }
-
-
-		
-
-		
 	}
 	
 

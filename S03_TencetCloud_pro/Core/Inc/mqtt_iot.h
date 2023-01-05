@@ -18,11 +18,6 @@ typedef enum _QoS {
 
 
 
-
-
-
-
-
 /**
  * @brief Get the status of loop thread
  *
@@ -36,10 +31,6 @@ typedef enum _QoS {
 void MqttData_Publish_Init(void);
 
 
-void Mqtt_Value_Init(void);
-
-void MqttData_Publish_State(void);
-
 void MqttData_Publis_ReadTempHum(uint8_t tempvalue,uint8_t humvalue);
 
 void MqttData_Publis_SetFan(uint8_t fan);
@@ -47,13 +38,6 @@ void MqttData_Publis_SetFan(uint8_t fan);
 void MqttData_Publis_SetTemp(uint8_t temp);
 
 
-
-/**
- * @brief Active triggering of mqtt reconnection
- *
- * @param pClient       handle to MQTT client
- * @return error code of last IOT_MQTT_Construct operation
- */
 
 
 #endif /* QCLOUD_IOT_EXPORT_MQTT_H_ */

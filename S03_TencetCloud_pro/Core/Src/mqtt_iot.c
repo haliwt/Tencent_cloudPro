@@ -35,7 +35,7 @@
 
 
 
-static void Publish_Init_Data(void);
+
 static void property_topic_publish(void);
 static void property_report_state(void);
 
@@ -174,7 +174,7 @@ static void property_report_ReadTempHum(uint8_t tempvalue,uint8_t humvalue)
 
 	   char	message[128]    = {0};
 	   int	message_len	  = 0;
-	   message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up00\\\"\\,\\\"params\\\":{\\\"temperature\\\":%d\\,\\\"Humidity\\\":%d}}\"\r\n"
+	   message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up00\\\"\\,\\\"params\\\":{\\\"nowtemperature\\\":%d\\,\\\"Humidity\\\":%d}}\"\r\n"
 								,tempvalue,humvalue);
 								  
 		at_send_data((uint8_t *)message, message_len);
@@ -201,10 +201,9 @@ static void property_report_SetTemp(uint8_t temp)
 }
 /********************************************************************************
 	*
-	*Function Name:static void property_report_SetTempFan(void)
-	*Function : sensor of data to tencent cloud  temperature and humidity of data
-	*Input Ref: only read temperature value and humidiy value
-	*           
+	*Function Name:static void property_report_SetSonic(uint8_t datsonic)
+	*Function : "驱虫"
+	*Input Ref: bool-> 1 ->on ,0 -> off
 	*Return Ref:
 	*
 ********************************************************************************/
@@ -214,8 +213,48 @@ static void property_report_SetSonic(uint8_t datsonic)
 	 int	message_len	  = 0;
 	
 	
-	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up01\\\"\\,\\\"params\\\":{\\\"sonic\\\":%d}}\"\r\n"
+	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up02\\\"\\,\\\"params\\\":{\\\"sonic\\\":%d}}\"\r\n"
 								,datsonic);
+								  
+	at_send_data((uint8_t *)message, message_len);
+
+}
+/********************************************************************************
+	*
+	*Function Name:static void property_report_SetAnion(uint8_t datsonic)
+	*Function : "灭菌"
+	*Input Ref: bool-> 1 ->on ,0 -> off
+	*Return Ref:
+	*
+********************************************************************************/
+static void property_report_SetAnion(uint8_t datanion)
+{
+     char	message[128]    = {0};
+	 int	message_len	  = 0;
+	
+	
+	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up03\\\"\\,\\\"params\\\":{\\\"Anion\\\":%d}}\"\r\n"
+								,datanion);
+								  
+	at_send_data((uint8_t *)message, message_len);
+
+}
+/********************************************************************************
+	*
+	*Function Name:static void property_report_SetPtc(uint8_t datsonic)
+	*Function : "驱虫"
+	*Input Ref: bool-> 1 ->on ,0 -> off
+	*Return Ref:
+	*
+********************************************************************************/
+static void property_report_SetPtc(uint8_t datptc)
+{
+     char	message[128]    = {0};
+	 int	message_len	  = 0;
+	
+	
+	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up04\\\"\\,\\\"params\\\":{\\\"ptc\\\":%d}}\"\r\n"
+								,datptc);
 								  
 	at_send_data((uint8_t *)message, message_len);
 
@@ -236,7 +275,7 @@ static void property_report_SetFan(uint8_t fan)
 	 int	message_len	  = 0;
 	
 	
-	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up02\\\"\\,\\\"params\\\":{\\\"find\\\":%d}}\"\r\n",
+	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up05\\\"\\,\\\"params\\\":{\\\"find\\\":%d}}\"\r\n",
 								fan);
 	at_send_data((uint8_t *)message, message_len);
 
@@ -251,12 +290,6 @@ static void property_report_SetFan(uint8_t fan)
 	*Return Ref:
 	*
 ********************************************************************************/
-void   MqttData_Publish_State(void)
-{
-    property_topic_publish();
-    property_report_state();
-}
-
 void MqttData_Publish_Init(void)
 {
 	 property_topic_publish();
@@ -265,18 +298,7 @@ void MqttData_Publish_Init(void)
 
 }
 
-static void Publish_Init_Data(void)
-{
 
-     char	message[128]    = {0};
-	 int	message_len	  = 0;
-	 uint8_t fan = 41,temp = 29;
-	
-	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up01\\\"\\,\\\"params\\\":{\\\"temperature\\\":%d\\,\\\"find\\\":%d}}\"\r\n",temp,fan);
-	 at_send_data((uint8_t *)message, message_len);
-
-
-}
 /********************************************************************************
 	*
 	*Function Name:void MqttData_Publis_TempHumidity(void)
