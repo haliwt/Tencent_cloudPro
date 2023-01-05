@@ -73,7 +73,7 @@ void SystemClock_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+  static uint8_t first_sub;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -131,14 +131,21 @@ int main(void)
 
 	
    if(esp8266data.esp8266_login_cloud_success==1){
-   	    if(esp8266data.gTimer_publish_timing>10){
+   	    
+
+		
+        
+         if(esp8266data.gTimer_publish_timing>5){
 			
            esp8266data.gTimer_publish_timing=0;
+           if(first_sub==0){
+           	esp8266data.gTimer_subscription_timing=0;
+            first_sub++;
+           }
 			Publish_Data_ToCloud_Handler();
            
    	    }
-
-		if(esp8266data.gTimer_subscription_timing>5){
+         if(esp8266data.gTimer_subscription_timing>18){
 		 	esp8266data.gTimer_subscription_timing=0;
 		    // esp8266data.rx_link_cloud_flag =1;
 			 Subscriber_Data_FromCloud_Handler();

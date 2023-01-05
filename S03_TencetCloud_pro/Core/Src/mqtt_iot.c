@@ -231,23 +231,20 @@ void   MqttData_Publish_State(void)
 
 void MqttData_Publish_Init(void)
 {
-     Publish_Init_Data();
+	 property_topic_publish();
+
+	 Publish_Init_Data();
 
 }
 
 static void Publish_Init_Data(void)
 {
 
-    //uint8_t *device_massage;
-     char	message[256]    = {0};
+     char	message[128]    = {0};
 	 int	message_len	  = 0;
+	 uint8_t fan = 0x41;
 	
-
-	// sprintf((char *)device_massage,"AT+TCMQTTPUB=\"$thing/up/property/EHQB1P53IH/%s\",0,\"{\"method\":\"report\"\,\"clientToken\":\"up01\"\,\"params\":{\"open\":1\,\"temperature\":25\,\"find\":80\,\"Anion\":1\,\"ptc\":1\,\"sonic\":1\,\"nowtemperature\":28\,\"Humidity\":69}}\"",
-							//	DEVUICE_NAME);
-   message_len=  snprintf(message,sizeof(message),"AT+TCMQTTPUB=\"$thing/up/property/EHQB1P53IH/%s\",0,\"{\"method\":\"report\"\,\"clientToken\":\"up01\"\,\"params\":{\"open\":1\,\"temperature\":25\,\"find\":80\,\"Anion\":1\,\"ptc\":1\,\"sonic\":1\,\"nowtemperature\":28\,\"Humidity\":69}}\"",
-								DEVUICE_NAME);
-								  
+	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"%s\\\"\\,\\\"params\\\":{\\\"find\\\":%d}}\"\r\n",TOKEN_ID,fan);
 	at_send_data((uint8_t *)message, message_len);
 
 
