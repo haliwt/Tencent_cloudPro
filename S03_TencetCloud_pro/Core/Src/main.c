@@ -90,7 +90,7 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
    delay_init(24);
-  Mqtt_Value_Init();
+ 
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */

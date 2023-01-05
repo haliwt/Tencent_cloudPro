@@ -79,13 +79,15 @@ typedef struct {
     
     bool     open;
 	bool     sonic;
-	bool     state ;
+	
 	bool     ptc;
 	bool     anion;
+
+	uint8_t     state ; //
     
 	uint8_t  find;
+	uint8_t  set_temperature;
 	uint8_t  nowtemperature;
-    uint8_t  temperature;
     uint8_t  humidity;
 
     
@@ -104,11 +106,14 @@ void Mqtt_Value_Init(void)
    	sg_info.open=1;
     sg_info.state=1;
     sg_info.ptc=1; 
-    sg_info.anion=1;
+    sg_info.anion=1;  //灭菌
+	sg_info.sonic =1;  //驱虫
+    sg_info.find=50;
+	sg_info.set_temperature=20;
+	
 
-	sg_info.find=54;
+	
    	sg_info.nowtemperature=27;
-    sg_info.temperature=36;
     sg_info.humidity=64;
 
 
@@ -146,8 +151,10 @@ static void property_report_state(void)
 {
     char       message[256]    = {0};
     int        message_len     = 0;
-   message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"%s\\\"\\,\\\"params\\\":{\\\"open\\\":%d\\,\\\"Anion\\\":%d\\,\\\"ptc\\\":%d\\,\\\"sonic\\\":%d\\,\\\"state\\\":%d\\}}\"\r\n",
-                             TOKEN_ID,sg_info.open,sg_info.anion,sg_info.ptc,sg_info.sonic,sg_info.state);
+
+    Mqtt_Value_Init();
+   message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up01\\\"\\,\\\"params\\\":{\\\"open\\\":%d\\,\\\"Anion\\\":%d\\,\\\"ptc\\\":%d\\,\\\"sonic\\\":%d\\,\\\"state\\\":%d\\,\\\"find\\\":%d\\,\\\"temperature\\\":%d}}\"\r\n",
+                             sg_info.open,sg_info.anion,sg_info.ptc,sg_info.sonic,sg_info.state,sg_info.find,sg_info.set_temperature);
                                
  
 	at_send_data((uint8_t *)message, message_len);
@@ -167,8 +174,8 @@ static void property_report_ReadTempHum(uint8_t tempvalue,uint8_t humvalue)
 
 	   char	message[128]    = {0};
 	   int	message_len	  = 0;
-	   message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"%s\\\"\\,\\\"params\\\":{\\\"temperature\\\":%d\\,\\\"Humidity\\\":%d}}\"\r\n",
-								TOKEN_ID,tempvalue,humvalue);
+	   message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up00\\\"\\,\\\"params\\\":{\\\"temperature\\\":%d\\,\\\"Humidity\\\":%d}}\"\r\n"
+								,tempvalue,humvalue);
 								  
 		at_send_data((uint8_t *)message, message_len);
 }
@@ -187,12 +194,33 @@ static void property_report_SetTemp(uint8_t temp)
 	 int	message_len	  = 0;
 	
 	
-	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"%s\\\"\\,\\\"params\\\":{\\\"nowtemperature\\\":%d}}\"\r\n",
-								TOKEN_ID,temp);
+	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up01\\\"\\,\\\"params\\\":{\\\"nowtemperature\\\":%d}}\"\r\n",temp);
 								  
 	at_send_data((uint8_t *)message, message_len);
 
 }
+/********************************************************************************
+	*
+	*Function Name:static void property_report_SetTempFan(void)
+	*Function : sensor of data to tencent cloud  temperature and humidity of data
+	*Input Ref: only read temperature value and humidiy value
+	*           
+	*Return Ref:
+	*
+********************************************************************************/
+static void property_report_SetSonic(uint8_t datsonic)
+{
+     char	message[128]    = {0};
+	 int	message_len	  = 0;
+	
+	
+	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up01\\\"\\,\\\"params\\\":{\\\"sonic\\\":%d}}\"\r\n"
+								,datsonic);
+								  
+	at_send_data((uint8_t *)message, message_len);
+
+}
+
 /********************************************************************************
 	*
 	*Function Name:static void property_report_SetTempFan(void)
@@ -208,8 +236,8 @@ static void property_report_SetFan(uint8_t fan)
 	 int	message_len	  = 0;
 	
 	
-	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"%s\\\"\\,\\\"params\\\":{\\\"find\\\":%d}}\"\r\n",
-								TOKEN_ID,fan);
+	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up02\\\"\\,\\\"params\\\":{\\\"find\\\":%d}}\"\r\n",
+								fan);
 	at_send_data((uint8_t *)message, message_len);
 
 }
@@ -233,7 +261,7 @@ void MqttData_Publish_Init(void)
 {
 	 property_topic_publish();
 
-	 Publish_Init_Data();
+	 property_report_state();
 
 }
 
@@ -242,10 +270,10 @@ static void Publish_Init_Data(void)
 
      char	message[128]    = {0};
 	 int	message_len	  = 0;
-	 uint8_t fan = 0x41;
+	 uint8_t fan = 41,temp = 29;
 	
-	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"%s\\\"\\,\\\"params\\\":{\\\"find\\\":%d}}\"\r\n",TOKEN_ID,fan);
-	at_send_data((uint8_t *)message, message_len);
+	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up01\\\"\\,\\\"params\\\":{\\\"temperature\\\":%d\\,\\\"find\\\":%d}}\"\r\n",temp,fan);
+	 at_send_data((uint8_t *)message, message_len);
 
 
 }

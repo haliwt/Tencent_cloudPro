@@ -20,6 +20,7 @@ void Publish_Data_ToCloud_Handler(void)
 
         case tencent_cloud_init:
 			 MqttData_Publish_Init();
+			 
 	    break;
 
 		case tencent_cloud_real_times:
