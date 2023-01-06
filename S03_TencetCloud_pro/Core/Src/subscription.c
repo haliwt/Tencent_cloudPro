@@ -8,7 +8,7 @@
 #include "wifi_fun.h"
 #include "usart.h"
 
-uint8_t TCMQTTRCVPUB[256];
+uint8_t TCMQTTRCVPUB[40];
 uint8_t Sub_Topic[128];
 uint8_t Sub_Data[128];
 
@@ -506,17 +506,25 @@ void Subscribe_Rx_Interrupt_Handler(void)
          }
             
       break;
-
+         
       case 10:
+       if(UART2_DATA.UART_DataBuf[0] == '"')  //hex :4B - "K" -fixed
+             esp8266data.rx_data_state=11; //=1
+         else{
+           esp8266data.rx_data_state =0;
+            esp8266data.rx_counter=0;
+         }
+
+      case 11:
         
          
          UART2_DATA.UART_Data[esp8266data.rx_counter] = UART2_DATA.UART_DataBuf[0];
             esp8266data.rx_counter++ ;
                  
-         if(UART2_DATA.UART_DataBuf[0]=='}') // 0x0A = "\n"
+         if(UART2_DATA.UART_DataBuf[0]=='}') // end
          {
             
-             esp8266data.rx_data_success++;
+            esp8266data.rx_data_success++;
             if(esp8266data.rx_data_success==1){
                esp8266data.rx_data_success++;
                 strcpy((char *)TCMQTTRCVPUB, (char *)UART2_DATA.UART_Data);
@@ -529,7 +537,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
          }
          else{
 
-            esp8266data.rx_data_state=10; //=1
+            esp8266data.rx_data_state=11; 
 
          }
        

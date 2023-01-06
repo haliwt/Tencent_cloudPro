@@ -28,11 +28,11 @@ void Publish_Data_ToCloud_Handler(void)
 		case tencent_cloud_real_times:
 		     Update_Dht11_Totencent_Value();
 			
+        break;
 
-		break;
 
-
-		}
+		
+       }
 
 
 	}

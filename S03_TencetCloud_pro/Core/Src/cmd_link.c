@@ -96,12 +96,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
          } 
 		 else{
 
-		    
-			  //  Subscribe_Rx_IntHandler();
-               Subscribe_Rx_Interrupt_Handler();
-             
-
-		}
+		    Subscribe_Rx_Interrupt_Handler();
+         }
         
          HAL_UART_Receive_IT(&huart2,UART2_DATA.UART_DataBuf,sizeof(UART2_DATA.UART_DataBuf));
 	}
