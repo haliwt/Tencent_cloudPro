@@ -8,18 +8,6 @@
 #include "wifi_fun.h"
 #include "usart.h"
 
-uint8_t TCMQTTRCVPUB[40];
-uint8_t Sub_Topic[128];
-uint8_t Sub_Data[128];
-
-char *pub_buf;
-
-
-void Parser_Cloud_ObjectName(uint8_t name_len);
-
-//static void Parse_Rx_Cloud_Data(void);
-
-
 //处理腾讯云下发的数据
 /*******************************************************************************
    **
@@ -56,206 +44,8 @@ void Receive_Data_FromCloud_Data(int type, char *str)
       
        }
 
-      //subscription of topic of name
-       if(esp8266data.rx_data_name_len==3 ||esp8266data.rx_data_name_len==4 || \
-             esp8266data.rx_data_name_len==5 || esp8266data.rx_data_name_len==11 ){
-
-           Parser_Cloud_ObjectName(esp8266data.rx_data_name_len);
-
-      
-
-         }
+   
    }
-
-/*******************************************************************************
-   **
-   *Function Name:void Parser_Cloud_ObjectName(void)
-   *Function: dy
-   *Input Ref: 
-   *Return Ref:NO
-   *
-********************************************************************************/
-void Parser_Cloud_ObjectName(uint8_t name_len)
-{
-    static uint8_t num,temp;
-   uint8_t fan_hundred;
-    switch(name_len){
-
-     case 3: //"ptc"
-       switch(num){
-      
-          case 0:
-            if(UART2_DATA.UART_DataBuf[1]=='p')
-                   num=1;
-              
-             break;
-
-         case 1: //dry
-                   esp8266data.getCloudValue_decade =UART2_DATA.UART_DataBuf[name_len+3];
-             
-            run_t.gDry= esp8266data.getCloudValue_decade;
-          
-            esp8266data.rx_data_success=0;
-            num=0;
-         break;
-
-         
-
-         default:
-            num=0;
-
-         break;
-
-         }
-
-    break;
-
-    case 4: //"open" ,"find",
-        switch(num){
-          
-         case 0:
-         if(UART2_DATA.UART_DataBuf[1]=='o')
-            num=1;
-         else if(UART2_DATA.UART_DataBuf[1]=='f')
-            num=2;
-
-         break;
-
-         case 1: //open
-            esp8266data.getCloudValue_decade =UART2_DATA.UART_DataBuf[name_len+3];
-            run_t.gPower_flag=esp8266data.getCloudValue_decade;
-            esp8266data.rx_data_success=0;
-            num=0;
-         break;
-
-         case 2: //fan
-         esp8266data.getCloudValue_decade =UART2_DATA.UART_DataBuf[name_len+3] -30;
-         esp8266data.getCloudValue_unit =UART2_DATA.UART_DataBuf[name_len+4] -30;
-         fan_hundred = UART2_DATA.UART_DataBuf[name_len+5] -30;
-
-         if(fan_hundred ==0) run_t.gFan =100;
-         else{
-
-            if((esp8266data.getCloudValue_decade >=0 && esp8266data.getCloudValue_decade <=9)
-            &&(esp8266data.getCloudValue_unit>=0 && esp8266data.getCloudValue_unit<=9)){
-               temp = esp8266data.getCloudValue_decade*10;
-
-               run_t.gFan=temp + esp8266data.getCloudValue_unit;
-
-            }
-            else
-            run_t.gFan = esp8266data.getCloudValue_decade;
-
-         }
-         esp8266data.rx_data_success=0;
-
-         num=0;
-
-         break;
-
-         default:
-         num=0;
-
-         break;
-
-         }
-   
-   break;
-
-     case 5: // "sonic","state","Anion"
-        switch(num){
-          
-              case 0:
-                if(UART2_DATA.UART_DataBuf[1]=='A') //Anion-plasma
-                  num=1;
-               else if(UART2_DATA.UART_DataBuf[1]=='s') //state
-                  num=2;
-                  
-                break;
-     
-             case 1: //
-                    run_t.gPlasma= esp8266data.getCloudValue_decade =UART2_DATA.UART_DataBuf[name_len+3];
-               esp8266data.rx_data_success=0;
-               num=0;
-               
-             break;
-     
-             case 2:
-                if(UART2_DATA.UART_DataBuf[2]=='t') //state
-                  num=3;
-               else if(UART2_DATA.UART_DataBuf[2]=='o')  //sonic
-                  num=4;
-               else
-                   num=0;
-               
-     
-             break;
-
-             case 3:
-                     esp8266data.getCloudValue_decade =UART2_DATA.UART_DataBuf[name_len+3];
-                run_t.gModel=  esp8266data.getCloudValue_decade;
-                esp8266data.rx_data_success=0;
-                num=0;
-
-             break;
-
-             case 4:
-
-                 
-                     esp8266data.getCloudValue_decade =UART2_DATA.UART_DataBuf[name_len+4];
-                     run_t.gUlransonic = esp8266data.getCloudValue_decade;
-               esp8266data.rx_data_success=0;
-               num=0;
-
-             break;
-     
-             default:
-                num=0;
-     
-             break;
-     
-             }
-   
-   
-   
-     break;
-
-    case 11: //"temperature"
-
-          switch(num){
-         
-             case 0:
-               if(UART2_DATA.UART_DataBuf[1]=='t')
-                  num=1;
-              
-                break;
-   
-            case 1: //power on or off
-
-                 esp8266data.getCloudValue_decade =UART2_DATA.UART_DataBuf[name_len+3]-30; 
-                     esp8266data.getCloudValue_unit =UART2_DATA.UART_DataBuf[name_len+4]-30; 
-
-                temp = esp8266data.getCloudValue_decade *10;
-                
-               run_t.gTemperature= temp + esp8266data.getCloudValue_unit ;
-               
-               esp8266data.rx_data_success=0;
-               num=0;
-            break;
-   
-            
-   
-            default:
-               num=0;
-   
-            break;
-   
-            }
-   
-   break;
-        } 
-}
-
 
  /*******************************************************************************
 **
@@ -285,22 +75,7 @@ void Subscriber_Data_FromCloud_Handler()
 
 
    }   
- 
-  // Parse_Rx_Cloud_Data();
-  // Tencent_Cloud_Rx_Handler();
-
-}
-void Parse_Rx_Cloud_Data(void)
-{
-    if(esp8266data.rx_data_success==1){
-        esp8266data.rx_data_success=0;
-        
-        Receive_Data_FromCloud_Data(JSOBJECT,(char *)UART2_DATA.UART_DataBuf);
-        
-      
-    }
-    
-}
+ }
 /*******************************************************************************
 **
 *Function Name:void Subscribe_Rx_IntHandler(void)
@@ -459,8 +234,6 @@ void Subscribe_Rx_Interrupt_Handler(void)
  
 
 }
-
-
 /*******************************************************************************
 **
 *Function Name:void Subscribe_Rx_IntHandler(void)
@@ -498,67 +271,72 @@ void Wifi_Rx_InputInfo_Handler(void)
         
             
 }
-
+/*******************************************************************************
+    **
+    *Function Name:void Tencent_Cloud_Rx_Handler(void)
+    *Function: 
+    *Input Ref: +TCMQTTCONN:OK
+    *Return Ref:NO
+    *
+********************************************************************************/
 void Tencent_Cloud_Rx_Handler(void)
 {
-     uint8_t i;
+   
     if( esp8266data.rx_data_success==1){
         esp8266data.rx_data_success=0;
     if(strstr((char *)UART2_DATA.UART_Data,"ptc\":0")){
-            esp8266data.rx_data_success=0;
-            esp8266data.rx_counter=0;
+           
             run_t.gDry=0;
             
     }
     else if(strstr((char *)UART2_DATA.UART_Data,"ptc\":1")){
-            esp8266data.rx_data_success=0;
-            esp8266data.rx_counter=0;
+          
             run_t.gDry=1;
 
     }
     else if(strstr((char *)UART2_DATA.UART_Data,"Anion\":0")){
-            esp8266data.rx_data_success=0;
-            esp8266data.rx_counter=0;
+          
             run_t.gPlasma=0;
 
     }
     else if(strstr((char *)UART2_DATA.UART_Data,"Anion\":1")){
-            esp8266data.rx_data_success=0;
-            esp8266data.rx_counter=0;
+           
             run_t.gPlasma=1;
 
     }
     else if(strstr((char *)UART2_DATA.UART_Data,"sonic\":0")){
-            esp8266data.rx_data_success=0;
-            esp8266data.rx_counter=0;
+            
             run_t.gUlransonic=0;
             
     }
     else if(strstr((char *)UART2_DATA.UART_Data,"sonic\":1")){
-            esp8266data.rx_data_success=0;
-            esp8266data.rx_counter=0;
+            
             run_t.gUlransonic=1;
             
     }
+    else if(strstr((char *)UART2_DATA.UART_Data,"state\":1")){
+          
+            run_t.gModel=1;
+            
+    }
+    else if(strstr((char *)UART2_DATA.UART_Data,"state\":2")){
+           
+            run_t.gModel=2;
+            
+    }
     else if(strstr((char *)UART2_DATA.UART_Data,"temperature")){
-            esp8266data.rx_data_success=0;
-            esp8266data.rx_counter=0;
+           
             run_t.set_temperature_decade=UART2_DATA.UART_Data[14]-0x30;
             run_t.set_temperature_unit=UART2_DATA.UART_Data[15]-0x30;
-
+            run_t.set_temperature_value = run_t.set_temperature_decade*10 +  run_t.set_temperature_unit;
     }
     else if(strstr((char *)UART2_DATA.UART_Data,"find")){
-            esp8266data.rx_data_success=0;
-            esp8266data.rx_counter=0;
+          
             run_t.wind_speed_decade=UART2_DATA.UART_Data[7]-0x30;
             run_t.wind_speed_unit=UART2_DATA.UART_Data[8]-0x30;
+            run_t.wind_speed_value = run_t.wind_speed_decade*10 + run_t.wind_speed_unit;
 
     }
-    
-    
-    
-    
-
-  }
+    }
 
 }

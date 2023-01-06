@@ -67,8 +67,10 @@ typedef struct _RUN_T{
 	  uint8_t  gFan;
 	  uint8_t  gUlransonic;
 	  uint8_t  gModel;
+	  uint8_t  set_temperature_value;
 	  uint8_t  set_temperature_decade;
 	  uint8_t  set_temperature_unit;
+	  uint8_t  wind_speed_value;
 	  uint8_t  wind_speed_decade;
 	  uint8_t  wind_speed_unit;
 

@@ -153,8 +153,7 @@ int main(void)
 
 		 }
      
-     // Tencent_Cloud_Rx_Handler();
-        // Parse_Rx_Cloud_Data();
+ 
          Tencent_Cloud_Rx_Handler();
    		
   	}
