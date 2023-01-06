@@ -17,103 +17,9 @@ char *pub_buf;
 
 void Parser_Cloud_ObjectName(uint8_t name_len);
 
-//static Subscription1 subscription;
-//static void SubscriptionDispatch(Subscription1 *me, unsigned const sig);
-static void Parse_Rx_Cloud_Data(void);
-
-//void Subscription_Handler(void)
-//{
-//	uint8_t  sig;
-//	switch (run_t.wifi_subscription_lable){
-//		case OPEN_SIG: 
-//			sig = RUN;
-//	        break;
-//		case STATE_SIG : 
-//			sig = STAR_SIG;  
-//			break;
-//		case PTC_SIG:
-//			break;
-//		case SONIC_SIG:
-//			break;
-//		case ANION_SIG:
-//			break;
-//		case TEMP_SIG:
-//			break;
-//		case FIND_SIG:
-//			break;
-//		case HUM_SIG:
-//			break;
-//		case NOWTEMP_SIG:
-//			break;
-//				
-//	   default:  sig = CHAR_SIG;  break;
-//	}
-//	
-//   SubscriptionDispatch(&subscription,  sig);
-//}
-
-//static void SubscriptionDispatch(Subscription1 *me, unsigned const sig) {
-//   switch (me->substate__) {
-//   case STANDBY:
-//      switch (sig) {
-//      case OPEN_SIG:
-//	  	 
-//         Subscription1Tran(me, START);         /* transition to "slash" */
-//         break;
-//      }
-//   break;
-//	  
-//   case START:
-//      switch (sig) {
-//      case STATE_SIG:
-//         me->commentCtr__ += 2;     /* SLASH-STAR count as comment */
-//        Subscription1Tran(me, SLASH);     /* transition to "comment" */
-//         break;
-//      case CHAR_SIG:
-//      case SLASH_SIG:
-//         Subscription1Tran(me, SLASH);         /* go back to "code" */
-//         break;
-//      }
-//   break;
-//	  
-//   case WORKS:
-//      switch (sig) {
-//      case STAR_SIG:
-//         CParser1Tran(me, STAR);           /* transition to "star" */
-//         break;
-//      case CHAR_SIG:
-//      case SLASH_SIG:
-//         ++me->commentCtr__;             /* count the comment char */
-//         break; 
-//      }
-//   break;
-//	  
-//   case RUN:
-//      switch (sig) {
-//      case STAR_SIG:
-//         ++me->commentCtr__;              /* count STAR as comment */
-//         break;
-//      case SLASH_SIG:
-//         me->commentCtr__ += 2;     /* count STAR-SLASH as comment */
-//         CParser1Tran(me, CODE);           /* transition to "code" */
-//         break;
-//      case CHAR_SIG:
-//         me->commentCtr__ += 2;         /* count STAR-? as comment */
-//         CParser1Tran(me, COMMENT);        /* go back to "comment" */
-//         break;
-//      }
-//   break;
-
-//  case END:
-//  	switch(sig){
-//	case 1:
-
-//  break;
+//static void Parse_Rx_Cloud_Data(void);
 
 
-//	}
-//   }
-//}
 //处理腾讯云下发的数据
 /*******************************************************************************
    **
@@ -179,13 +85,13 @@ void Parser_Cloud_ObjectName(uint8_t name_len)
        switch(num){
       
           case 0:
-            if(TCMQTTRCVPUB[1]=='p')
+            if(UART2_DATA.UART_DataBuf[1]=='p')
                    num=1;
               
              break;
 
          case 1: //dry
-                   esp8266data.getCloudValue_decade =TCMQTTRCVPUB[name_len+3];
+                   esp8266data.getCloudValue_decade =UART2_DATA.UART_DataBuf[name_len+3];
              
             run_t.gDry= esp8266data.getCloudValue_decade;
           
@@ -208,24 +114,24 @@ void Parser_Cloud_ObjectName(uint8_t name_len)
         switch(num){
           
          case 0:
-         if(TCMQTTRCVPUB[1]=='o')
+         if(UART2_DATA.UART_DataBuf[1]=='o')
             num=1;
-         else if(TCMQTTRCVPUB[1]=='f')
+         else if(UART2_DATA.UART_DataBuf[1]=='f')
             num=2;
 
          break;
 
          case 1: //open
-            esp8266data.getCloudValue_decade =TCMQTTRCVPUB[name_len+3];
+            esp8266data.getCloudValue_decade =UART2_DATA.UART_DataBuf[name_len+3];
             run_t.gPower_flag=esp8266data.getCloudValue_decade;
             esp8266data.rx_data_success=0;
             num=0;
          break;
 
          case 2: //fan
-         esp8266data.getCloudValue_decade =TCMQTTRCVPUB[name_len+3] -30;
-         esp8266data.getCloudValue_unit =TCMQTTRCVPUB[name_len+4] -30;
-         fan_hundred = TCMQTTRCVPUB[name_len+5] -30;
+         esp8266data.getCloudValue_decade =UART2_DATA.UART_DataBuf[name_len+3] -30;
+         esp8266data.getCloudValue_unit =UART2_DATA.UART_DataBuf[name_len+4] -30;
+         fan_hundred = UART2_DATA.UART_DataBuf[name_len+5] -30;
 
          if(fan_hundred ==0) run_t.gFan =100;
          else{
@@ -260,24 +166,24 @@ void Parser_Cloud_ObjectName(uint8_t name_len)
         switch(num){
           
               case 0:
-                if(TCMQTTRCVPUB[1]=='A') //Anion-plasma
+                if(UART2_DATA.UART_DataBuf[1]=='A') //Anion-plasma
                   num=1;
-               else if(TCMQTTRCVPUB[1]=='s') //state
+               else if(UART2_DATA.UART_DataBuf[1]=='s') //state
                   num=2;
                   
                 break;
      
              case 1: //
-                    run_t.gPlasma= esp8266data.getCloudValue_decade =TCMQTTRCVPUB[name_len+3];
+                    run_t.gPlasma= esp8266data.getCloudValue_decade =UART2_DATA.UART_DataBuf[name_len+3];
                esp8266data.rx_data_success=0;
                num=0;
                
              break;
      
              case 2:
-                if(TCMQTTRCVPUB[2]=='t') //state
+                if(UART2_DATA.UART_DataBuf[2]=='t') //state
                   num=3;
-               else if(TCMQTTRCVPUB[2]=='o')  //sonic
+               else if(UART2_DATA.UART_DataBuf[2]=='o')  //sonic
                   num=4;
                else
                    num=0;
@@ -286,7 +192,7 @@ void Parser_Cloud_ObjectName(uint8_t name_len)
              break;
 
              case 3:
-                     esp8266data.getCloudValue_decade =TCMQTTRCVPUB[name_len+3];
+                     esp8266data.getCloudValue_decade =UART2_DATA.UART_DataBuf[name_len+3];
                 run_t.gModel=  esp8266data.getCloudValue_decade;
                 esp8266data.rx_data_success=0;
                 num=0;
@@ -296,7 +202,7 @@ void Parser_Cloud_ObjectName(uint8_t name_len)
              case 4:
 
                  
-                     esp8266data.getCloudValue_decade =TCMQTTRCVPUB[name_len+4];
+                     esp8266data.getCloudValue_decade =UART2_DATA.UART_DataBuf[name_len+4];
                      run_t.gUlransonic = esp8266data.getCloudValue_decade;
                esp8266data.rx_data_success=0;
                num=0;
@@ -319,15 +225,15 @@ void Parser_Cloud_ObjectName(uint8_t name_len)
           switch(num){
          
              case 0:
-               if(TCMQTTRCVPUB[1]=='t')
+               if(UART2_DATA.UART_DataBuf[1]=='t')
                   num=1;
               
                 break;
    
             case 1: //power on or off
 
-                 esp8266data.getCloudValue_decade =TCMQTTRCVPUB[name_len+3]-30; 
-                     esp8266data.getCloudValue_unit =TCMQTTRCVPUB[name_len+4]-30; 
+                 esp8266data.getCloudValue_decade =UART2_DATA.UART_DataBuf[name_len+3]-30; 
+                     esp8266data.getCloudValue_unit =UART2_DATA.UART_DataBuf[name_len+4]-30; 
 
                 temp = esp8266data.getCloudValue_decade *10;
                 
@@ -366,31 +272,33 @@ void Subscriber_Data_FromCloud_Handler()
    switch(esp8266data.subscrible_receive_data_label){
 
 	 case subscrible_data:
-     device_massage = (uint8_t *)malloc(128);
-  
-     esp8266data.gTimer_subscription_timing=0;
+         device_massage = (uint8_t *)malloc(128);
       
+         esp8266data.gTimer_subscription_timing=0;
+          
 
-     sprintf((char *)device_massage,"AT+TCMQTTSUB=\"$thing/down/property/%s/%s\",0\r\n", PRODUCT_ID, DEVUICE_NAME);
-     HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000); 
-     free(device_massage);
+         sprintf((char *)device_massage,"AT+TCMQTTSUB=\"$thing/down/property/%s/%s\",0\r\n", PRODUCT_ID, DEVUICE_NAME);
+         HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000); 
+         free(device_massage);
      break;
 
 
 
    }   
  
-
-   
-   Parse_Rx_Cloud_Data();
+  // Parse_Rx_Cloud_Data();
+  // Tencent_Cloud_Rx_Handler();
 
 }
-
-static void Parse_Rx_Cloud_Data(void)
+void Parse_Rx_Cloud_Data(void)
 {
-    Receive_Data_FromCloud_Data(JSOBJECT,(char *)TCMQTTRCVPUB);
+    if(esp8266data.rx_data_success==1){
+        esp8266data.rx_data_success=0;
+        
+        Receive_Data_FromCloud_Data(JSOBJECT,(char *)UART2_DATA.UART_DataBuf);
+        
       
-    
+    }
     
 }
 /*******************************************************************************
@@ -403,6 +311,7 @@ static void Parse_Rx_Cloud_Data(void)
 ********************************************************************************/
 void Subscribe_Rx_Interrupt_Handler(void)
 {
+    static uint8_t char_len;
     switch(esp8266data.rx_data_state)
       {
       case 0:  //#0
@@ -517,21 +426,17 @@ void Subscribe_Rx_Interrupt_Handler(void)
 
       case 11:
         
-         
+         if(esp8266data.rx_data_success==0){
          UART2_DATA.UART_Data[esp8266data.rx_counter] = UART2_DATA.UART_DataBuf[0];
             esp8266data.rx_counter++ ;
                  
          if(UART2_DATA.UART_DataBuf[0]=='}') // end
          {
-            
-            esp8266data.rx_data_success++;
-            if(esp8266data.rx_data_success==1){
-               esp8266data.rx_data_success++;
-                strcpy((char *)TCMQTTRCVPUB, (char *)UART2_DATA.UART_Data);
-            }
+            char_len = esp8266data.rx_counter;
+            esp8266data.rx_data_success=1;
             esp8266data.rx_data_state=0;
             esp8266data.rx_counter=0;
-
+            UART2_DATA.UART_Data[char_len];
            break;
                
          }
@@ -540,7 +445,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
             esp8266data.rx_data_state=11; 
 
          }
-       
+        }
             
       break;
 
@@ -594,4 +499,66 @@ void Wifi_Rx_InputInfo_Handler(void)
             
 }
 
+void Tencent_Cloud_Rx_Handler(void)
+{
+     uint8_t i;
+    if( esp8266data.rx_data_success==1){
+        esp8266data.rx_data_success=0;
+    if(strstr((char *)UART2_DATA.UART_Data,"ptc\":0")){
+            esp8266data.rx_data_success=0;
+            esp8266data.rx_counter=0;
+            run_t.gDry=0;
+            
+    }
+    else if(strstr((char *)UART2_DATA.UART_Data,"ptc\":1")){
+            esp8266data.rx_data_success=0;
+            esp8266data.rx_counter=0;
+            run_t.gDry=1;
 
+    }
+    else if(strstr((char *)UART2_DATA.UART_Data,"Anion\":0")){
+            esp8266data.rx_data_success=0;
+            esp8266data.rx_counter=0;
+            run_t.gPlasma=0;
+
+    }
+    else if(strstr((char *)UART2_DATA.UART_Data,"Anion\":1")){
+            esp8266data.rx_data_success=0;
+            esp8266data.rx_counter=0;
+            run_t.gPlasma=1;
+
+    }
+    else if(strstr((char *)UART2_DATA.UART_Data,"sonic\":0")){
+            esp8266data.rx_data_success=0;
+            esp8266data.rx_counter=0;
+            run_t.gUlransonic=0;
+            
+    }
+    else if(strstr((char *)UART2_DATA.UART_Data,"sonic\":1")){
+            esp8266data.rx_data_success=0;
+            esp8266data.rx_counter=0;
+            run_t.gUlransonic=1;
+            
+    }
+    else if(strstr((char *)UART2_DATA.UART_Data,"temperature")){
+            esp8266data.rx_data_success=0;
+            esp8266data.rx_counter=0;
+            run_t.set_temperature_decade=UART2_DATA.UART_Data[14]-0x30;
+            run_t.set_temperature_unit=UART2_DATA.UART_Data[15]-0x30;
+
+    }
+    else if(strstr((char *)UART2_DATA.UART_Data,"find")){
+            esp8266data.rx_data_success=0;
+            esp8266data.rx_counter=0;
+            run_t.wind_speed_decade=UART2_DATA.UART_Data[7]-0x30;
+            run_t.wind_speed_unit=UART2_DATA.UART_Data[8]-0x30;
+
+    }
+    
+    
+    
+    
+
+  }
+
+}

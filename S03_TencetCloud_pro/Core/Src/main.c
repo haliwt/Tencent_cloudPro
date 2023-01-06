@@ -152,6 +152,10 @@ int main(void)
 			 Subscriber_Data_FromCloud_Handler();
 
 		 }
+     
+     // Tencent_Cloud_Rx_Handler();
+        // Parse_Rx_Cloud_Data();
+         Tencent_Cloud_Rx_Handler();
    		
   	}
    
