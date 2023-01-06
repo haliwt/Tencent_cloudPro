@@ -102,11 +102,14 @@ void RunWifi_Command_Handler(void)
 
 	    case wifi_has_benn_connected:
 		  disconnect =0;
+	      first_sub=0;
+		  first_sub=0;
 		  SmartPhone_TryToLink_TencentCloud();
 		  if(esp8266data.esp8266_login_cloud_success==1){
 		  	    esp8266data.rx_link_cloud_flag=0;
-         		SendWifiData_To_Cmd(1);//To tell display panel wifi be connetor to tencent cloud is success
-				
+         	//	SendWifiData_To_Cmd(1);//To tell display panel wifi be connetor to tencent cloud is success
+				esp8266data.gTimer_publish_timing=0;
+	            esp8266data.gTimer_subscription_timing=0;
 				wifi_t.runCommand_order_lable = wifi_tencent_init_data;
 				
 		  }
@@ -138,7 +141,7 @@ void RunWifi_Command_Handler(void)
 		 	esp8266data.gTimer_subscription_timing=0;
 		    first_sub++;
 			 Subscriber_Data_FromCloud_Handler();
-
+             wifi_t.runCommand_order_lable= wifi_rx_tencent_cloud_data;
 		 }
 
 		  if(esp8266data.gTimer_publish_timing>4 && first_publish == 0){
