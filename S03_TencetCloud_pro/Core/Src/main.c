@@ -126,14 +126,15 @@ int main(void)
 
       	Wifi_SoftAP_Config_Handler();
 	  	SmartPhone_LinkTengxunCloud();
-	    
+	    esp8266data.gTimer_publish_timing=0;
+	    esp8266data.gTimer_subscription_timing=0;
      }
 
 	
    if(esp8266data.esp8266_login_cloud_success==1){
    	    
 
-		
+	
         
          if(esp8266data.gTimer_publish_timing>5){
 			

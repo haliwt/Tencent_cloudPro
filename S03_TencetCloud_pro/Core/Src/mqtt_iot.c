@@ -213,7 +213,7 @@ static void property_report_SetSonic(uint8_t datsonic)
 	 int	message_len	  = 0;
 	
 	
-	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up02\\\"\\,\\\"params\\\":{\\\"sonic\\\":%d}}\"\r\n"
+	message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up02\\\"\\,\\\"params\\\":{\\\"sonic\\\":%d}}\"\r\n"
 								,datsonic);
 								  
 	at_send_data((uint8_t *)message, message_len);

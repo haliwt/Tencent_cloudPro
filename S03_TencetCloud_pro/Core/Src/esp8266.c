@@ -64,12 +64,12 @@ static void InitWifiModule(void)
 	
 	
 			run_t.gTimer_wifi_1s=0;
-			at_send_data("AT+RESTORE\r\n", strlen("AT+RESTORE\r\n"));
-			HAL_Delay(200);
+			at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
+			HAL_Delay(100);
 			at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
 			run_t.gTimer_wifi_1s=0;
-			HAL_Delay(1000);
-			HAL_Delay(1000);
+			HAL_Delay(100);
+			
 			
 		}
 		//HAL_UART_Abort(&huart2);
@@ -85,6 +85,7 @@ static void InitWifiModule(void)
 	*Return Ref:NO
 	*
 ****************************************************************************************************/
+#if 0
 void Wifi_Link_SmartConfig_Handler(void)
 {
        uint8_t *device_massage;
@@ -99,9 +100,9 @@ void Wifi_Link_SmartConfig_Handler(void)
    	case 1:
 
    			WIFI_IC_ENABLE();
-         	HAL_UART_Transmit(&huart2, "AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"), 5000);
+         	HAL_UART_Transmit(&huart2, "AT+CWMODE=2\r\n", strlen("AT+CWMODE=2\r\n"), 5000);
         	HAL_Delay(1000);
-			
+			HAL_UART_Transmit(&huart2, "AT+CIPMUX=1\r\n", strlen("AT+CIPMUX=1\r\n"), 5000);
 			run_t.wifi_config_net_lable=2;
 
 	break;
@@ -135,17 +136,18 @@ void Wifi_Link_SmartConfig_Handler(void)
          esp8266data.esp8266_dynamic_reg_flag=0;
 		 HAL_UART_Transmit(&huart2, "AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"), 5000); //动态注册 
 	     HAL_Delay(1000);
-		  HAL_Delay(1000);
-	      HAL_Delay(1000);
+		 HAL_Delay(1000);
+	     HAL_Delay(1000);
 		run_t.wifi_config_net_lable=5;
 
     break;
 
     case 5:
 	   
+	   HAL_Delay(1000);
 
        HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
-       HAL_Delay(1000);
+       
 	   HAL_Delay(1000);
 	   HAL_Delay(1000);
 	   HAL_Delay(1000);
@@ -163,6 +165,7 @@ void Wifi_Link_SmartConfig_Handler(void)
    }
     free(device_massage);
 }
+#endif 
 /****************************************************************************************************
 	**
 	*Function Name:void Wifi_SoftAP_Config_Handler(void)
@@ -193,6 +196,8 @@ void Wifi_SoftAP_Config_Handler(void)
     	    WIFI_IC_ENABLE();
          	HAL_UART_Transmit(&huart2, "AT+CWMODE=2\r\n", strlen("AT+CWMODE=2\r\n"), 5000);
         	HAL_Delay(1000);
+			HAL_Delay(1000);
+			//HAL_UART_Transmit(&huart2, "AT+CIPMUX=1\r\n", strlen("AT+CIPMUX=1\r\n"), 5000);
 			run_t.wifi_config_net_lable =wifi_set_softap;
 
 	 break;
@@ -204,18 +209,21 @@ void Wifi_SoftAP_Config_Handler(void)
 			usart2_flag = at_send_data(device_massage, strlen((const char *)device_massage));
 	  		HAL_Delay(1000);
             HAL_Delay(1000);
-	        if(usart2_flag !=0)
-				run_t.wifi_config_net_lable=wifi_set_tcdevreg;
-			else
-				run_t.wifi_config_net_lable=wifi_set_softap;
+			 HAL_Delay(1000);
+	        
+			run_t.wifi_config_net_lable=wifi_set_tcdevreg;
+		
 	  break;
 
 
 	 case wifi_set_tcdevreg://dynamic register
-		 HAL_UART_Transmit(&huart2, "AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"), 5000); //动态注册 
+		 HAL_UART_Transmit(&huart2, "AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"), 0xffff); //动态注册 
 	      HAL_Delay(1000);
-		  HAL_Delay(1000);
-	      HAL_Delay(1000);
+		 HAL_Delay(1000);
+		HAL_Delay(1000);
+		HAL_Delay(1000);
+
+	  
 	     run_t.wifi_config_net_lable=wifi_set_tcsap;
 
 	 break;
@@ -223,20 +231,19 @@ void Wifi_SoftAP_Config_Handler(void)
 
 	 case wifi_set_tcsap:
 	 
-	  	   // sprintf((char *)device_massage, "AT+TCSAP=\"%s\"\r\n",DEVUICE_NAME);
-           // usart2_flag = at_send_data(device_massage, strlen((const char *)device_massage));
-           
-            HAL_Delay(1000);
-	        HAL_Delay(1000);
             HAL_Delay(1000);
 		    HAL_Delay(1000);
-	        HAL_Delay(1000);
             HAL_Delay(1000);
-            sprintf((char *)device_massage, "AT+TCSAP=\"%s\"\r\n",DEVUICE_NAME);
+		    HAL_Delay(1000);
+			HAL_Delay(1000);
+		    HAL_Delay(1000);
+	        sprintf((char *)device_massage, "AT+TCSAP=\"%s\"\r\n",DEVUICE_NAME);
             usart2_flag = at_send_data(device_massage, strlen((const char *)device_massage));
+			 HAL_Delay(1000);
 			 wifi_t.soft_ap_config_flag =1;
 			esp8266data.rx_link_cloud_flag =1; //enable usart2 receive wifi  data
 			 run_t.wifi_config_net_lable=0xff;
+			
 	 break;
 
 	
