@@ -281,10 +281,19 @@ void Wifi_Rx_InputInfo_Handler(void)
 ********************************************************************************/
 void Tencent_Cloud_Rx_Handler(void)
 {
-   
+
+    static uint8_t wind_hundred, wind_decade,wind_unit,temp_decade,temp_unit;
     if( esp8266data.rx_data_success==1){
         esp8266data.rx_data_success=0;
-    if(strstr((char *)UART2_DATA.UART_Data,"ptc\":0")){
+   if(strstr((char *)UART2_DATA.UART_Data,"open\":0")){
+			   
+			run_t.wifi_gPower_On=0;
+	}
+	else if(strstr((char *)UART2_DATA.UART_Data,"open\":1")){
+				   
+				run_t.wifi_gPower_On=1;
+	}
+	else if(strstr((char *)UART2_DATA.UART_Data,"ptc\":0")){
            
             run_t.gDry=0;
             
@@ -326,15 +335,16 @@ void Tencent_Cloud_Rx_Handler(void)
     }
     else if(strstr((char *)UART2_DATA.UART_Data,"temperature")){
            
-            run_t.set_temperature_decade=UART2_DATA.UART_Data[14]-0x30;
-            run_t.set_temperature_unit=UART2_DATA.UART_Data[15]-0x30;
-            run_t.set_temperature_value = run_t.set_temperature_decade*10 +  run_t.set_temperature_unit;
+            temp_decade=UART2_DATA.UART_Data[14]-0x30;
+            temp_unit=UART2_DATA.UART_Data[15]-0x30;
+            run_t.set_temperature_value = temp_decade*10 +  temp_unit;
     }
     else if(strstr((char *)UART2_DATA.UART_Data,"find")){
           
-            run_t.wind_speed_decade=UART2_DATA.UART_Data[7]-0x30;
-            run_t.wind_speed_unit=UART2_DATA.UART_Data[8]-0x30;
-            run_t.wind_speed_value = run_t.wind_speed_decade*10 + run_t.wind_speed_unit;
+            wind_hundred=UART2_DATA.UART_Data[7]-0x30;
+            wind_decade=UART2_DATA.UART_Data[8]-0x30;
+	        wind_unit=UART2_DATA.UART_Data[9]-0x30;
+            run_t.wind_speed_value = wind_hundred *100 + wind_decade*10 + wind_unit;
 
     }
     }
