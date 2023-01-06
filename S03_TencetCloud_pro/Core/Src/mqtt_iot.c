@@ -281,6 +281,8 @@ static void property_report_SetFan(uint8_t fan)
 
 }
 
+
+
 /********************************************************************************
 	*
 	*Function Name:void IOT_MQTT_Publish(pClient, topic, &pubParams)

@@ -73,7 +73,7 @@ void SystemClock_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-  static uint8_t first_sub,first_publish;
+ 
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -121,45 +121,10 @@ int main(void)
     
       Decode_Function();
       RunCommand_Order();
+      
+      RunWifi_Command_Handler();
 	
-    if(wifi_t.wifi_connector_tencent_cloud ==1){
-
-      	Wifi_SoftAP_Config_Handler();
-	  	SmartPhone_LinkTengxunCloud();
-	    esp8266data.gTimer_publish_timing=0;
-	    esp8266data.gTimer_subscription_timing=0;
-     }
-
-	
-   if(esp8266data.esp8266_login_cloud_success==1){
-   	    
-
-	
-        
-        
-         if(esp8266data.gTimer_subscription_timing>2 && first_sub==0  ){
-		 	esp8266data.gTimer_subscription_timing=0;
-		    first_sub++;
-			 Subscriber_Data_FromCloud_Handler();
-
-		 }
-
-		if(first_publish == 0){
-
-			 if(esp8266data.gTimer_publish_timing>4){
-				first_publish++;
-	           esp8266data.gTimer_publish_timing=0;
-	          
-				Publish_Data_ToCloud_Handler();
-	           
-	   	    }
-		}
-		
-     
- 
-         Tencent_Cloud_Rx_Handler();
-   		
-  	}
+   
    
 
    

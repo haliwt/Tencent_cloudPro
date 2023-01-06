@@ -5,6 +5,8 @@
 #include "tim.h"
 #include "special_power.h"
 #include "esp8266.h"
+#include "publish.h"
+#include "subscription.h"
 
 WIFI_FUN   wifi_t;
 
@@ -71,41 +73,7 @@ void SetTemperatureHost(void(*temperatureHandler)(void))
 	*           default is AI mode
 	*
 ***********************************************/
-void Wifi_Mode(void)
-{
-   
-if(esp8266data.esp8266_login_cloud_success==1){ //当WIFI连接成功，
 
-   if( run_t.gPower_flag ==1){ //from smartPhone receive signal ->smartPhone operation 
-
-      wifi_t.wifi_power = 0xf0;
-      PowerOn(); //default AI 
-      SendWifiCmd_To_Order(0x80); //send displayPanel operation Power On action.
-      
-  
-      wifi_t.WifiMode =1;
-      wifiPowerOn_After_data_update();
-     
-           
-   }
-
-   if(run_t.gPower_flag ==0 ){ //from smartPhone operation and receive data form tencent cloud .
-          wifi_t.wifi_power = 0xff;
-			 PowerOff();
-      
-          run_t.gFan_continueRun =1;
-          run_t.gFan_counter=0;
-          wifi_t.WifiMode =0;
-          SendWifiCmd_To_Order(0x81);
-		  
-           
-    }
-   
-     
-      
-    
-  }
-  }
 
 /***********************************************
    *
@@ -119,23 +87,6 @@ static void Wifi_RunCmd(uint8_t sig)
    Ai_Fun(sig); //调用函数地址,有参数的函数
 
 }
-
-
-
-
-/***********************************************
-   *
-   *Function Name: void Wifi_RunCmd(void)
-   *Funciton : wifi power on default is AI mode
-   *
-   *
-***********************************************/
-static void wifiPowerOn_After_data_update(void)
-{
-
-
-
-}
 /***********************************************
    *
    *Function Name: void Wifi_RunCmd(void)
@@ -143,41 +94,84 @@ static void wifiPowerOn_After_data_update(void)
    *
    *
 ***********************************************/
-void wifiDisplayTemperature_Humidity(void)
+void RunWifi_Command_Handler(void)
 {
- // mcu_dp_value_update(DPID_DISPTEMP,wifi_t.dispTemperatureValue); //VALUE型数据上报;
- /// mcu_dp_value_update(DPID_DISPHUM,wifi_t.dispHumidityValue); //VALUE型数据上报;
+     static uint8_t first_sub,first_publish,disconnect;
+     switch(wifi_t.runCommand_order_lable){
 
+
+	    case wifi_has_benn_connected:
+		  disconnect =0;
+		  SmartPhone_TryToLink_TencentCloud();
+		  if(esp8266data.esp8266_login_cloud_success==1){
+		  	    esp8266data.rx_link_cloud_flag=0;
+         		SendWifiData_To_Cmd(1);//To tell display panel wifi be connetor to tencent cloud is success
+				
+				wifi_t.runCommand_order_lable = wifi_tencent_init_data;
+				
+		  }
+		  else{
+
+		       wifi_t.runCommand_order_lable = wifi_link_tencent_cloud;
+
+		  }
+
+
+	    break;
+
+        case wifi_link_tencent_cloud:
+			
+			Wifi_SoftAP_Config_Handler();
+	        SmartPhone_LinkTencent_Cloud();
+	        esp8266data.gTimer_publish_timing=0;
+	        esp8266data.gTimer_subscription_timing=0;
+
+			if(esp8266data.esp8266_login_cloud_success==1){
+				disconnect =0;
+			    wifi_t.runCommand_order_lable = wifi_tencent_init_data;
+			}
+
+	    break;
+
+	  case wifi_tencent_init_data:
+		if(esp8266data.gTimer_subscription_timing>2 && first_sub==0  ){
+		 	esp8266data.gTimer_subscription_timing=0;
+		    first_sub++;
+			 Subscriber_Data_FromCloud_Handler();
+
+		 }
+
+		  if(esp8266data.gTimer_publish_timing>4 && first_publish == 0){
+				first_publish++;
+	           esp8266data.gTimer_publish_timing=0;
+	          
+				Publish_Data_ToCloud_Handler();
+				wifi_t.runCommand_order_lable= wifi_rx_tencent_cloud_data;
+	           
+	   	    }
+		
+		
+       break;
+
+	   case wifi_rx_tencent_cloud_data: 
+			
+		    Tencent_Cloud_Rx_Handler();
+
+	   break;
+
+	   case wifi_disconnect:
+          if(disconnect == 0){
+		  	 disconnect ++;
+		    wifi_Disconnect_Fun();
+          }
+		  esp8266data.esp8266_login_cloud_success=0;
+	   break;
+
+	   default:
+
+	   break;
+	 
+     }
+	 	
 }
-
-void wifiUpdate_Power_Status(uint8_t pvalue)
-{
-
-  // mcu_dp_bool_update(DPID_START,pvalue); //BOOL型数据上报;
-}
-void wifiUpdate_Kill_Status(uint8_t kvalue)
-{
-  // mcu_dp_bool_update(DPID_KILL,kvalue); //BOOL型数据上报;
-}
-void wifiUpdate_AI_Status(uint8_t aiv)
-{
- // mcu_dp_enum_update(DPID_MODE,aiv); //枚举型数据上报;
-}
-void wifiUpdate_Dry_Status(uint8_t dvalue)
-{
-   // mcu_dp_bool_update(DPID_HEAT,dvalue); //BOOL型数据上报;
-}
-
-
-void wifiUpdate_SetTimeValue(uint8_t tv)
-{
-  // mcu_dp_value_update(DPID_SETTIME,tv); //VALUE型数据上报;
-
-}
-
-void wifiUpdate_SetTemperatureValue(uint8_t temp)
-{
-  // mcu_dp_value_update(DPID_SETTEMP,temp); //VALUE型数据上报;
-}
-
 

@@ -6,7 +6,7 @@
 #include "run.h"
 #include "mqtt_iot.h"
 #include "wifi_fun.h"
-
+#include "cmd_link.h"
 
 
 ESP8266DATATypedef esp8266data;
@@ -241,7 +241,7 @@ void Wifi_SoftAP_Config_Handler(void)
             usart2_flag = at_send_data(device_massage, strlen((const char *)device_massage));
 			 HAL_Delay(1000);
 			 wifi_t.soft_ap_config_flag =1;
-			esp8266data.rx_link_cloud_flag =1; //enable usart2 receive wifi  data
+			 esp8266data.rx_link_cloud_flag =1; //enable usart2 receive wifi  data
 			 run_t.wifi_config_net_lable=0xff;
 			
 	 break;
@@ -265,7 +265,7 @@ void Wifi_SoftAP_Config_Handler(void)
 *Return Ref:NO
 *
 ****************************************************************************************************/
-void SmartPhone_LinkTengxunCloud(void)
+void SmartPhone_LinkTencent_Cloud(void)
 {
    
     uint8_t *device_submassage;
@@ -278,7 +278,6 @@ void SmartPhone_LinkTengxunCloud(void)
        esp8266data.soft_ap_config_success=0;
 	   HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
        HAL_Delay(1000);
-	   wifi_t.wifi_connector_tencent_cloud++;
        SendWifiData_To_Cmd(1);//To tell display panel wifi be connetor to tencent cloud is success
 	 
      }
@@ -287,8 +286,27 @@ void SmartPhone_LinkTengxunCloud(void)
 
 }
 
+void SmartPhone_TryToLink_TencentCloud(void)
+{
+   
+	
+    esp8266data.rx_link_cloud_flag =1; //enable usart2 receive wifi  data
+	wifi_t.soft_ap_config_flag =0;
+    HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
+	HAL_Delay(1000);
+    HAL_Delay(1000);
+	   
+    
 
+	
+}
 
+void wifi_Disconnect_Fun(void)
+{
+
+  HAL_UART_Transmit(&huart2, "AT+TCMQTTDISCONN\r\n", strlen("AT+TCMQTTDISCONN\r\n"), 5000);//开始连接
+
+}
 
 
 

@@ -549,20 +549,23 @@ void RunCommand_Order(void)
 	case POWER_ON:
 		SetPowerOn_ForDoing();
 	    Update_DHT11_Value();
-	     wifi_t.wifi_connector_tencent_cloud=1;
+	  
+		 wifi_t.runCommand_order_lable = wifi_has_benn_connected;
 	    run_t.gPower_On = 0x0A;
      
 	break;
 
 	case POWER_CONNECTOR_WIFI:
-		wifi_t.wifi_connector_tencent_cloud=1;
+		
+		wifi_t.runCommand_order_lable = wifi_has_benn_connected;
 		run_t.gPower_On = 0x0A;
 
 	break;
 
 	case POWER_OFF:
 		SetPowerOff_ForDoing();
-		
+		wifi_t.runCommand_order_lable = wifi_disconnect;
+	   esp8266data.esp8266_login_cloud_success=0;
 	break;
 
 	

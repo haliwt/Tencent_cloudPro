@@ -11,12 +11,25 @@ typedef enum{
 
 }wifi_mode_t;
 
+typedef enum _wifi_state_t{  
+	
+    wifi_has_benn_connected =0x01,
+	wifi_link_tencent_cloud,
+	wifi_tencent_init_data,	
+	wifi_rx_tencent_cloud_data,
+	wifi_disconnect
+
+
+}wifi_state_t;
+
 
 typedef struct _WIFI_FUN{
 
     uint8_t wifi_power;
   
     uint8_t wifi_RunMode;
+	uint8_t runCommand_order_lable;
+
 
 	uint8_t WifiMode;
 	uint8_t wifi_cmd;
@@ -30,7 +43,7 @@ typedef struct _WIFI_FUN{
 	uint8_t wifi_kill;
 	uint8_t wifi_counter; 
 	uint8_t wifi_detect;
-	uint8_t wifi_connector_tencent_cloud;
+
 
 	uint8_t real_hours;
 	uint8_t real_minutes;
