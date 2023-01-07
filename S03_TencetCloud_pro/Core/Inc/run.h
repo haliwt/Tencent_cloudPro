@@ -48,7 +48,7 @@ typedef struct _RUN_T{
 
     uint8_t gFan_continueRun;
 
-	uint8_t Single_cmd;
+	uint8_t RunComman_Lable;
 	
   
     uint8_t decodeFlag;
@@ -64,43 +64,25 @@ typedef struct _RUN_T{
 	  uint8_t  gFan;
 	  uint8_t  gUlransonic;
 	  uint8_t  gModel;
+      uint8_t Single_cmd ;
+	  
 	  uint8_t  set_temperature_value;
 	  uint8_t  set_temperature_decade;
 	  uint8_t  set_temperature_unit;
 	  uint8_t  set_wind_speed_value;
+      
 	  uint8_t  wind_speed_decade;
 	  uint8_t  wind_speed_unit;
+      uint8_t wifi_config_net_lable;
 
-	uint8_t kill_key;
-	uint8_t kill_key_off;
-
-
-	uint8_t dry_key;
-	uint8_t dry_key_off;
-
-	uint8_t ai_key;
-	uint8_t ai_key_off;
 	
-	uint8_t wifi_key;
-	uint8_t wifi_key_off;
-    uint8_t wifi_config_net_lable;
-    uint8_t wifi_cwsap_flag;
-	uint8_t wifi_cwmode_flag;
-	uint8_t mqtt_error_flag ;
-
-	uint8_t  globe_sub_flag;
-	uint8_t set_temperature_on;
-	uint8_t set_temperature_off;
-
-
-
-	uint8_t gTimer_60s;
+    uint8_t gTimer_60s;
 	uint8_t gTimer_wifi_1s;
 	uint8_t gTimer_1s;
 
 	uint8_t gFan_counter;
 
-	uint8_t globe_setPriority;
+	
    
     
  }RUN_T;

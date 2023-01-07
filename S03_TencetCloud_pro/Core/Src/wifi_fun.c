@@ -19,15 +19,6 @@ void (*Ai_Fun)(uint8_t sig);
 void (*SetTimes)(void);
 void (*SetTemperature)(void);
 
-static void Wifi_RunCmd(uint8_t sig);
-
-
-
-
-
-
-uint8_t temp[7];
-
 
 void PowerOn_Host(void (* poweronHandler)(void))
 {
@@ -66,28 +57,6 @@ void SetTemperatureHost(void(*temperatureHandler)(void))
 
 }
 
-
-/***********************************************
-	*
-	*Function Name: void Wifi_Mode(void)
-	*Funciton : wifi power on machine
-	*           default is AI mode
-	*
-***********************************************/
-
-
-/***********************************************
-   *
-   *Function Name: void Wifi_RunCmd(void)
-   *Funciton : wifi power on default is AI mode
-   *
-   *
-***********************************************/
-static void Wifi_RunCmd(uint8_t sig)
-{
-   Ai_Fun(sig); //调用函数地址,有参数的函数
-
-}
 /***********************************************
    *
    *Function Name: void Wifi_RunCmd(void)
@@ -97,7 +66,7 @@ static void Wifi_RunCmd(uint8_t sig)
 ***********************************************/
 void RunWifi_Command_Handler(void)
 {
-     static uint8_t first_sub,first_publish,disconnect,first_connect,first_dis;
+     static uint8_t first_sub,first_publish,disconnect,first_connect;
      switch(wifi_t.runCommand_order_lable){
 
 
@@ -106,7 +75,6 @@ void RunWifi_Command_Handler(void)
 	      first_sub=0;
 		  first_sub=0;
 		  first_connect=0;
-		  first_dis=0;
 		  SmartPhone_TryToLink_TencentCloud();
 		  if(esp8266data.esp8266_login_cloud_success==1){
 		  	    esp8266data.rx_link_cloud_flag=0;
@@ -208,21 +176,12 @@ void RunWifi_Command_Handler(void)
 	 if(esp8266data.esp8266_login_cloud_success==1){
 	 	  if(first_connect == 0){
 		  	first_connect ++ ;
-			first_dis =0;
             SendWifiData_To_Cmd(0x01) ;
 		  }
 	      Tencent_Cloud_Rx_Handler();
 
      }
-//	 else{
-//		if(first_dis ==0){
-//			first_dis ++;
-//		   first_connect =0 ;
-//            SendWifiData_To_Cmd(0x0) ;
 
-//		}
-//		  
-//     }
 	 
 	 	
 }

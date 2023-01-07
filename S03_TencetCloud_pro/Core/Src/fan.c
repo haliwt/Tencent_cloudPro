@@ -21,23 +21,7 @@ void FAN_Stop(void)
 }
 
 
-//static void Delay_BuzzerUs(uint8_t t)
-//{
-//
-//    uint16_t j;
-//	for(j=0;j<t;j++)
-//	{
-//	   for(int i = 0; i <100; i++)//better for(int i = 0; i < 100; i++)	 //for(int i = 0; i < 20; i++)	  
-//		{
-//			__asm("NOP");//等待1个指令周期，系统主频24M
-//		   
-//		}
-//	}
-//
-//
-//  
-//
-//}
+
 
 void Buzzer_On(void)
 {
@@ -61,7 +45,7 @@ void ShutDown_AllFunction(void)
 
 
 }
-
+//"杀毒" 
 void SterIlization(uint8_t sel)
 {
     if(sel==0){//open 

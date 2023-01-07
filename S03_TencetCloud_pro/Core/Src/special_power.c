@@ -65,6 +65,43 @@ void Single_Usart_RxData(void(*rxHandler)(uint8_t dat))
       Single_Usart_ReceiveData=  rxHandler;
 
 }
+
+void ActionEvent_Handler(void)
+{
+     
+	if(run_t.gDry == 1){
+		FAN_CCW_RUN();
+	    PTC_SetHigh();
+	     
+	}
+	else{
+	   PTC_SetLow();
+
+	}
+	//kill
+	if(run_t.gPlasma == 1){
+		 FAN_CCW_RUN();
+	     PLASMA_SetHigh();
+	}
+	else{
+
+		PLASMA_SetLow();
+	}
+	//driver bug
+	if(run_t.gUlransonic ==1){
+	    FAN_CCW_RUN();
+		HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);//ultrasnoic ON 
+	}
+	else{
+	  HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic off
+
+	}
+		
+
+
+
+}
+
 #if 0
 void Updaet_DisplayPanel_Data_Handler(void)
 {
