@@ -3,6 +3,7 @@
 #include "cmd_link.h"
 #include "wifi_fun.h"
 #include "delay.h"
+#include "mqtt_iot.h"
 
 
 #define Bit_RESET 0
@@ -209,7 +210,7 @@ void Update_Dht11_Totencent_Value(void)
 
 	Dht11_Read_TempHumidity_Handler(&DHT11);
 
-	MqttData_Publis_ReadTempHum(run_t.gDht11_temperature,run_t.gDht11_humidity  );
+	MqttData_Publis_ReadTempHum(run_t.gDht11_temperature,run_t.gDht11_humidity);
 
 }
 

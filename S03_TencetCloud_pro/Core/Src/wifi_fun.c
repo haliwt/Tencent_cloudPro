@@ -19,7 +19,7 @@ void (*SetTimes)(void);
 void (*SetTemperature)(void);
 
 static void Wifi_RunCmd(uint8_t sig);
-static void wifiPowerOn_After_data_update(void);
+
 
 
 
@@ -110,7 +110,8 @@ void RunWifi_Command_Handler(void)
          	//	SendWifiData_To_Cmd(1);//To tell display panel wifi be connetor to tencent cloud is success
 				esp8266data.gTimer_publish_timing=0;
 	            esp8266data.gTimer_subscription_timing=0;
-				wifi_t.runCommand_order_lable = wifi_tencent_init_data;
+				wifi_t.has_been_login_flag = 1;
+				wifi_t.runCommand_order_lable = wifi_tencent_subscription_init_data;
 				
 		  }
 		  else{
@@ -131,20 +132,28 @@ void RunWifi_Command_Handler(void)
 
 			if(esp8266data.esp8266_login_cloud_success==1){
 				disconnect =0;
-			    wifi_t.runCommand_order_lable = wifi_tencent_init_data;
+			    wifi_t.runCommand_order_lable = wifi_tencent_subscription_init_data;
 			}
 
 	    break;
 
-	  case wifi_tencent_init_data:
+	  case wifi_tencent_subscription_init_data:
 		if(esp8266data.gTimer_subscription_timing>2 && first_sub==0  ){
 		 	esp8266data.gTimer_subscription_timing=0;
+			 esp8266data.gTimer_publish_timing=0;
 		    first_sub++;
 			 Subscriber_Data_FromCloud_Handler();
-             wifi_t.runCommand_order_lable= wifi_rx_tencent_cloud_data;
+			 if(wifi_t.has_been_login_flag==1)
+                 wifi_t.runCommand_order_lable= wifi_tencent_login_publish_init_data;
+			 else
+                 wifi_t.runCommand_order_lable= wifi_tencent_publish_init_data;
 		 }
 
-		  if(esp8266data.gTimer_publish_timing>4 && first_publish == 0){
+	  break;
+
+	  case wifi_tencent_publish_init_data:
+
+		  if(esp8266data.gTimer_publish_timing>3 && first_publish == 0){
 				first_publish++;
 	           esp8266data.gTimer_publish_timing=0;
 	          
@@ -155,6 +164,18 @@ void RunWifi_Command_Handler(void)
 		
 		
        break;
+
+	   case wifi_tencent_login_publish_init_data:
+          if(esp8266data.gTimer_publish_timing>3 && first_publish == 0){
+				first_publish++;
+	           esp8266data.gTimer_publish_timing=0;
+	          
+				Publish_Data_ToCloud_Login_Handler();
+				wifi_t.runCommand_order_lable= wifi_rx_tencent_cloud_data;
+	           
+	   	   }
+
+	   break;
 
 	   case wifi_rx_tencent_cloud_data: 
 			

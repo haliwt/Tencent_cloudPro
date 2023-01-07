@@ -42,5 +42,11 @@ void Publish_Data_ToCloud_Handler(void)
 }
 
 
+void Publish_Data_ToCloud_Login_Handler(void)
+{
+      MqttData_Publish_Login();
+
+
+}
 
 

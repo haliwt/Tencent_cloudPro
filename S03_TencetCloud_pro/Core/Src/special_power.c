@@ -23,13 +23,13 @@ void SetPowerOn_ForDoing(void)
 	run_t.gPlasma =1;       //"杀菌"
 	run_t.gUlransonic = 1; // "驱虫"
 	run_t.gModel =1;
-
+    run_t.gFan_counter=0;
 	
     FAN_CCW_RUN();
     PLASMA_SetHigh(); //
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);//ultrasnoic ON 
     PTC_SetHigh();
-	Initial_Ref();
+	
     
     
 

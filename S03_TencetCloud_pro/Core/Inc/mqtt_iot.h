@@ -37,6 +37,7 @@ void MqttData_Publis_SetFan(uint8_t fan);
 
 void MqttData_Publis_SetTemp(uint8_t temp);
 
+void MqttData_Publish_Login(void);
 
 
 

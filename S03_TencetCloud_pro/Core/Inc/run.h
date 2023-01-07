@@ -71,7 +71,7 @@ typedef struct _RUN_T{
 	  uint8_t  set_temperature_value;
 	  uint8_t  set_temperature_decade;
 	  uint8_t  set_temperature_unit;
-	  uint8_t  wind_speed_value;
+	  uint8_t  set_wind_speed_value;
 	  uint8_t  wind_speed_decade;
 	  uint8_t  wind_speed_unit;
 
@@ -119,9 +119,8 @@ extern RUN_T run_t;
 void RunCommand_Order(void);
 
 void Decode_RunCmd(void);
-void Initial_Ref(void);
 
-void AI_Function(uint8_t sig);
+
 
 void Single_RunCmd(uint8_t sig);
 

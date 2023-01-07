@@ -338,7 +338,7 @@ void Tencent_Cloud_Rx_Handler(void)
             wind_hundred=UART2_DATA.UART_Data[7]-0x30;
             wind_decade=UART2_DATA.UART_Data[8]-0x30;
 	        wind_unit=UART2_DATA.UART_Data[9]-0x30;
-            run_t.wind_speed_value = wind_hundred *100 + wind_decade*10 + wind_unit;
+            run_t.set_wind_speed_value = wind_hundred *100 + wind_decade*10 + wind_unit;
 
     }
     }

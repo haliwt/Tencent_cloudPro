@@ -28,8 +28,7 @@ typedef enum _JSONTYPE {
 }JSONTYPE;
 
 extern uint8_t TCMQTTRCVPUB[40];
-extern uint8_t Sub_Topic[128];
-extern uint8_t Sub_Data[128];
+
 
 void Receive_Data_FromCloud_Data(int type, char *str);
 void Wifi_Rx_InputInfo_Handler(void);
@@ -39,3 +38,4 @@ void Subscriber_Data_FromCloud_Handler(void);
 void Subscribe_Rx_Interrupt_Handler(void);
 void Tencent_Cloud_Rx_Handler(void);
 #endif 
+

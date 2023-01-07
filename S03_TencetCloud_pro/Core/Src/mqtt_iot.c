@@ -34,6 +34,7 @@
 
 
 
+static void Mqtt_Value_login(void);
 
 
 static void property_topic_publish(void);
@@ -48,28 +49,11 @@ static void property_report_SetFan(uint8_t fan);
 
 
 
-#ifdef AUTH_MODE_CERT
-static char sg_cert_file[PATH_MAX + 1];  // full path of device cert file
-static char sg_key_file[PATH_MAX + 1];   // full path of device key file
-#endif
 
-typedef enum {
-    eCOMMON_DEV = 0,  // common dev
-    eGW_DEV     = 1,  // Gateway dev
-    eGW_SUB_DEV = 2,  // sub dev of Gateway
-    eDEFAULT_DEV=3,
-    eTONKEN=4
-} eDevType;
 
-typedef struct {
-    char product_id[MAX_SIZE_OF_PRODUCT_ID + 1];
-    char device_name[MAX_SIZE_OF_DEVICE_NAME + 1];
-    char client_id[MAX_SIZE_OF_CLIENT_ID + 1];
 
-   
 
-    eDevType dev_type;
-} DeviceInfo;
+
 
 
 
@@ -87,11 +71,7 @@ typedef struct {
     
 	uint8_t  find;
 	uint8_t  set_temperature;
-	uint8_t  nowtemperature;
-    uint8_t  humidity;
 
-    
-  
 } serviceInfo;
 
 
@@ -109,16 +89,20 @@ void Mqtt_Value_Init(void)
     sg_info.anion=1;  //灭菌
 	sg_info.sonic =1;  //驱虫
     sg_info.find=50;
-	sg_info.set_temperature=20;
-	
-
-	
-   	sg_info.nowtemperature=27;
-    sg_info.humidity=64;
-
-
+	sg_info.set_temperature = 20;
+}
+static void Mqtt_Value_login(void)
+{
+    sg_info.open = run_t.wifi_gPower_On;
+	sg_info.state = run_t.gModel;
+	sg_info.ptc  = run_t.gDry;
+	sg_info.anion = run_t.gPlasma;
+	sg_info.sonic = run_t.gUlransonic ;
+    sg_info.find = run_t.set_wind_speed_value;
+	sg_info.set_temperature = run_t.set_temperature_value;
 
 }
+
 /********************************************************************************
 	*
 	*Function Name:static void property_report_Temp_Humidity(void)
@@ -149,7 +133,7 @@ static void property_topic_publish(void)
 ********************************************************************************/
 static void property_report_state(void)
 {
-    char       message[256]    = {0};
+    char       message[128]    = {0};
     int        message_len     = 0;
 
     Mqtt_Value_Init();
@@ -160,6 +144,22 @@ static void property_report_state(void)
 	at_send_data((uint8_t *)message, message_len);
    
 }
+
+void property_report_login(void)
+{
+	char  message[128]    = {0};
+	int   message_len	   = 0;
+	
+	Mqtt_Value_login();
+	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up01\\\"\\,\\\"params\\\":{\\\"open\\\":%d\\,\\\"Anion\\\":%d\\,\\\"ptc\\\":%d\\,\\\"sonic\\\":%d\\,\\\"state\\\":%d\\,\\\"find\\\":%d\\,\\\"temperature\\\":%d}}\"\r\n",
+								 sg_info.open,sg_info.anion,sg_info.ptc,sg_info.sonic,sg_info.state,sg_info.find,sg_info.set_temperature);
+								   
+	 
+	at_send_data((uint8_t *)message, message_len);
+
+
+}
+
 /********************************************************************************
 	*
 	*Function Name:static void property_report_Temp_Humidity(void)
@@ -297,6 +297,13 @@ void MqttData_Publish_Init(void)
 	 property_topic_publish();
 
 	 property_report_state();
+
+}
+
+void MqttData_Publish_Login(void)
+{
+    property_topic_publish();
+	property_report_login();
 
 }
 

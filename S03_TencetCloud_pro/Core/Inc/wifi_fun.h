@@ -15,8 +15,10 @@ typedef enum _wifi_state_t{
 	
     wifi_has_benn_connected =0x01,
 	wifi_link_tencent_cloud,
-	wifi_tencent_init_data,	
+	wifi_tencent_subscription_init_data,
+	wifi_tencent_publish_init_data,
 	wifi_rx_tencent_cloud_data,
+	wifi_tencent_login_publish_init_data,
 	wifi_disconnect
 
 
@@ -29,6 +31,7 @@ typedef struct _WIFI_FUN{
   
     uint8_t wifi_RunMode;
 	uint8_t runCommand_order_lable;
+	uint8_t has_been_login_flag;
 
 
 	uint8_t WifiMode;
@@ -99,7 +102,7 @@ void wifiUpdate_SetTemperatureValue(uint8_t temp);
 void Wifi_RunMode(uint8_t cmd);
 
 
-
+void RunWifi_Command_Handler(void);
 
 #endif 
 
