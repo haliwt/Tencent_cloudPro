@@ -45,7 +45,7 @@ void Publish_Data_ToCloud_Handler(void)
 void Publish_Data_ToCloud_Login_Handler(void)
 {
       MqttData_Publish_Login();
-
+      Update_Dht11_Totencent_Value();
 
 }
 

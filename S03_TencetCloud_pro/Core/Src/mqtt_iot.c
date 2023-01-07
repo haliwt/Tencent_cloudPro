@@ -133,7 +133,7 @@ static void property_topic_publish(void)
 ********************************************************************************/
 static void property_report_state(void)
 {
-    char       message[128]    = {0};
+    char       message[256]    = {0};
     int        message_len     = 0;
 
     Mqtt_Value_Init();
@@ -147,7 +147,7 @@ static void property_report_state(void)
 
 void property_report_login(void)
 {
-	char  message[128]    = {0};
+	char  message[256]    = {0};
 	int   message_len	   = 0;
 	
 	Mqtt_Value_login();

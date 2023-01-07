@@ -142,9 +142,10 @@ void RunWifi_Command_Handler(void)
 		 	esp8266data.gTimer_subscription_timing=0;
 			 esp8266data.gTimer_publish_timing=0;
 		    first_sub++;
+			first_publish=0;
 			 Subscriber_Data_FromCloud_Handler();
 			 if(wifi_t.has_been_login_flag==1)
-                 wifi_t.runCommand_order_lable= wifi_tencent_login_publish_init_data;
+                 wifi_t.runCommand_order_lable= wifi_tencent_publish_login_init_data;
 			 else
                  wifi_t.runCommand_order_lable= wifi_tencent_publish_init_data;
 		 }
@@ -165,7 +166,7 @@ void RunWifi_Command_Handler(void)
 		
        break;
 
-	   case wifi_tencent_login_publish_init_data:
+	   case wifi_tencent_publish_login_init_data:
           if(esp8266data.gTimer_publish_timing>3 && first_publish == 0){
 				first_publish++;
 	           esp8266data.gTimer_publish_timing=0;

@@ -566,6 +566,7 @@ void RunCommand_Order(void)
 		SetPowerOff_ForDoing();
 		wifi_t.runCommand_order_lable = wifi_disconnect;
 	   esp8266data.esp8266_login_cloud_success=0;
+	   wifi_t.has_been_login_flag = 0;
 	break;
 
 	

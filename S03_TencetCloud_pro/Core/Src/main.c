@@ -124,13 +124,7 @@ int main(void)
       
       RunWifi_Command_Handler();
 	
-   
-   
-
-   
-	
-      
-  }
+   }
   /* USER CODE END 3 */
 }
 
