@@ -17,8 +17,8 @@ typedef enum _wifi_state_t{
 	wifi_link_tencent_cloud,
 	wifi_tencent_subscription_init_data,
 	wifi_tencent_publish_init_data,
-	wifi_rx_tencent_cloud_data,
 	wifi_tencent_publish_login_init_data,
+	wifi_publish_update_tencent_cloud_data,
 	wifi_disconnect
 
 
