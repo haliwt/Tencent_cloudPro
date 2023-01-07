@@ -180,7 +180,7 @@ void RunWifi_Command_Handler(void)
 
 	   case wifi_rx_tencent_cloud_data: 
 			
-		    Tencent_Cloud_Rx_Handler();
+		    //Tencent_Cloud_Rx_Handler();
 
 	   break;
 
@@ -196,6 +196,10 @@ void RunWifi_Command_Handler(void)
 
 	   break;
 	 
+     }
+	 if(esp8266data.esp8266_login_cloud_success==1){
+	      Tencent_Cloud_Rx_Handler();
+
      }
 	 	
 }
