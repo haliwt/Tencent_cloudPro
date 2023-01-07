@@ -7,6 +7,7 @@
 #include "esp8266.h"
 #include "publish.h"
 #include "subscription.h"
+#include "dht11.h"
 
 WIFI_FUN   wifi_t;
 
@@ -96,7 +97,7 @@ static void Wifi_RunCmd(uint8_t sig)
 ***********************************************/
 void RunWifi_Command_Handler(void)
 {
-     static uint8_t first_sub,first_publish,disconnect;
+     static uint8_t first_sub,first_publish,disconnect,first_connect,first_dis;
      switch(wifi_t.runCommand_order_lable){
 
 
@@ -104,10 +105,11 @@ void RunWifi_Command_Handler(void)
 		  disconnect =0;
 	      first_sub=0;
 		  first_sub=0;
+		  first_connect=0;
+		  first_dis=0;
 		  SmartPhone_TryToLink_TencentCloud();
 		  if(esp8266data.esp8266_login_cloud_success==1){
 		  	    esp8266data.rx_link_cloud_flag=0;
-         	//	SendWifiData_To_Cmd(1);//To tell display panel wifi be connetor to tencent cloud is success
 				esp8266data.gTimer_publish_timing=0;
 	            esp8266data.gTimer_subscription_timing=0;
 				wifi_t.has_been_login_flag = 1;
@@ -180,10 +182,10 @@ void RunWifi_Command_Handler(void)
 
 	   case wifi_publish_update_tencent_cloud_data: 
 			
-		   if(esp8266data.gTimer_publish_timing>5 && ){
+		   if(esp8266data.gTimer_publish_timing>5 ){
 				esp8266data.gTimer_publish_timing=0;
 	            Publish_Data_ToCloud_Login_Handler();
-				
+				Update_Dht11_Totencent_Value();
 	           
 	   	   }
 
@@ -193,6 +195,7 @@ void RunWifi_Command_Handler(void)
           if(disconnect == 0){
 		  	 disconnect ++;
 		    wifi_Disconnect_Fun();
+            SendWifiData_To_Cmd(0x0) ;
           }
 		  esp8266data.esp8266_login_cloud_success=0;
 	   break;
@@ -203,9 +206,24 @@ void RunWifi_Command_Handler(void)
 	 
      }
 	 if(esp8266data.esp8266_login_cloud_success==1){
+	 	  if(first_connect == 0){
+		  	first_connect ++ ;
+			first_dis =0;
+            SendWifiData_To_Cmd(0x01) ;
+		  }
 	      Tencent_Cloud_Rx_Handler();
 
      }
+//	 else{
+//		if(first_dis ==0){
+//			first_dis ++;
+//		   first_connect =0 ;
+//            SendWifiData_To_Cmd(0x0) ;
+
+//		}
+//		  
+//     }
+	 
 	 	
 }
 

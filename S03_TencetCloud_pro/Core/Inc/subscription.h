@@ -2,6 +2,26 @@
 #define __SUBSCRIPTION_H_
 #include "main.h"
 
+typedef enum DISPLAY_STATE_T{
+   
+    WIFI_POWER_ON = 0x80,
+    WIFI_POWER_OFF=0X81,
+    WIFI_MODE_1=0X08,   //state ->normal works
+    WIFI_MODE_2=0X18,   //state->sleeping works
+    WIFI_KILL_ON=0x04,  //Anion(plasma)
+    WIFI_KILL_OFF=0x14,
+    WIFI_PTC_ON = 0x02, 
+    WIFI_PTC_OFF = 0x12,
+    WIFI_SONIC_ON = 0x01,       //ultrasonic
+    WIFI_SONIC_OFF = 0x11,
+    WIFI_WIND_SPEED = 0x90,
+    WIFI_TEMPERATURE = 0xA0
+
+
+}display_state_t;
+
+
+
 typedef enum _subSignal{ /* enumeration for CParser signals */
    subscrible_data,
    OPEN_SIG, 

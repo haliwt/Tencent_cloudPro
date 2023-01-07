@@ -558,8 +558,15 @@ void RunCommand_Order(void)
 	case POWER_CONNECTOR_WIFI:
 		
 		wifi_t.runCommand_order_lable = wifi_has_benn_connected;
-		run_t.gPower_On = 0x0A;
+		run_t.gPower_On = UPDATE_TO_PANEL_DATA;
 
+	break;
+
+
+	case UPDATE_TO_PANEL_DATA:
+
+	 //   Updaet_DisplayPanel_Data_Handler();
+      
 	break;
 
 	case POWER_OFF:
@@ -567,7 +574,11 @@ void RunCommand_Order(void)
 		wifi_t.runCommand_order_lable = wifi_disconnect;
 	   esp8266data.esp8266_login_cloud_success=0;
 	   wifi_t.has_been_login_flag = 0;
+	   run_t.gPower_flag =POWER_OFF;
 	break;
+
+
+	
 
 	
 
@@ -608,46 +619,9 @@ void RunCommand_Order(void)
       
  }
 
-#if 0
-	   //has wifi 
-		if((esp8266data.esp8266_login_cloud_success==1)   && (run_t.gTimer_send_0xaa > 10 || send_0xaa < 4 )){
-		   run_t.gTimer_send_0xaa=0;
-		   wifi_t.wifi_detect++;
-		   send_0xaa++;
-		   
-			SendWifiData_To_Cmd(0xaa); 
-			if(send_0xaa > 50){
-			  send_0xaa =0 ;
-			//wifiDisplayTemperature_Humidity();//to tencent cloud data
-			 MqttData_Publis_ReadTempHum(run_t.gDht11_temperature,run_t.gDht11_humidity);
-		   
-		   }
-		   
-		}
-	   
-		  
 
 
-   //Fan at power of function 
-  if((run_t.gPower_flag == 0 ) && run_t.gFan_continueRun ==1){ //Fan be stop flag :0 -Fan works 
-        
-         if(run_t.gFan_counter < 61){
-         
-             FAN_CCW_RUN();
-         }        
-       
-        if(run_t.gFan_counter >= 60){ //60s
-        
-	     run_t.gFan_counter=0;
-	  
-         run_t.gFan_continueRun++;
-		  FAN_Stop();
-	   }
-   }
-
-}
-  #endif 
-
+ 
 
 
 

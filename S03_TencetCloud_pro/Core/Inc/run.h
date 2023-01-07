@@ -27,12 +27,8 @@ typedef enum{
    POWER_ON =0x01,
    POWER_OFF,
    POWER_CONNECTOR_WIFI,
-   PTC_ON,
-   PTC_OFF,
-   KILL_ON,
-   KILL_OFF,
-   ULTRASONIC_ON,
-   ULTRASONIC_OFF,
+   UPDATE_TO_PANEL_DATA
+
    
 
 }run_state_t;

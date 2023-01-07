@@ -16,7 +16,7 @@ void sendData_Real_TimeHum(uint8_t hum,uint8_t temp);
 
 void SendWifiData_To_Cmd(uint8_t wdata);
 
-
+void SendWifiData_To_PanelWindSpeed(uint8_t dat1);
 
 
 void SendWifiData_To_PanelTime(uint8_t dat1);

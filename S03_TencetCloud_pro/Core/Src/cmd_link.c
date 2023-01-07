@@ -157,15 +157,12 @@ void sendData_Real_TimeHum(uint8_t hum,uint8_t temp)
 void SendWifiData_To_PanelTime(uint8_t dat1)
 {
    
-	//crc=0x55;
+	
 		outputBuf[0]='M'; //4D
 		outputBuf[1]='A'; //41
 		outputBuf[2]='T'; //44	// 'T' time
 		outputBuf[3]=dat1; //	
 		
-		
-		//for(i=3;i<6;i++) crc ^= outputBuf[i];
-		//outputBuf[i]=crc;
 		transferSize=4;
 		if(transferSize)
 		{
@@ -177,7 +174,14 @@ void SendWifiData_To_PanelTime(uint8_t dat1)
 
 
 }
-
+/********************************************************************************
+**
+*Function Name:void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+*Function :UART callback function  for UART interrupt for transmit data
+*Input Ref: structure UART_HandleTypeDef pointer
+*Return Ref:NO
+*
+*******************************************************************************/
 void SendWifiData_To_PanelTemp(uint8_t dat1)
 {
    
@@ -198,7 +202,27 @@ void SendWifiData_To_PanelTemp(uint8_t dat1)
 			HAL_UART_Transmit_IT(&huart1,outputBuf,transferSize);
 		}
 
+}
 
+void SendWifiData_To_PanelWindSpeed(uint8_t dat1)
+{
+   
+	//crc=0x55;
+		outputBuf[0]='M'; //
+		outputBuf[1]='A'; //
+		outputBuf[2]='S'; // wind speed
+		outputBuf[3]=dat1; //	
+	
+		
+		//for(i=3;i<6;i++) crc ^= outputBuf[i];
+		//outputBuf[i]=crc;
+		transferSize=4;
+		if(transferSize)
+		{
+			while(transOngoingFlag); //UART interrupt transmit flag ,disable one more send data.
+			transOngoingFlag=1;
+			HAL_UART_Transmit_IT(&huart1,outputBuf,transferSize);
+		}
 
 }
 
@@ -270,14 +294,7 @@ void SendData_Real_GMT(uint8_t hdata,uint8_t mdata,uint8_t sdata)
 	}
 
 }
-/********************************************************************************
-**
-*Function Name:void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
-*Function :UART callback function  for UART interrupt for transmit data
-*Input Ref: structure UART_HandleTypeDef pointer
-*Return Ref:NO
-*
-*******************************************************************************/
+
 
 
 /********************************************************************************
