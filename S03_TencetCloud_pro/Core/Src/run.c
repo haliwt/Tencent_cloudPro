@@ -234,7 +234,7 @@ void RunCommand_Order(void)
 
 
 	case UPDATE_TO_PANEL_DATA:
-       if(run_t.gTimer_senddata_panel >20){
+       if(run_t.gTimer_senddata_panel >40){
 	   	    run_t.gTimer_senddata_panel=0;
 	        ActionEvent_Handler();
 

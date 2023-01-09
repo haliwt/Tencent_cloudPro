@@ -13,7 +13,8 @@
 uint8_t  inputBuf[4];
 uint8_t  inputCmd[2];
 uint8_t  wifiInputBuf[1];
-//unsigned char rx_value;
+uint8_t test_counter;
+uint8_t test_counter_usat1;
 
 uint8_t rx_wifi_data[7];
 
@@ -36,9 +37,36 @@ volatile uint8_t usart2_transOngoingFlag;
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
     static uint8_t state=0;
-    if(huart->Instance==USART1)//if(huart==&huart1) // Motor Board receive data (filter)
-	{
+   
+    //wifi usart2
+    if(huart->Instance==USART2)
+    {
+           
+       if(esp8266data.rx_link_cloud_flag ==1){
 
+		     
+               UART2_DATA.UART_Data[UART2_DATA.UART_Cnt] = UART2_DATA.UART_DataBuf[0];
+               UART2_DATA.UART_Cnt++;
+              
+                if(*UART2_DATA.UART_DataBuf==0X0A) // 0x0A = "\n"
+                {
+                   UART2_DATA.UART_Flag = 1;
+				   Wifi_Rx_InputInfo_Handler();
+				 
+                }
+              
+           	
+         } 
+		 else{
+            test_counter++;
+		    Subscribe_Rx_Interrupt_Handler();
+         }
+        
+         HAL_UART_Receive_IT(&huart2,UART2_DATA.UART_DataBuf,1);
+	}
+	else if(huart->Instance==USART1)//if(huart==&huart1) // Motor Board receive data (filter)
+	{
+        test_counter_usat1++;
 		switch(state)
 		{
 		case 0:  //#0
@@ -72,35 +100,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		}
 		HAL_UART_Receive_IT(&huart1,inputBuf,1);//UART receive data interrupt 1 byte
 		
-	}
-    //wifi usart2
-    if(huart->Instance==USART2)
-    {
-           
-         
-
-        if(esp8266data.rx_link_cloud_flag ==1){
-
-		     
-               UART2_DATA.UART_Data[UART2_DATA.UART_Cnt] = UART2_DATA.UART_DataBuf[0];
-               UART2_DATA.UART_Cnt++;
-              
-                if(*UART2_DATA.UART_DataBuf==0X0A) // 0x0A = "\n"
-                {
-                   UART2_DATA.UART_Flag = 1;
-				   Wifi_Rx_InputInfo_Handler();
-				 
-                }
-              
-           	
-         } 
-		 else{
-
-		    Subscribe_Rx_Interrupt_Handler();
-         }
-        
-         HAL_UART_Receive_IT(&huart2,UART2_DATA.UART_DataBuf,1);
-	}
+	 }
     
   
  }

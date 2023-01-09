@@ -26,9 +26,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         tm2++;
     
        run_t.gTimer_1s ++;
-
-	
-  
+       esp8266data.gTimer_publish_dht11++;
 	   esp8266data.gTimer_publish_timing++;
 	   esp8266data.gTimer_subscription_timing++;
 	  
