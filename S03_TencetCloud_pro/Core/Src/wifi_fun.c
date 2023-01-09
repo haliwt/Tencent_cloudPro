@@ -174,9 +174,9 @@ void RunWifi_Command_Handler(void)
 
 	   case wifi_tencent_publish_dht11_data:
 	       	HAL_UART_Receive_IT(&huart2,UART2_DATA.UART_DataBuf,1);
-             esp8266data.gTimer_publish_dht11=0;
-			  Update_Dht11_Totencent_Value();
-	          wifi_t.runCommand_order_lable= wifi_publish_update_tencent_cloud_data;
+            esp8266data.gTimer_publish_dht11=0;
+			Update_Dht11_Totencent_Value();
+	        wifi_t.runCommand_order_lable= wifi_publish_update_tencent_cloud_data;
 	   	       
 
 	   break;

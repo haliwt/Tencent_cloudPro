@@ -274,25 +274,29 @@ void Tencent_Cloud_Rx_Handler(void)
         esp8266data.rx_data_success=0;
    if(strstr((char *)UART2_DATA.UART_Data,"open\":0")){
 			   
-			run_t.wifi_gPower_On= 0;
-            run_t.gPower_On = POWER_OFF;
-   			SendWifiCmd_To_Order(WIFI_POWER_OFF);
+
+	    run_t.wifi_gPower_On= 0;
+	    run_t.gPower_On = POWER_OFF;
+		SendWifiCmd_To_Order(WIFI_POWER_OFF);
+            
 	}
 	else if(strstr((char *)UART2_DATA.UART_Data,"open\":1")){
-				   
-				run_t.wifi_gPower_On= 1;
-	            run_t.gPower_On = POWER_ON;
-				SendWifiCmd_To_Order(WIFI_POWER_ON);
+	   run_t.wifi_gPower_On= 1;
+       run_t.gPower_On = POWER_ON;
+	   SendWifiCmd_To_Order(WIFI_POWER_ON);
+				
 	}
 	else if(strstr((char *)UART2_DATA.UART_Data,"ptc\":0")){
-           
-            run_t.gDry=0;
-            SendWifiCmd_To_Order(WIFI_PTC_OFF);
+            if(run_t.gDry == 1){
+	            run_t.gDry=0;
+	            SendWifiCmd_To_Order(WIFI_PTC_OFF);
+            }
     }
     else if(strstr((char *)UART2_DATA.UART_Data,"ptc\":1")){
-          
-            run_t.gDry=1;
-			SendWifiCmd_To_Order(WIFI_PTC_ON);
+            if(run_t.gDry==0){
+	            run_t.gDry=1;
+				SendWifiCmd_To_Order(WIFI_PTC_ON);
+            }
 
     }
     else if(strstr((char *)UART2_DATA.UART_Data,"Anion\":0")){
@@ -336,12 +340,16 @@ void Tencent_Cloud_Rx_Handler(void)
     }
     else if(strstr((char *)UART2_DATA.UART_Data,"find")){
           
-            wind_hundred=UART2_DATA.UART_Data[7]-0x30;
-            wind_decade=UART2_DATA.UART_Data[8]-0x30;
-	        wind_unit=UART2_DATA.UART_Data[9]-0x30;
-            run_t.set_wind_speed_value = wind_hundred *100 + wind_decade*10 + wind_unit;
+            if(UART2_DATA.UART_Data[7]==0x31 && UART2_DATA.UART_Data[8]==0x30 && UART2_DATA.UART_Data[9]==0x30){
+		           run_t.set_wind_speed_value =100;
+            }
+			else{
+           		 wind_decade=UART2_DATA.UART_Data[7]-0x30;
+	       		 wind_unit=UART2_DATA.UART_Data[8]-0x30;
+                 run_t.set_wind_speed_value = wind_decade*10 + wind_unit;
+			}
     		SendWifiData_To_PanelWindSpeed(run_t.set_wind_speed_value);
     }
-    }
+   }
 
 }
