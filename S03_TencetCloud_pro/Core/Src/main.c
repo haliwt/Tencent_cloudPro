@@ -117,9 +117,7 @@ int main(void)
    
     /* USER CODE BEGIN 3 */
 
-	
-    
-      Decode_Function();
+	  Decode_Function();
       RunCommand_Order();
       
       RunWifi_Command_Handler();

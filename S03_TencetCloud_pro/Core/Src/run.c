@@ -243,9 +243,9 @@ void RunCommand_Order(void)
 
 	case POWER_OFF:
 		SetPowerOff_ForDoing();
-		wifi_t.runCommand_order_lable = wifi_disconnect;
-	   esp8266data.esp8266_login_cloud_success=0;
-	   wifi_t.has_been_login_flag = 0;
+		//wifi_t.runCommand_order_lable = wifi_disconnect;
+	   //esp8266data.esp8266_login_cloud_success=0;
+	   //wifi_t.has_been_login_flag = 0;
 	   run_t.gPower_flag =POWER_OFF;
 	break;
 
@@ -259,7 +259,7 @@ void RunCommand_Order(void)
 	
     
   
-    if(run_t.gTimer_1s>10){
+    if(run_t.gTimer_1s>20){
 		run_t.gTimer_1s=0;
 				
 		Update_DHT11_Value();

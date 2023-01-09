@@ -8,6 +8,7 @@
 #include "publish.h"
 #include "subscription.h"
 #include "dht11.h"
+#include "usart.h"
 
 WIFI_FUN   wifi_t;
 
@@ -67,17 +68,17 @@ void SetTemperatureHost(void(*temperatureHandler)(void))
 ***********************************************/
 void RunWifi_Command_Handler(void)
 {
-     static uint8_t first_sub,first_publish,disconnect;
+     static uint8_t first_sub,first_publish;
      switch(wifi_t.runCommand_order_lable){
 
 
 	    case wifi_has_benn_connected:
-		  disconnect =0;
+	
 	      first_sub=0;
 		  first_sub=0;
 		  first_connect=0;
 		  SmartPhone_TryToLink_TencentCloud();
-		  if(esp8266data.esp8266_login_cloud_success==1){
+	     if(esp8266data.esp8266_login_cloud_success==1){
 		  	    esp8266data.rx_link_cloud_flag=0;
 				esp8266data.gTimer_publish_timing=0;
 	            esp8266data.gTimer_subscription_timing=0;
@@ -86,8 +87,9 @@ void RunWifi_Command_Handler(void)
 				
 		  }
 		  else{
-
-		       wifi_t.runCommand_order_lable = wifi_link_tencent_cloud;
+		  	
+			  
+               wifi_t.runCommand_order_lable = wifi_link_tencent_cloud;
 
 		  }
 
@@ -102,7 +104,6 @@ void RunWifi_Command_Handler(void)
 	        esp8266data.gTimer_subscription_timing=0;
 
 			if(esp8266data.esp8266_login_cloud_success==1){
-				disconnect =0;
 			    wifi_t.runCommand_order_lable = wifi_tencent_subscription_init_data;
 			}
 
@@ -180,13 +181,13 @@ void RunWifi_Command_Handler(void)
 	   break;
 
 	   case wifi_disconnect:
-          if(disconnect == 0){
-		  	 disconnect ++;
-		    wifi_Disconnect_Fun();
-            SendWifiData_To_Cmd(0x0) ;
-          }
-		  esp8266data.esp8266_login_cloud_success=0;
-		  esp8266data.rx_link_cloud_flag=1;
+          //if(disconnect == 0){
+		  	// disconnect ++;
+		   // wifi_Disconnect_Fun();
+           //  SendWifiData_To_Cmd(0x0) ;
+         // }
+		  //esp8266data.esp8266_login_cloud_success=0;
+		 // esp8266data.rx_link_cloud_flag=1;
 	   break;
 
 	   default:
@@ -200,6 +201,7 @@ void RunWifi_Command_Handler(void)
 		  	first_connect ++ ;
             SendWifiData_To_Cmd(0x01) ;
 		  }
+		 
 	      Tencent_Cloud_Rx_Handler();
 
      }

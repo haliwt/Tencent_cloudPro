@@ -275,11 +275,13 @@ void Tencent_Cloud_Rx_Handler(void)
    if(strstr((char *)UART2_DATA.UART_Data,"open\":0")){
 			   
 			run_t.wifi_gPower_On= 0;
+            run_t.gPower_On = POWER_OFF;
    			SendWifiCmd_To_Order(WIFI_POWER_OFF);
 	}
 	else if(strstr((char *)UART2_DATA.UART_Data,"open\":1")){
 				   
 				run_t.wifi_gPower_On= 1;
+	            run_t.gPower_On = POWER_ON;
 				SendWifiCmd_To_Order(WIFI_POWER_ON);
 	}
 	else if(strstr((char *)UART2_DATA.UART_Data,"ptc\":0")){
