@@ -64,7 +64,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         
          HAL_UART_Receive_IT(&huart2,UART2_DATA.UART_DataBuf,1);
 	}
-	else if(huart->Instance==USART1)//if(huart==&huart1) // Motor Board receive data (filter)
+
+	
+	if(huart->Instance==USART1)//if(huart==&huart1) // Motor Board receive data (filter)
 	{
         test_counter_usat1++;
 		switch(state)
