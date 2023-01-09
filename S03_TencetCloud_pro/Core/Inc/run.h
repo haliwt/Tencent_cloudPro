@@ -65,6 +65,7 @@ typedef struct _RUN_T{
 	  uint8_t  gUlransonic;
 	  uint8_t  gModel;
       uint8_t Single_cmd ;
+	  uint8_t gFan_counter;
 	  
 	  uint8_t  set_temperature_value;
 	  uint8_t  set_temperature_decade;
@@ -77,15 +78,13 @@ typedef struct _RUN_T{
 
 	
     uint8_t gTimer_60s;
-	uint8_t gTimer_wifi_1s;
 	uint8_t gTimer_1s;
-
-	uint8_t gFan_counter;
+	uint8_t gTimer_senddata_panel;
 
 	
-   
-    
- }RUN_T;
+
+	
+}RUN_T;
 
 //#define CProcessInit(me_) ((me_)->cmdCtr__ =0,(me_)->state__ = IDLE)
 extern uint8_t ReceiveBuffer[1];

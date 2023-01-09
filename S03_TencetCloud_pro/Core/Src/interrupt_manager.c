@@ -18,15 +18,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
     static uint8_t tm0 ,tm1,tm2;
     if(htim->Instance==TIM3){
+		
 	   tm0 ++ ;
- 
+       run_t.gTimer_senddata_panel++;
 	 if(tm0 > 99){//100ms *10 = 1000ms =1s
         tm0 =0;
         tm2++;
     
        run_t.gTimer_1s ++;
 
-	  
+	
   
 	   esp8266data.gTimer_publish_timing++;
 	   esp8266data.gTimer_subscription_timing++;

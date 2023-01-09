@@ -58,16 +58,14 @@ static void InitWifiModule(void)
 	if(run_t.wifi_config_net_lable==0)
 		{
 			run_t.wifi_config_net_lable++;
-		  //  HAL_UART_Abort(&huart2);
 			
 			WIFI_IC_ENABLE();
 	
 	
-			run_t.gTimer_wifi_1s=0;
 			at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
 			HAL_Delay(100);
 			at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
-			run_t.gTimer_wifi_1s=0;
+		
 			HAL_Delay(100);
 			
 			

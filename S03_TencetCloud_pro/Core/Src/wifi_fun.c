@@ -32,6 +32,7 @@ void PowerOff_Host(void(*poweroffHandler)(void))
    PowerOff = poweroffHandler;
 
 }
+uint8_t first_connect;
 /****************************************************************
      * 
      * Function Name:void AI_Function_Host(void(*AIhandler)(uint8_t sig))
@@ -66,7 +67,7 @@ void SetTemperatureHost(void(*temperatureHandler)(void))
 ***********************************************/
 void RunWifi_Command_Handler(void)
 {
-     static uint8_t first_sub,first_publish,disconnect,first_connect;
+     static uint8_t first_sub,first_publish,disconnect;
      switch(wifi_t.runCommand_order_lable){
 
 
@@ -166,6 +167,7 @@ void RunWifi_Command_Handler(void)
             SendWifiData_To_Cmd(0x0) ;
           }
 		  esp8266data.esp8266_login_cloud_success=0;
+		  esp8266data.rx_link_cloud_flag=1;
 	   break;
 
 	   default:
@@ -174,6 +176,7 @@ void RunWifi_Command_Handler(void)
 	 
      }
 	 if(esp8266data.esp8266_login_cloud_success==1){
+	 	 esp8266data.rx_link_cloud_flag=0;
 	 	  if(first_connect == 0){
 		  	first_connect ++ ;
             SendWifiData_To_Cmd(0x01) ;

@@ -185,33 +185,26 @@ void Subscribe_Rx_Interrupt_Handler(void)
             
       break;
          
-      case 10:
-       if(UART2_DATA.UART_DataBuf[0] == '"')  //hex :4B - "K" -fixed
-             esp8266data.rx_data_state=11; //=1
-         else{
-           esp8266data.rx_data_state =0;
-            esp8266data.rx_counter=0;
-         }
-
-      case 11:
+     case 10:
         
          if(esp8266data.rx_data_success==0){
          UART2_DATA.UART_Data[esp8266data.rx_counter] = UART2_DATA.UART_DataBuf[0];
             esp8266data.rx_counter++ ;
                  
-         if(UART2_DATA.UART_DataBuf[0]=='}') // end
+         if(UART2_DATA.UART_DataBuf[0]==0x7D) //'}') // end
          {
             char_len = esp8266data.rx_counter;
             esp8266data.rx_data_success=1;
             esp8266data.rx_data_state=0;
             esp8266data.rx_counter=0;
             UART2_DATA.UART_Data[char_len];
-           break;
+          
                
          }
          else{
 
-            esp8266data.rx_data_state=11; 
+            esp8266data.rx_data_state=10; 
+			
 
          }
         }

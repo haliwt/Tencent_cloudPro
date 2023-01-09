@@ -234,10 +234,12 @@ void RunCommand_Order(void)
 
 
 	case UPDATE_TO_PANEL_DATA:
+       if(run_t.gTimer_senddata_panel >20){
+	   	    run_t.gTimer_senddata_panel=0;
+	        ActionEvent_Handler();
 
-	   ActionEvent_Handler();
-      
-	break;
+       	}
+    break;
 
 	case POWER_OFF:
 		SetPowerOff_ForDoing();

@@ -104,7 +104,7 @@ int main(void)
    HAL_TIM_Base_Start_IT(&htim3);//HAL_TIM_Base_Start(&htim3);
    UART_Start_Receive_IT(&huart1,inputBuf,1);
    //DMA usart2
-   UART_Start_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,sizeof(UART2_DATA.UART_DataBuf));
+   UART_Start_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,1);
   /* USER CODE END 2 */
 
    
