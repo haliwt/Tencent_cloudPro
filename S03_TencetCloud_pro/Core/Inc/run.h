@@ -104,6 +104,7 @@ void Single_RunCmd(uint8_t sig);
 void Single_Mode(void);
 
 void Single_ReceiveCmd(uint8_t cmd);
+void SystemReset(void);
 
 
 #endif 

@@ -42,15 +42,13 @@ void Decode_RunCmd(void)
         
        if(cmdType_2 == 0x00){ //power off
           
-		
-		  run_t.gPower_On=POWER_OFF;
-		
-	
-		   
-      } 
+	       run_t.gPower_On=POWER_OFF;
+	  } 
       else if(cmdType_2 ==1){ //power on
-       run_t.gPower_On=POWER_ON;
-	   
+         
+         run_t.gPower_flag = POWER_ON;
+		 run_t.gPower_On = POWER_ON;
+	     
       }       
       else if(cmdType_2==2){
 
@@ -60,15 +58,6 @@ void Decode_RunCmd(void)
           
       break;
       
-      case 'A': //AI function ->wifi ->indicate Fan
-        
-        if(run_t.gPower_On==1){
-			
-		  Single_ReceiveCmd(cmdType_2);
-            
-		}
-
-      break;
 
 	  case 'H': //remember setup time timing
 	      if(run_t.gPower_On==1){
@@ -77,26 +66,11 @@ void Decode_RunCmd(void)
         }
 	   break;
 
-	  case 'I': // set up time timing how many ?
-	  	  if(run_t.gPower_On==1){
-				 
-			
-        }
-
-
-	  break;
-
 	  case 'T': //set up temperature
 	  	if(run_t.gPower_On==1){
-				 
-			
-
-			   // mcu_dp_value_update(DPID_SETTEMP,cmdType_2); //VALUE型数据上报;
-			   MqttData_Publis_SetTemp(cmdType_2);
-			
-			     
-			
-        }
+		   // mcu_dp_value_update(DPID_SETTEMP,cmdType_2); //VALUE型数据上报;
+			MqttData_Publis_SetTemp(cmdType_2);
+		}
 
 	  break;
 
@@ -120,86 +94,15 @@ void Decode_RunCmd(void)
 	*Return Ref: NO
 	*
 **********************************************************************/
-void Single_ReceiveCmd(uint8_t cmd)
+void SystemReset(void)
 {
-   
-	switch(cmd){
-	
-		 case 0x11: //wifi key command turn off
-		  
-			  
-	
-		 break;
-	
-		case 0x01://wifi key command turn on
-			 
-		break;
-	
-		//AI key
-		case 0x08: //AI key command turn on
+    if(run_t.gPower_flag ==POWER_ON){
+		run_t.gPower_flag=0xff;
+		run_t.gPower_On=POWER_ON;
 		
-			 run_t.Single_cmd = 0x08;
-			
-		   
-	
-		break;
-	
-		case 0x18: //AI turn off
-		  
-			   run_t.Single_cmd = 0x18;
-			 
-		 
-		 break;
-	
-		//dry key
-		case 0x02:
-		   
-			 run_t.Single_cmd = 0x02;
-			
-		   
-		break;
-	
-		case 0x12:
-		  
-			 run_t.Single_cmd = 0x12;
-			
-		  
-		break;
-	
-		//kill key
-	
-		case 0x04:
-		  
-			 run_t.Single_cmd = 0x04;
-			
-		
-		break;
-	
-		case 0x14:
-		   
-			 run_t.Single_cmd = 0x14;
-		
-		 
-		break;
-	
-		case 0x88:
-				 run_t.Single_cmd = 0x88; //turn on plasma and dry ->set up temperature value
-			
-	
-	
-		break;
-	
-		case 0x87:
-				run_t.Single_cmd = 0x87;  //tunr off plasma and dry machine ->set up temperature value 
-				
-		break;
-	
-		default:
-			
-			run_t.Single_cmd = 0;
-		break;
-
-}
+		__set_PRIMASK(1) ;
+		HAL_NVIC_SystemReset();
+    }
 
 }
 

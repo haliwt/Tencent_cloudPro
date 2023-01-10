@@ -87,8 +87,7 @@ void RunWifi_Command_Handler(void)
 				
 		  }
 		  else{
-		  	
-			   SmartPhone_TryToLink_TencentCloud();
+		  	   SmartPhone_TryToLink_TencentCloud();
                wifi_t.runCommand_order_lable = wifi_link_tencent_cloud;
 
 		  }
@@ -179,16 +178,6 @@ void RunWifi_Command_Handler(void)
 	        wifi_t.runCommand_order_lable= wifi_publish_update_tencent_cloud_data;
 	   	       
 
-	   break;
-
-	   case wifi_disconnect:
-          //if(disconnect == 0){
-		  	// disconnect ++;
-		   // wifi_Disconnect_Fun();
-           //  SendWifiData_To_Cmd(0x0) ;
-         // }
-		  //esp8266data.esp8266_login_cloud_success=0;
-		 // esp8266data.rx_link_cloud_flag=1;
 	   break;
 
 	   default:

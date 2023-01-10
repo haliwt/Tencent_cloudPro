@@ -116,10 +116,10 @@ int main(void)
    
     /* USER CODE BEGIN 3 */
 
-	  Decode_Function();
-      RunCommand_Order();
-      
-      RunWifi_Command_Handler();
+	Decode_Function();
+	//SystemReset();
+    RunCommand_Order();
+    RunWifi_Command_Handler();
 	
    }
   /* USER CODE END 3 */
