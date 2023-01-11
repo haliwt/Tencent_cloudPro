@@ -93,7 +93,7 @@ extern RUN_T run_t;
 
 
 
-void RunCommand_Order(void);
+void  RunCommand_MainBoard_Fun(void);
 
 void Decode_RunCmd(void);
 

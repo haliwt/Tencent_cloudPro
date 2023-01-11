@@ -67,11 +67,11 @@ typedef struct ESP8266_DATA
     uint8_t subscrible_receive_data_label;
 	
 
-	uint8_t esp8266_timer_link_1s;
-	uint8_t esp8266_timer_1s;
+
+
 	uint8_t gTimer_subscription_timing;
-	uint8_t gTimer_tencent_down_1s;
-    uint8_t esp8266_timer_dynamic_1s;
+
+ 
 	uint8_t gTimer_publish_timing;
 	uint8_t gTimer_publish_dht11;
 	

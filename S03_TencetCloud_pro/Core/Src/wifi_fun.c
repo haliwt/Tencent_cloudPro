@@ -184,7 +184,7 @@ void RunWifi_Command_Handler(void)
      }
 	 if(esp8266data.esp8266_login_cloud_success==1){
 	 	 esp8266data.rx_link_cloud_flag=0;
-	 	  if(first_connect == 0){
+	 	  if(first_connect == 0 ){
 		  	first_connect ++ ;
             SendWifiData_To_Cmd(0x01) ;
 		  }

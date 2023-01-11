@@ -98,13 +98,13 @@ void SystemReset(void)
 
 /**********************************************************************
 	*
-	*Functin Name: void RunCommand_Order(void)
+	*Functin Name: void  RunCommand_MainBoard_Fun(void)
 	*Function : be check key of value 
 	*Input Ref:  key of value
 	*Return Ref: NO
 	*
 **********************************************************************/
-void RunCommand_Order(void)
+void RunCommand_MainBoard_Fun(void)
 {
   
    switch(run_t.gPower_On){
@@ -114,6 +114,10 @@ void RunCommand_Order(void)
 	    Update_DHT11_Value();
 	    run_t.gPower_On = UPDATE_TO_PANEL_DATA;
         run_t.gTimer_1s=0;
+		if(esp8266data.esp8266_login_cloud_success==1){
+	 	     SendWifiData_To_Cmd(0x01) ;
+		}
+		
 	break;
 
    case UPDATE_TO_PANEL_DATA:
@@ -134,8 +138,7 @@ void RunCommand_Order(void)
     if(run_t.gTimer_1s>7 ){
 		run_t.gTimer_1s=0;
 		Update_DHT11_Value();
-					   
-	 }
+	  }
 
 	if(run_t.gFan_continueRun ==1 && run_t.gPower_flag == POWER_OFF){
           
