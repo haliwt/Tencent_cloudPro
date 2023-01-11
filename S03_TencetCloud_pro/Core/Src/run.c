@@ -106,7 +106,7 @@ void SystemReset(void)
 **********************************************************************/
 void RunCommand_MainBoard_Fun(void)
 {
-  
+   static uint8_t stop_fan_flag;
    switch(run_t.gPower_On){
 
 	case POWER_ON:
@@ -117,7 +117,7 @@ void RunCommand_MainBoard_Fun(void)
 		if(esp8266data.esp8266_login_cloud_success==1){
 	 	     SendWifiData_To_Cmd(0x01) ;
 		}
-		
+		stop_fan_flag=0;
 	break;
 
    case UPDATE_TO_PANEL_DATA:
@@ -130,7 +130,12 @@ void RunCommand_MainBoard_Fun(void)
 
 	case POWER_OFF:
 		SetPowerOff_ForDoing();
+        if(run_t.gFan_continueRun==1 && stop_fan_flag==0){
+            stop_fan_flag++;
+            run_t.gFan_counter=0;
+        }
 	   run_t.gPower_flag =POWER_OFF;
+       run_t.gPower_On=0xff;
 	break;
 
     }
