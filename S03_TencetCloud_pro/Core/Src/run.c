@@ -11,16 +11,7 @@
 #include "mqtt_iot.h"
 
 
- 
-
-
-//static CProcess1 cprocess;
 RUN_T run_t; 
-
- 
-
-
-
 
 /**********************************************************************
 *
@@ -43,6 +34,7 @@ void Decode_RunCmd(void)
        if(cmdType_2 == 0x00){ //power off
           
 	       run_t.gPower_On=POWER_OFF;
+            run_t.gPower_flag = POWER_OFF;
 	  } 
       else if(cmdType_2 ==1){ //power on
          
@@ -50,32 +42,30 @@ void Decode_RunCmd(void)
 		 run_t.gPower_On = POWER_ON;
 	     
       }       
-      else if(cmdType_2==2){
-
-        run_t.gPower_On=POWER_CONNECTOR_WIFI;
-
-      }
           
       break;
       
 
-	  case 'H': //remember setup time timing
-	      if(run_t.gPower_On==1){
-				 
-			
+	  case 'W': //wifi-function
+	      if(run_t.gPower_flag==POWER_ON){
+	      if(cmdType_2==1){
+			  wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;	 
+		   }
+		   else if(cmdType_2==0){
+               	wifi_t.runCommand_order_lable= wifi_has_been_connected;
+		   }
+		   else if(cmdType_2==0x14){
+                run_t.gModel =2; //turn off
+            }
+            else if(cmdType_2==0x04){
+                run_t.gModel =1;  //turn on
+            }
         }
 	   break;
 
-	  case 'T': //set up temperature
-	  	if(run_t.gPower_On==1){
-		   // mcu_dp_value_update(DPID_SETTEMP,cmdType_2); //VALUE型数据上报;
-			MqttData_Publis_SetTemp(cmdType_2);
-		}
-
-	  break;
 
 	  case 'Z' ://buzzer sound 
-	    if(run_t.gPower_On==1){
+	    if(run_t.gPower_flag==POWER_ON){
 
 		    if(cmdType_2== 'Z'){//turn off AI
 			    Buzzer_On();
@@ -116,60 +106,37 @@ void SystemReset(void)
 **********************************************************************/
 void RunCommand_Order(void)
 {
-    
+  
    switch(run_t.gPower_On){
 
 	case POWER_ON:
 		SetPowerOn_ForDoing();
 	    Update_DHT11_Value();
-	  
-		 wifi_t.runCommand_order_lable = wifi_has_benn_connected;
 	    run_t.gPower_On = UPDATE_TO_PANEL_DATA;
-     
+        run_t.gTimer_1s=0;
 	break;
 
-	case POWER_CONNECTOR_WIFI:
-		
-		wifi_t.runCommand_order_lable = wifi_has_benn_connected;
-		run_t.gPower_On = UPDATE_TO_PANEL_DATA;
-
-	break;
-
-
-	case UPDATE_TO_PANEL_DATA:
-       if(run_t.gTimer_senddata_panel >40){
+   case UPDATE_TO_PANEL_DATA:
+       if(run_t.gTimer_senddata_panel >40){ //400ms
 	   	    run_t.gTimer_senddata_panel=0;
 	        ActionEvent_Handler();
 
-       	}
+     }
     break;
 
 	case POWER_OFF:
 		SetPowerOff_ForDoing();
-		//wifi_t.runCommand_order_lable = wifi_disconnect;
-	   //esp8266data.esp8266_login_cloud_success=0;
-	   //wifi_t.has_been_login_flag = 0;
 	   run_t.gPower_flag =POWER_OFF;
 	break;
 
-
-	
-
-	
-
-   
     }
 	
-    
-  
-    if(run_t.gTimer_1s>20){
+    if(run_t.gTimer_1s>7 ){
 		run_t.gTimer_1s=0;
-				
 		Update_DHT11_Value();
 					   
 	 }
 
-	
 	if(run_t.gFan_continueRun ==1 && run_t.gPower_flag == POWER_OFF){
           
                 if(run_t.gFan_counter < 60){
