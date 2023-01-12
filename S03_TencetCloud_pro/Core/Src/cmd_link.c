@@ -63,9 +63,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 				  if(wifi_t.get_rx_beijing_time_flag==1){
 				  	UART2_DATA.UART_Data[UART2_DATA.UART_Cnt] = UART2_DATA.UART_DataBuf[0];
 					UART2_DATA.UART_Cnt++;
-				    if(UART2_DATA.UART_Cnt > 47 ){
-                        // Wifi_Rx_Beijing_Time_Handler();
-				    }
+				    
 				  }
 				  else
 				    Subscribe_Rx_Interrupt_Handler();
