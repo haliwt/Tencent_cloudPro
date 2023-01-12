@@ -231,13 +231,14 @@ void Wifi_SoftAP_Config_Handler(void)
 	 
           //  HAL_Delay(1000);
 		  //  HAL_Delay(1000);
-          //  HAL_Delay(1000);
+            HAL_Delay(1000);
 		    HAL_Delay(1000);
 			HAL_Delay(1000);
 		    HAL_Delay(1000);
 	        sprintf((char *)device_massage, "AT+TCSAP=\"%s\"\r\n",DEVUICE_NAME);
             usart2_flag = at_send_data(device_massage, strlen((const char *)device_massage));
 			 HAL_Delay(1000);
+             HAL_Delay(1000);
 			 wifi_t.soft_ap_config_flag =1;
 			 esp8266data.rx_link_cloud_flag =1; //enable usart2 receive wifi  data
 			 run_t.wifi_config_net_lable=0xff;
@@ -275,6 +276,7 @@ void SmartPhone_LinkTencent_Cloud(void)
 
        esp8266data.soft_ap_config_success=0;
 	   HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
+       HAL_Delay(1000);
        HAL_Delay(1000);
        SendWifiData_To_Cmd(1);//To tell display panel wifi be connetor to tencent cloud is success
 	 

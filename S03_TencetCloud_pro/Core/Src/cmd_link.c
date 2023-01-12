@@ -48,7 +48,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	      if(UART2_DATA.UART_Flag ==0){
 
 		      UART2_DATA.UART_Data[UART2_DATA.UART_Cnt] = UART2_DATA.UART_DataBuf[0];
-		  	
+		  	  UART2_DATA.UART_Cnt++;
 			  if(*UART2_DATA.UART_DataBuf==0X0A) // 0x0A = "\n"
 		         {
 		            UART2_DATA.UART_Flag = 1;
@@ -68,7 +68,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	                {
 	                   UART2_DATA.UART_Flag = 1;
 					   Wifi_Rx_InputInfo_Handler();
-					 
+					     UART2_DATA.UART_Cnt=0;
 	                }
 	              
 	           	
