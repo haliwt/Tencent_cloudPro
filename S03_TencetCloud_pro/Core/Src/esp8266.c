@@ -241,6 +241,7 @@ void Wifi_SoftAP_Config_Handler(void)
              HAL_Delay(1000);
 			 wifi_t.soft_ap_config_flag =1;
 			 esp8266data.rx_link_cloud_flag =1; //enable usart2 receive wifi  data
+			 UART2_DATA.UART_Cnt=0;
 			 run_t.wifi_config_net_lable=0xff;
 			
 	 break;
@@ -289,6 +290,7 @@ void SmartPhone_LinkTencent_Cloud(void)
 void SmartPhone_TryToLink_TencentCloud(void)
 {
     esp8266data.rx_link_cloud_flag =1; //enable usart2 receive wifi  data
+    UART2_DATA.UART_Cnt=0;
 	wifi_t.soft_ap_config_flag =0;
     HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
 	HAL_Delay(1000);

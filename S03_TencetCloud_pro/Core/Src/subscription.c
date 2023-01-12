@@ -373,27 +373,73 @@ void Wifi_Rx_Beijing_Time_Handler(void)
             }
          break;
 
-      case 1:
+	  case 1:
+	  	 if(UART2_DATA.UART_DataBuf[0] == ' ')
+		  	 esp8266data.rx_data_state=2; //=1
+		  else{
+		      esp8266data.rx_data_state=0; //=1
+
+          }
+	  	break;
+
+      case 2:
       
            wifi_t.real_hours=UART2_DATA.UART_DataBuf[0];
-           esp8266data.rx_data_state=2; //=1
+           esp8266data.rx_data_state=3; //=1
          break;
-      case 2: //#1
+
+	  case 3:
+	  	  if(UART2_DATA.UART_DataBuf[0] == ':')
+		  	 esp8266data.rx_data_state=4; //=1
+		  else{
+		      esp8266data.rx_data_state=0; //=1
+
+          }
+	  	break;
+      case 4: //#1
       
             wifi_t.real_minutes = UART2_DATA.UART_DataBuf[0];
-            esp8266data.rx_data_state=3; //=1
+            esp8266data.rx_data_state=5; //=1
        
          break;
+
+	  case 5:
+	  	 if(UART2_DATA.UART_DataBuf[0] == ':')
+		  	 esp8266data.rx_data_state=6; //=1
+		  else{
+		      esp8266data.rx_data_state=0; //=1
+
+          }
+	  break;
             
-        case 3:
+        case 6:
            wifi_t.real_seconds = UART2_DATA.UART_DataBuf[0];
-           esp8266data.rx_data_state=0; //=1
-           wifi_t.rx_beijing_decode_flag =1;
-		   wifi_t.get_beijing_flag=0 ;
-		   UART2_DATA.UART_Flag = 0; 
-		   UART2_DATA.UART_Cnt=0;
+           esp8266data.rx_data_state=7; //=1
+           
         
         break;
+
+		case 7:
+			if(UART2_DATA.UART_DataBuf[0] == ' ')
+		  	 esp8266data.rx_data_state=8; //=1
+		  else{
+		      esp8266data.rx_data_state=0; //=1
+
+          }
+
+		break;
+		  
+		case 8:
+			 if(UART2_DATA.UART_DataBuf[0] ==20){
+
+		          wifi_t.rx_beijing_decode_flag =1;
+				  wifi_t.get_beijing_flag=0 ;
+				  esp8266data.rx_data_state=0; //=1
+				  
+		     }
+			
+			
+		break;
         
         
 

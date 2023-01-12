@@ -43,41 +43,33 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     if(huart->Instance==USART2)
     {
            
-      if(wifi_t.get_beijing_flag==1){
-
-	      if(UART2_DATA.UART_Flag ==0){
-
-		      UART2_DATA.UART_Data[UART2_DATA.UART_Cnt] = UART2_DATA.UART_DataBuf[0];
-		  	  UART2_DATA.UART_Cnt++;
-			  if(*UART2_DATA.UART_DataBuf==0X0A) // 0x0A = "\n"
-		         {
-		            UART2_DATA.UART_Flag = 1;
-					Wifi_Rx_Beijing_Time_Handler();
-					
-		        }
-	      } 
-	  }
-	  else{
+     
+	
 	      if(esp8266data.rx_link_cloud_flag ==1){
 
-			     
-	               UART2_DATA.UART_Data[UART2_DATA.UART_Cnt] = UART2_DATA.UART_DataBuf[0];
-	               UART2_DATA.UART_Cnt++;
-	              
-	                if(*UART2_DATA.UART_DataBuf==0X0A) // 0x0A = "\n"
-	                {
-	                   UART2_DATA.UART_Flag = 1;
-					   Wifi_Rx_InputInfo_Handler();
-					     UART2_DATA.UART_Cnt=0;
-	                }
-	              
-	           	
+			UART2_DATA.UART_Data[UART2_DATA.UART_Cnt] = UART2_DATA.UART_DataBuf[0];
+			UART2_DATA.UART_Cnt++;
+
+			if(*UART2_DATA.UART_DataBuf==0X0A) // 0x0A = "\n"
+			{
+			UART2_DATA.UART_Flag = 1;
+			Wifi_Rx_InputInfo_Handler();
+			UART2_DATA.UART_Cnt=0;
+			}
+
 	      } 
 		  else{
 		          test_counter++;
-				  Subscribe_Rx_Interrupt_Handler();
-	          }
-	     }
+				  if(wifi_t.get_beijing_flag==1){
+				  	UART2_DATA.UART_Data[UART2_DATA.UART_Cnt] = UART2_DATA.UART_DataBuf[0];
+					UART2_DATA.UART_Cnt++;
+
+	                 Wifi_Rx_Beijing_Time_Handler();
+				  }
+				  else
+				    Subscribe_Rx_Interrupt_Handler();
+	        }
+	   
       HAL_UART_Receive_IT(&huart2,UART2_DATA.UART_DataBuf,1);
 	}
 
