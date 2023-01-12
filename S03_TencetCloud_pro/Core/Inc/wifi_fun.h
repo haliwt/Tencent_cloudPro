@@ -15,12 +15,12 @@ typedef enum _wifi_state_t{
 	
     wifi_has_been_connected =0x01,
 	wifi_link_tencent_cloud,
-	wifi_tencent_subscription_init_data,
 	wifi_tencent_publish_init_data,
-	wifi_tencent_publish_login_init_data,
+	wifi_tencent_subscription_data,
 	wifi_publish_update_tencent_cloud_data,
 	wifi_tencent_subscription_login_data,
 	wifi_tencent_publish_dht11_data,
+	wifi_get_beijing_time,
 	wifi_disconnect
 
 
@@ -28,52 +28,21 @@ typedef enum _wifi_state_t{
 
 
 typedef struct _WIFI_FUN{
-
-    uint8_t wifi_power;
-  
-    uint8_t wifi_RunMode;
-	uint8_t runCommand_order_lable;
+	
+    uint8_t runCommand_order_lable;
 	uint8_t has_been_login_flag;
+    uint8_t soft_ap_config_flag;
+    uint8_t get_beijing_flag;
+	uint8_t rx_beijing_decode_flag;
 
 
-	uint8_t WifiMode;
-	uint8_t wifi_cmd;
-    uint8_t wifi_enable_flag;
-	uint8_t soft_ap_config_flag;
-
-
-	uint8_t wifi_ai;
-	uint8_t wifi_itemAi;
-	uint8_t wifi_dry;
-	uint8_t wifi_kill;
-	uint8_t wifi_counter; 
-	uint8_t wifi_detect;
-
-
-	uint8_t real_hours;
+    uint8_t real_hours;
 	uint8_t real_minutes;
 	uint8_t real_seconds;
 
-	uint8_t setTimesValue;
-	uint8_t dispTimesValue;
-	uint8_t SetTemperatureValue;
-
-
-
-    uint8_t getTime_flag;
-	uint8_t gTimer_500ms;
-	uint8_t gTimer_1s;
-    
-    uint8_t timer_wifi_send_cmd;
-    uint8_t timer_wiifi_sensor;
-	uint8_t wifi_timer_send_info;
-    uint8_t getGreenTime;
-    uint8_t gTimer_gmt;
+    uint8_t gTimer_1s;
+    uint8_t gTimer_get_beijing_time;
 	
-	uint8_t getTime[7];
-	
-
-
 }WIFI_FUN;
 
 extern WIFI_FUN   wifi_t;
@@ -96,9 +65,9 @@ void wifiDisplayTemperature_Humidity(void);
 void wifiUpdate_SetTimeValue(uint8_t tv);
 void wifiUpdate_SetTemperatureValue(uint8_t temp);
 
-
-
 void RunWifi_Command_Handler(void);
+void GetNTP_Times(void);
+
 
 #endif 
 

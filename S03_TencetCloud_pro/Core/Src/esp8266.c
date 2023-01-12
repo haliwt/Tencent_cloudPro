@@ -23,7 +23,7 @@ void InitWifiModule(void);
 
 
 
-static uint8_t wifi_inputBuf[20];
+
 
 /**
  *pdata: pointer of data for send
@@ -229,9 +229,9 @@ void Wifi_SoftAP_Config_Handler(void)
 
 	 case wifi_set_tcsap:
 	 
-            HAL_Delay(1000);
-		    HAL_Delay(1000);
-            HAL_Delay(1000);
+          //  HAL_Delay(1000);
+		  //  HAL_Delay(1000);
+          //  HAL_Delay(1000);
 		    HAL_Delay(1000);
 			HAL_Delay(1000);
 		    HAL_Delay(1000);
@@ -301,5 +301,10 @@ void wifi_Disconnect_Fun(void)
 
 }
 
+void Get_BeiJing_Time_Cmd(void)
+{
 
+  HAL_UART_Transmit(&huart2, "AT+CIPSNTPCFG=1,8,\"cn.ntp.org.cn\",\"ntp.sjtu.edu.cn\"", strlen("AT+CIPSNTPCFG=1,8,\"cn.ntp.org.cn\",\"ntp.sjtu.edu.cn\""), 5000);//开始连接
+
+}
 

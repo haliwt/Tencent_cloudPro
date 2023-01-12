@@ -353,3 +353,66 @@ void Tencent_Cloud_Rx_Handler(void)
    }
 
 }
+void Wifi_Rx_Beijing_Time_Handler(void)
+{
+
+    static uint8_t char_len;
+    switch(esp8266data.rx_data_state)
+      {
+      case 0:  //#0
+
+            
+         if(UART2_DATA.UART_DataBuf[0] == 0x01 || UART2_DATA.UART_DataBuf[0] == 0x02 ||UART2_DATA.UART_DataBuf[0] == 0x03 ||UART2_DATA.UART_DataBuf[0] == 0x04 \
+		 	|| UART2_DATA.UART_DataBuf[0] == 0x05 ||UART2_DATA.UART_DataBuf[0] == 0x06 ||UART2_DATA.UART_DataBuf[0] == 0x07 ||UART2_DATA.UART_DataBuf[0] == 0x08 \
+		 	|| UART2_DATA.UART_DataBuf[0] == 0x09 ||UART2_DATA.UART_DataBuf[0] == 0x0a ||UART2_DATA.UART_DataBuf[0] == 0x0b ||UART2_DATA.UART_DataBuf[0] == 0x0c ){ 
+             esp8266data.rx_data_state=1; //=1
+		  }
+		  else{
+               esp8266data.rx_counter=0;
+               UART2_DATA.UART_Flag = 0; 
+            }
+         break;
+
+      case 1:
+      
+           wifi_t.real_hours=UART2_DATA.UART_DataBuf[0];
+           esp8266data.rx_data_state=2; //=1
+         break;
+      case 2: //#1
+      
+            wifi_t.real_minutes = UART2_DATA.UART_DataBuf[0];
+            esp8266data.rx_data_state=3; //=1
+       
+         break;
+            
+        case 3:
+           wifi_t.real_seconds = UART2_DATA.UART_DataBuf[0];
+           esp8266data.rx_data_state=0; //=1
+           wifi_t.rx_beijing_decode_flag =1;
+		   wifi_t.get_beijing_flag=0 ;
+		   UART2_DATA.UART_Flag = 0; 
+		   
+        
+        break;
+        
+        
+
+        default:
+         
+         
+       break;
+      }
+
+
+
+
+}
+
+void Wifi_Get_Beijing_Time_Handler(void)
+{
+ /*AT+CIPSNTPTIME?+CIPSNTPTIME:Wed Jan 11 19:31:04 2023 OK */
+
+
+
+}
+

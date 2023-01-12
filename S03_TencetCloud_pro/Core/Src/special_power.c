@@ -38,7 +38,7 @@ void SetPowerOff_ForDoing(void)
     Buzzer_On();
 	run_t.gPower_flag = 0;
 	run_t.gFan_continueRun =1; //the fan still run 60s
-	run_t.gPower_On == POWER_OFF;
+	run_t.gPower_On = POWER_OFF;
 	run_t.wifi_gPower_On = 0;
  
     run_t.gFan = 0;

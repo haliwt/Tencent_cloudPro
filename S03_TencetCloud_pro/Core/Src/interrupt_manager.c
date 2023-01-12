@@ -29,7 +29,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
        esp8266data.gTimer_publish_dht11++;
 	   esp8266data.gTimer_publish_timing++;
 	   esp8266data.gTimer_subscription_timing++;
-	  
+	   wifi_t.gTimer_get_beijing_time++;
 	  
 	   if(run_t.gFan_continueRun ==1){
 	   	   tm1++;

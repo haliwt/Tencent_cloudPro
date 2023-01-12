@@ -47,18 +47,6 @@ static void property_report_SetTemp(uint8_t temp);
 static void property_report_SetFan(uint8_t fan);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 typedef struct {
     
     bool     open;
@@ -150,7 +138,7 @@ void property_report_login(void)
 	char  message[256]    = {0};
 	int   message_len	   = 0;
 	
-	Mqtt_Value_login();
+	 Mqtt_Value_login();
 	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up01\\\"\\,\\\"params\\\":{\\\"open\\\":%d\\,\\\"Anion\\\":%d\\,\\\"ptc\\\":%d\\,\\\"sonic\\\":%d\\,\\\"state\\\":%d\\,\\\"find\\\":%d\\,\\\"temperature\\\":%d}}\"\r\n",
 								 sg_info.open,sg_info.anion,sg_info.ptc,sg_info.sonic,sg_info.state,sg_info.find,sg_info.set_temperature);
 								   
@@ -280,7 +268,6 @@ static void property_report_SetFan(uint8_t fan)
 	at_send_data((uint8_t *)message, message_len);
 
 }
-
 
 
 /********************************************************************************

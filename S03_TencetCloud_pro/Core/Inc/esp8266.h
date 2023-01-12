@@ -90,6 +90,8 @@ void Wifi_Rx_InputInfo_Handler(void);
 void Wifi_SoftAP_Config_Handler(void);
 void SmartPhone_TryToLink_TencentCloud(void);
 void wifi_Disconnect_Fun(void);
+void Get_BeiJing_Time_Cmd(void);
+
 
 
 #endif 
