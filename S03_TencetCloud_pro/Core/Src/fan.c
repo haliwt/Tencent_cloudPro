@@ -23,16 +23,7 @@ void FAN_Stop(void)
 
 
 
-void Buzzer_On(void)
-{
-  uint8_t m;
-  while(m--){
 
-		BUZZER_TOGGLE() ; 
-        delay_us(400);
-  	}    
-       
- }
 
 void ShutDown_AllFunction(void)
 {

@@ -186,10 +186,14 @@ void RunWifi_Command_Handler(void)
             esp8266data.gTimer_publish_dht11=0;
 			Update_Dht11_Totencent_Value();
 			if(wifi_t.gTimer_get_beijing_time > 15){
+			   wifi_t.gTimer_get_beijing_time=0;
 			   wifi_t.get_beijing_flag=1;
                UART2_DATA.UART_Cnt=0;
+			   wifi_t.gTimer_beijing_time=0;
 			   Get_BeiJing_Time_Cmd();
+			  
 	           wifi_t.runCommand_order_lable= wifi_get_beijing_time; 
+			    
 			}  
 			else
 			  wifi_t.runCommand_order_lable= wifi_publish_update_tencent_cloud_data;
@@ -197,13 +201,18 @@ void RunWifi_Command_Handler(void)
 	   break;
 
 	   case wifi_get_beijing_time:
-	   	   wifi_t.gTimer_get_beijing_time=0;
-		  
-           if(wifi_t.rx_beijing_decode_flag==1){
+	   	  if(wifi_t.gTimer_beijing_time>2){
+		  	wifi_t.gTimer_beijing_time=0;
+			esp8266data.gTimer_publish_timing=0;
+		   	 Get_Beijing_Time();
+           if(wifi_t.rx_beijing_decode_flag==1 ){
 		   	wifi_t.rx_beijing_decode_flag=0;
 	        SendData_Real_GMT(wifi_t.real_hours,wifi_t.real_minutes,wifi_t.real_seconds);
-            wifi_t.runCommand_order_lable= wifi_publish_update_tencent_cloud_data;
            }
+		   wifi_t.runCommand_order_lable= wifi_publish_update_tencent_cloud_data;
+	   	  }
+		 //  else
+		   	//   wifi_t.runCommand_order_lable= wifi_get_beijing_time;
 		  
 	   break;
 

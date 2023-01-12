@@ -68,7 +68,7 @@ void Decode_RunCmd(void)
 	    if(run_t.gPower_flag==POWER_ON){
 
 		    if(cmdType_2== 'Z'){//turn off AI
-			    Buzzer_On();
+			    Buzzer_KeySound();
 			}
 		}
 

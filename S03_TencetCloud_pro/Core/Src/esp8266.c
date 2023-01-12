@@ -192,7 +192,7 @@ void Wifi_SoftAP_Config_Handler(void)
 
 	 case wifi_set_cwmode:
     	    WIFI_IC_ENABLE();
-         	HAL_UART_Transmit(&huart2, "AT+CWMODE=2\r\n", strlen("AT+CWMODE=2\r\n"), 5000);
+         	HAL_UART_Transmit(&huart2, "AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"), 5000);
         	HAL_Delay(1000);
 			HAL_Delay(1000);
 			//HAL_UART_Transmit(&huart2, "AT+CIPMUX=1\r\n", strlen("AT+CIPMUX=1\r\n"), 5000);
@@ -307,6 +307,14 @@ void Get_BeiJing_Time_Cmd(void)
 {
 
   HAL_UART_Transmit(&huart2, "AT+CIPSNTPCFG=1,8,\"cn.ntp.org.cn\",\"ntp.sjtu.edu.cn\"", strlen("AT+CIPSNTPCFG=1,8,\"cn.ntp.org.cn\",\"ntp.sjtu.edu.cn\""), 5000);//开始连接
+
+}
+
+void Get_Beijing_Time(void)
+{
+
+   HAL_UART_Transmit(&huart2, "AT+CIPSNTPTIME?\r\n", strlen("AT+CIPSNTPTIME?\r\n"), 5000);//开始连接
+
 
 }
 

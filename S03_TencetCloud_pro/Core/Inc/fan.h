@@ -20,8 +20,7 @@
 #define PTC_SetHigh()            HAL_GPIO_WritePin(PTC_GPIO,PTC_PIN ,GPIO_PIN_SET)    // output high level
 #define PTC_SetLow()             HAL_GPIO_WritePin(PTC_GPIO,PTC_PIN ,GPIO_PIN_RESET)    // output low level
 
-#define BUZZER_PIN      GPIO_PIN_1
-#define BUZZER_GPIO     GPIOB
+
 
 #define BUZZER_SetHigh()            HAL_GPIO_WritePin(BUZZER_GPIO,BUZZER_PIN,GPIO_PIN_SET)    // output high level
 #define BUZZER_SetLow()             HAL_GPIO_WritePin(BUZZER_GPIO,BUZZER_PIN,GPIO_PIN_RESET)    // output low level
@@ -46,7 +45,7 @@ void SterIlization(uint8_t sel);
 
 
 
-void Buzzer_On(void);
+
 void ShutDown_AllFunction(void);
 void Dry_Function(uint8_t sel);
 
