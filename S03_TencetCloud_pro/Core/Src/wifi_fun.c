@@ -70,6 +70,7 @@ void SetTemperatureHost(void(*temperatureHandler)(void))
 void RunWifi_Command_Handler(void)
 {
      static uint8_t first_sub,first_publish;
+	 static uint16_t beijing_flag;
      switch(wifi_t.runCommand_order_lable){
 
 
@@ -110,6 +111,8 @@ void RunWifi_Command_Handler(void)
 
 	  	
 	  	case wifi_tencent_publish_init_data:
+		  wifi_t.runCommand_order_lable = wifi_get_beijing_time;
+		 #if 0
 
 		  if(esp8266data.gTimer_publish_timing>2 && first_publish == 0){
 				first_publish++;
@@ -121,7 +124,7 @@ void RunWifi_Command_Handler(void)
 	           
 	   	    }
 		
-		
+		 #endif 
        	break;
 
 		
@@ -186,12 +189,12 @@ void RunWifi_Command_Handler(void)
             esp8266data.gTimer_publish_dht11=0;
 			Update_Dht11_Totencent_Value();
 			if(wifi_t.gTimer_get_beijing_time > 15){
-			   wifi_t.gTimer_get_beijing_time=0;
+			   
 			   wifi_t.get_beijing_flag=1;
                UART2_DATA.UART_Cnt=0;
 			   wifi_t.gTimer_beijing_time=0;
 			   Get_BeiJing_Time_Cmd();
-			  
+			   wifi_t.gTimer_get_beijing_time=0;
 	           wifi_t.runCommand_order_lable= wifi_get_beijing_time; 
 			    
 			}  
@@ -201,16 +204,30 @@ void RunWifi_Command_Handler(void)
 	   break;
 
 	   case wifi_get_beijing_time:
+	   	   wifi_t.get_beijing_flag=1;
+	   	  if(beijing_flag > 2){
+			 beijing_flag=0;
+             Get_BeiJing_Time_Cmd();
+		     HAL_Delay(1000);
+			 HAL_Delay(1000);
+		     wifi_t.gTimer_beijing_time=0;
+	   	  }
 	   	  if(wifi_t.gTimer_beijing_time>1){
 		  	wifi_t.gTimer_beijing_time=0;
+			beijing_flag ++;
 			esp8266data.gTimer_publish_timing=0;
+		     wifi_t.get_beijing_flag=1;
 		   	 Get_Beijing_Time();
+			 HAL_Delay(1000);
+			 HAL_Delay(1000);
+			 HAL_Delay(1000);
            if(wifi_t.rx_beijing_decode_flag==1 ){
 		   	wifi_t.rx_beijing_decode_flag=0;
 	        SendData_Real_GMT(wifi_t.real_hours,wifi_t.real_minutes,wifi_t.real_seconds);
-           
-		     wifi_t.runCommand_order_lable= wifi_publish_update_tencent_cloud_data;
-           	}
+            wifi_t.runCommand_order_lable= wifi_publish_update_tencent_cloud_data;
+		    }
+		   
+		    
 	   	  }
 		 //  else
 		   	//   wifi_t.runCommand_order_lable= wifi_get_beijing_time;
