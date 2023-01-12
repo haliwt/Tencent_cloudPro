@@ -433,7 +433,7 @@ void Wifi_Rx_Beijing_Time_Handler(void)
 			 if(UART2_DATA.UART_DataBuf[0] ==20){
 
 		          wifi_t.rx_beijing_decode_flag =1;
-				  wifi_t.get_beijing_flag=0 ;
+				  wifi_t.get_rx_beijing_time_flag=0 ;
 				  esp8266data.rx_data_state=0; //=1
 				  
 		     }

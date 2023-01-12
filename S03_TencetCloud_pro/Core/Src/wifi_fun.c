@@ -69,7 +69,7 @@ void SetTemperatureHost(void(*temperatureHandler)(void))
 ***********************************************/
 void RunWifi_Command_Handler(void)
 {
-     static uint8_t first_sub,first_publish,get_rx_beijing_time_flag=0;
+     static uint8_t first_sub,first_publish, get_rx_beijing_time_flag;
 	 static uint8_t beijing_flag;
      switch(wifi_t.runCommand_order_lable){
 
@@ -80,7 +80,7 @@ void RunWifi_Command_Handler(void)
 		  first_sub=0;
 		  first_publish=0;
 		  first_connect=0;
-		  wifi_t.get_beijing_flag=0;
+		  wifi_t.get_rx_beijing_time_flag=0;
 		 SmartPhone_TryToLink_TencentCloud();
 	     if(esp8266data.esp8266_login_cloud_success==1){
 		  	    esp8266data.rx_link_cloud_flag=0;
@@ -156,7 +156,7 @@ void RunWifi_Command_Handler(void)
 		   break;
 
 	   	case wifi_publish_update_tencent_cloud_data:
-            wifi_t.get_beijing_flag=0;
+            wifi_t.get_rx_beijing_time_flag=0;
           if(esp8266data.gTimer_publish_timing>2 && first_publish == 0){
 				first_publish++;
 	           esp8266data.gTimer_publish_timing=0;
@@ -182,7 +182,7 @@ void RunWifi_Command_Handler(void)
 
 
 	   case wifi_tencent_publish_dht11_data:
-	   	    wifi_t.get_beijing_flag=0;
+	   	    wifi_t.get_rx_beijing_time_flag=0;
 			esp8266data.gTimer_subscription_timing=0;
 	       	HAL_UART_Receive_IT(&huart2,UART2_DATA.UART_DataBuf,1);
 			
@@ -190,7 +190,7 @@ void RunWifi_Command_Handler(void)
 			Update_Dht11_Totencent_Value();
 			if(wifi_t.gTimer_get_beijing_time > 15){
 			   wifi_t.gTimer_get_beijing_time=0;
-			   wifi_t.get_beijing_flag=1;
+			   wifi_t.get_rx_beijing_time_flag=1;
 			 
 			   Get_BeiJing_Time_Cmd();
 			  
@@ -204,30 +204,36 @@ void RunWifi_Command_Handler(void)
 	   break;
 
 	   case wifi_get_beijing_time:
-	   	   wifi_t.get_beijing_flag=1;
-	   	  if(beijing_flag > 2){
-			 beijing_flag=0;
+	 
+		  esp8266data.rx_link_cloud_flag =0;
+	   	  wifi_t.get_rx_beijing_time_flag=1;
+	   	  if(beijing_flag ==0 && wifi_t.gTimer_beijing_time>2 ){
+			 beijing_flag++;
+			 wifi_t.gTimer_beijing_time=0;
+             UART2_DATA.UART_Cnt=0;
              Get_BeiJing_Time_Cmd();
+             
 		     wifi_t.gTimer_beijing_time=0;
 	   	  }
-	   	  if(wifi_t.gTimer_beijing_time>2 ){
+	   	  if(wifi_t.gTimer_beijing_time>3 ){
 		  	wifi_t.gTimer_beijing_time=0;
-			beijing_flag ++;
+			beijing_flag =0;
 			esp8266data.gTimer_publish_timing=0;
-		   	 Get_Beijing_Time();
+		   	Get_Beijing_Time();
+		   	// Get_BeiJing_Time_Cmd();
 			 get_rx_beijing_time_flag=1;
 	   	   }
 		  
-          if(wifi_t.rx_beijing_decode_flag==1 ){
-		   	wifi_t.rx_beijing_decode_flag=0;
-	        SendData_Real_GMT(wifi_t.real_hours,wifi_t.real_minutes,wifi_t.real_seconds);
-            wifi_t.runCommand_order_lable= wifi_publish_update_tencent_cloud_data;
-		    }
-		  else if(get_rx_beijing_time_flag ==1){
-		  	 get_rx_beijing_time_flag=0;
-			 esp8266data.gTimer_subscription_timing=0;
-		   	 wifi_t.runCommand_order_lable= wifi_publish_update_tencent_cloud_data;
-		  	}
+//          if(wifi_t.rx_beijing_decode_flag==1 ){
+//		   	wifi_t.rx_beijing_decode_flag=0;
+//	        SendData_Real_GMT(wifi_t.real_hours,wifi_t.real_minutes,wifi_t.real_seconds);
+//            wifi_t.runCommand_order_lable= wifi_get_beijing_time;//wifi_publish_update_tencent_cloud_data;
+//		    }
+//		  else if(get_rx_beijing_time_flag ==1){
+//		  	 get_rx_beijing_time_flag=0;
+//			 esp8266data.gTimer_subscription_timing=0;
+//		   	 wifi_t.runCommand_order_lable= wifi_get_beijing_time;//wifi_publish_update_tencent_cloud_data;
+//		  	}
 	   break;
 
 	   
@@ -243,7 +249,7 @@ void RunWifi_Command_Handler(void)
 		  	first_connect ++ ;
             SendWifiData_To_Cmd(0x01) ;
 		  }
-		  if(wifi_t.get_beijing_flag==0){
+		  if(wifi_t.get_rx_beijing_time_flag==0){
 	          Tencent_Cloud_Rx_Handler();
 		  }
 
