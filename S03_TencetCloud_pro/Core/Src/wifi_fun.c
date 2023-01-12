@@ -191,8 +191,7 @@ void RunWifi_Command_Handler(void)
 			if(wifi_t.gTimer_get_beijing_time > 15){
 			   wifi_t.gTimer_get_beijing_time=0;
 			   wifi_t.get_rx_beijing_time_flag=1;
-			 
-			   Get_BeiJing_Time_Cmd();
+			  UART2_DATA.UART_Cnt=0;
 			  
 			   wifi_t.gTimer_beijing_time=0;
 	           wifi_t.runCommand_order_lable= wifi_get_beijing_time; 
@@ -207,7 +206,7 @@ void RunWifi_Command_Handler(void)
 	 
 		  esp8266data.rx_link_cloud_flag =0;
 	   	  wifi_t.get_rx_beijing_time_flag=1;
-	   	  if(beijing_flag ==0 && wifi_t.gTimer_beijing_time>2 ){
+	   	  if(beijing_flag ==0 && wifi_t.gTimer_beijing_time>1 ){
 			 beijing_flag++;
 			 wifi_t.gTimer_beijing_time=0;
              UART2_DATA.UART_Cnt=0;
@@ -215,25 +214,26 @@ void RunWifi_Command_Handler(void)
              
 		     wifi_t.gTimer_beijing_time=0;
 	   	  }
-	   	  if(wifi_t.gTimer_beijing_time>3 ){
+	   	  if(wifi_t.gTimer_beijing_time>3){
 		  	wifi_t.gTimer_beijing_time=0;
 			beijing_flag =0;
 			esp8266data.gTimer_publish_timing=0;
 		   	Get_Beijing_Time();
-		   	// Get_BeiJing_Time_Cmd();
-			 get_rx_beijing_time_flag=1;
+			HAL_Delay(1000);
+			HAL_Delay(1000);
+		     get_rx_beijing_time_flag=1;
 	   	   }
 		  
-//          if(wifi_t.rx_beijing_decode_flag==1 ){
-//		   	wifi_t.rx_beijing_decode_flag=0;
-//	        SendData_Real_GMT(wifi_t.real_hours,wifi_t.real_minutes,wifi_t.real_seconds);
-//            wifi_t.runCommand_order_lable= wifi_get_beijing_time;//wifi_publish_update_tencent_cloud_data;
-//		    }
-//		  else if(get_rx_beijing_time_flag ==1){
-//		  	 get_rx_beijing_time_flag=0;
-//			 esp8266data.gTimer_subscription_timing=0;
-//		   	 wifi_t.runCommand_order_lable= wifi_get_beijing_time;//wifi_publish_update_tencent_cloud_data;
-//		  	}
+          if(get_rx_beijing_time_flag==1){
+		  	get_rx_beijing_time_flag=0;
+		  	wifi_t.real_hours = (UART2_DATA.UART_Data[134]-0x30)*10 + UART2_DATA.UART_Data[135]-0x30;
+			wifi_t.real_minutes =(UART2_DATA.UART_Data[137]-0x30)*10 + UART2_DATA.UART_Data[138]-0x30;
+		    wifi_t.real_seconds = (UART2_DATA.UART_Data[140]-0x30)*10 + UART2_DATA.UART_Data[141]-0x30;
+	
+	        SendData_Real_GMT(wifi_t.real_hours,wifi_t.real_minutes,wifi_t.real_seconds);
+            wifi_t.runCommand_order_lable=wifi_publish_update_tencent_cloud_data;
+		    }
+		 
 	   break;
 
 	   
