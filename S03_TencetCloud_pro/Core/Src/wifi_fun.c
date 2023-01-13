@@ -227,12 +227,13 @@ void RunWifi_Command_Handler(void)
 		  
           if(get_rx_beijing_time_flag==1){
 		  	get_rx_beijing_time_flag=0;
+		  	if(wifi_t.real_hours < 25 && wifi_t.real_minutes < 60 && wifi_t.real_seconds < 60){
 		  	wifi_t.real_hours = (UART2_DATA.UART_Data[134]-0x30)*10 + UART2_DATA.UART_Data[135]-0x30;
 			wifi_t.real_minutes =(UART2_DATA.UART_Data[137]-0x30)*10 + UART2_DATA.UART_Data[138]-0x30;
-		    wifi_t.real_seconds = (UART2_DATA.UART_Data[140]-0x30)*10 + UART2_DATA.UART_Data[141]-0x30;
-	
-	        SendData_Real_GMT(wifi_t.real_hours,wifi_t.real_minutes,wifi_t.real_seconds);
-            wifi_t.runCommand_order_lable=wifi_publish_update_tencent_cloud_data;
+		     wifi_t.real_seconds = (UART2_DATA.UART_Data[140]-0x30)*10 + UART2_DATA.UART_Data[141]-0x30;
+		      SendData_Real_GMT(wifi_t.real_hours,wifi_t.real_minutes,wifi_t.real_seconds);
+		    }
+	         wifi_t.runCommand_order_lable=wifi_publish_update_tencent_cloud_data;
 		   }
 		 
 		 
