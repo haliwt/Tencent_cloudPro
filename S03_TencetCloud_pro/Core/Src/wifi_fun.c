@@ -70,7 +70,7 @@ void SetTemperatureHost(void(*temperatureHandler)(void))
 void RunWifi_Command_Handler(void)
 {
      static uint8_t first_sub,first_publish, get_rx_beijing_time_flag;
-	 static uint8_t beijing_flag,wifi_jump_Num;
+	 static uint8_t beijing_flag,wifi_jump_Num,gamt_recode;
      switch(wifi_t.runCommand_order_lable){
 
 
@@ -175,7 +175,7 @@ void RunWifi_Command_Handler(void)
            }
            if(esp8266data.gTimer_publish_dht11 >30){
 		   	  esp8266data.gTimer_publish_dht11=0;
-			  wifi_t.gTimer_get_beijing_time=0;
+			 
               wifi_jump_Num = 1;
 		   	  wifi_t.runCommand_order_lable= wifi_tencent_publish_dht11_data;
            	}
@@ -185,14 +185,18 @@ void RunWifi_Command_Handler(void)
 
 	   case wifi_tencent_publish_dht11_data://6
 	   	    wifi_t.get_rx_beijing_time_flag=0;
-           
+            if(gamt_recode==0){
+                 gamt_recode ++;
+                 wifi_t.gTimer_get_beijing_time=0;
+			}
 			esp8266data.gTimer_subscription_timing=0;
 	       	HAL_UART_Receive_IT(&huart2,UART2_DATA.UART_DataBuf,1);
 			
             esp8266data.gTimer_publish_dht11=0;
 			Update_Dht11_Totencent_Value();
-			if(wifi_t.gTimer_get_beijing_time > 1){
+			if(wifi_t.gTimer_get_beijing_time > 60){
 			   wifi_t.gTimer_get_beijing_time=0;
+			   gamt_recode=0;
 			   wifi_t.get_rx_beijing_time_flag=1;
 			  UART2_DATA.UART_Cnt=0;
 			  
@@ -200,7 +204,12 @@ void RunWifi_Command_Handler(void)
 	           wifi_t.runCommand_order_lable= wifi_get_beijing_time; 
 
 			    wifi_jump_Num = 0;
-			  }  
+				}
+			   else{
+
+                  wifi_t.runCommand_order_lable= wifi_publish_update_tencent_cloud_data;
+
+			   }
 			
 			  
 
@@ -218,7 +227,7 @@ void RunWifi_Command_Handler(void)
              
 		     wifi_t.gTimer_beijing_time=0;
 	   	  }
-	   	  if(wifi_t.gTimer_beijing_time>3){
+	   	  if(wifi_t.gTimer_beijing_time>2){
 		  	wifi_t.gTimer_beijing_time=0;
 			beijing_flag =0;
 			esp8266data.gTimer_publish_timing=0;
