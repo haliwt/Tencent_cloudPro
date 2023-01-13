@@ -17,23 +17,10 @@
 //char *tx_data={"AT+TCMQTTPUB=\"$thing/up/property/EHQB1P53IH/UYIJIA01-a0005\",0,\"{\\\"method\\\":\\\"report\\\"\\\,\\\"clientToken\\\":\\\"up01\\\"\\,\\\"params\\\":{\\\"open\\\":1\\,\\\"temperature\\\":26}}\"\r\n"};
 
 /* MAX size of client ID */
-#define MAX_SIZE_OF_CLIENT_ID                 (80)
-
-/* MAX size of product ID */
-#define MAX_SIZE_OF_PRODUCT_ID                (10)
-
-/* MAX size of product secret */
-#define MAX_SIZE_OF_PRODUCT_SECRET            (32)
-
-/* MAX size of device name */
-#define MAX_SIZE_OF_DEVICE_NAME                (48)
-
-/* MAX size of device secret */
-#define MAX_SIZE_OF_DEVICE_SECRET             (64)
 
 
 
-
+void property_report_SetOpen(uint8_t open);
 static void Mqtt_Value_login(void);
 
 
@@ -139,7 +126,7 @@ void property_report_login(void)
 	int   message_len	   = 0;
 	
 	 Mqtt_Value_login();
-	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up01\\\"\\,\\\"params\\\":{\\\"open\\\":%d\\,\\\"Anion\\\":%d\\,\\\"ptc\\\":%d\\,\\\"sonic\\\":%d\\,\\\"state\\\":%d\\,\\\"find\\\":%d\\,\\\"temperature\\\":%d}}\"\r\n",
+	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up02\\\"\\,\\\"params\\\":{\\\"open\\\":%d\\,\\\"Anion\\\":%d\\,\\\"ptc\\\":%d\\,\\\"sonic\\\":%d\\,\\\"state\\\":%d\\,\\\"find\\\":%d\\,\\\"temperature\\\":%d}}\"\r\n",
 								 sg_info.open,sg_info.anion,sg_info.ptc,sg_info.sonic,sg_info.state,sg_info.find,sg_info.set_temperature);
 								   
 	 
@@ -182,7 +169,18 @@ static void property_report_SetTemp(uint8_t temp)
 	 int	message_len	  = 0;
 	
 	
-	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up01\\\"\\,\\\"params\\\":{\\\"nowtemperature\\\":%d}}\"\r\n",temp);
+	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up03\\\"\\,\\\"params\\\":{\\\"nowtemperature\\\":%d}}\"\r\n",temp);
+								  
+	at_send_data((uint8_t *)message, message_len);
+
+}
+static void property_report_SetOpen(uint8_t open)
+{
+     char	message[128]    = {0};
+	 int	message_len	  = 0;
+	
+	
+	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up04\\\"\\,\\\"params\\\":{\\\"open\\\":%d}}\"\r\n",open);
 								  
 	at_send_data((uint8_t *)message, message_len);
 
@@ -292,6 +290,12 @@ void MqttData_Publish_Login(void)
     property_topic_publish();
 	property_report_login();
 
+}
+
+void MqttData_Publish_SetOpen(uint8_t open)
+{
+   property_topic_publish();
+   property_report_SetOpen(open);
 }
 
 

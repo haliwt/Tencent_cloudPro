@@ -33,13 +33,20 @@ void Decode_RunCmd(void)
        if(cmdType_2 == 0x00){ //power off
           
 	       run_t.gPower_On=POWER_OFF;
-            run_t.gPower_flag = POWER_OFF;
+           run_t.gPower_flag = POWER_OFF;
+           Buzzer_KeySound();
+           HAL_Delay(1000);
+           MqttData_Publish_SetOpen(0x0);
+           HAL_Delay(1000);
+           cmdType_1 =0xff;
 	  } 
       else if(cmdType_2 ==1){ //power on
          
          run_t.gPower_flag = POWER_ON;
 		 run_t.gPower_On = POWER_ON;
-	     
+	     Buzzer_KeySound();
+
+	     cmdType_1 =0xff;
       }       
           
       break;
@@ -48,17 +55,22 @@ void Decode_RunCmd(void)
 	  case 'W': //wifi-function
 	      if(run_t.gPower_flag==POWER_ON){
 	      if(cmdType_2==1){
-			  wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;	 
+			  wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;
+			  Buzzer_KeySound();	 
 		   }
 		   else if(cmdType_2==0){
                	wifi_t.runCommand_order_lable= wifi_has_been_connected;
+               	Buzzer_KeySound();
 		   }
 		   else if(cmdType_2==0x14){
                 run_t.gModel =2; //turn off
+                Buzzer_KeySound();
             }
             else if(cmdType_2==0x04){
                 run_t.gModel =1;  //turn on
+                Buzzer_KeySound();
             }
+            cmdType_2 =0xff;
         }
 	   break;
 
@@ -69,6 +81,7 @@ void Decode_RunCmd(void)
 		    if(cmdType_2== 'Z'){//turn off AI
 			    Buzzer_KeySound();
 			}
+			 cmdType_1 =0xff;
 		}
 
 	    break;
@@ -139,7 +152,7 @@ void RunCommand_MainBoard_Fun(void)
 
     }
 	
-    if(run_t.gTimer_1s>7 ){
+    if(run_t.gTimer_1s>30 ){
 		run_t.gTimer_1s=0;
 		Update_DHT11_Value();
 	  }

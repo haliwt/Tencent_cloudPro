@@ -12,7 +12,6 @@ void (*Single_Usart_ReceiveData)(uint8_t cmd);
 
 void SetPowerOn_ForDoing(void)
 {
-    Buzzer_KeySound();
     run_t.gFan_counter=0;
      run_t.gPower_flag = POWER_ON;
     run_t.gFan_continueRun =0;
@@ -36,7 +35,7 @@ void SetPowerOn_ForDoing(void)
 
 void SetPowerOff_ForDoing(void)
 {
-    Buzzer_KeySound();
+   
 	run_t.gPower_flag = 0;
 	run_t.gFan_continueRun =1; //the fan still run 60s
 	run_t.gPower_On = POWER_OFF;
