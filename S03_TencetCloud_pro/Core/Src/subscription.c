@@ -7,6 +7,7 @@
 #include "esp8266.h"
 #include "wifi_fun.h"
 #include "usart.h"
+#include "buzzer.h"
 
 //处理腾讯云下发的数据
 /*******************************************************************************
@@ -276,69 +277,87 @@ void Tencent_Cloud_Rx_Handler(void)
 
 	    run_t.wifi_gPower_On= 0;
 	    run_t.gPower_On = POWER_OFF;
+        run_t.gPower_flag =POWER_OFF;
 		SendWifiCmd_To_Order(WIFI_POWER_OFF);
+		 Buzzer_KeySound();
             
 	}
 	else if(strstr((char *)UART2_DATA.UART_Data,"open\":1")){
 	   run_t.wifi_gPower_On= 1;
        run_t.gPower_On = POWER_ON;
+	   run_t.gPower_flag =POWER_ON;
 	   SendWifiCmd_To_Order(WIFI_POWER_ON);
-				
+	   Buzzer_KeySound();
 	}
 	else if(strstr((char *)UART2_DATA.UART_Data,"ptc\":0")){
-            if(run_t.gDry == 1){
+            if(run_t.gPower_flag ==POWER_ON){
 	            run_t.gDry=0;
 	            SendWifiCmd_To_Order(WIFI_PTC_OFF);
+			    Buzzer_KeySound();
             }
     }
     else if(strstr((char *)UART2_DATA.UART_Data,"ptc\":1")){
-            if(run_t.gDry==0){
+            if(run_t.gPower_flag ==POWER_ON){
 	            run_t.gDry=1;
 				SendWifiCmd_To_Order(WIFI_PTC_ON);
+				 Buzzer_KeySound();
             }
 
     }
     else if(strstr((char *)UART2_DATA.UART_Data,"Anion\":0")){
-          
-            run_t.gPlasma=0;
-	       SendWifiCmd_To_Order(WIFI_KILL_OFF);
-
+          if(run_t.gPower_flag ==POWER_ON){
+	            run_t.gPlasma=0;
+		       SendWifiCmd_To_Order(WIFI_KILL_OFF);
+		       Buzzer_KeySound();
+          	}
     }
     else if(strstr((char *)UART2_DATA.UART_Data,"Anion\":1")){
-           
+            if(run_t.gPower_flag ==POWER_ON){
             run_t.gPlasma=1;
 			SendWifiCmd_To_Order(WIFI_KILL_ON);
-
+			Buzzer_KeySound();
+            }
     }
     else if(strstr((char *)UART2_DATA.UART_Data,"sonic\":0")){
-            
+            if(run_t.gPower_flag ==POWER_ON){
             run_t.gUlransonic=0;
             SendWifiCmd_To_Order(WIFI_SONIC_OFF);
+            }
     }
     else if(strstr((char *)UART2_DATA.UART_Data,"sonic\":1")){
-            
+            if(run_t.gPower_flag ==POWER_ON){
             run_t.gUlransonic=1;
             SendWifiCmd_To_Order(WIFI_SONIC_ON);
+			 Buzzer_KeySound(); 
+            }
     }
     else if(strstr((char *)UART2_DATA.UART_Data,"state\":1")){
-          
+           if(run_t.gPower_flag ==POWER_ON){
             run_t.gModel=1;
             SendWifiCmd_To_Order(WIFI_MODE_1);
+			Buzzer_KeySound();
+           	}
     }
     else if(strstr((char *)UART2_DATA.UART_Data,"state\":2")){
-           
+            if(run_t.gPower_flag ==POWER_ON){
             run_t.gModel=2;
             SendWifiCmd_To_Order(WIFI_MODE_2);
+			Buzzer_KeySound();
+            }
     }
     else if(strstr((char *)UART2_DATA.UART_Data,"temperature")){
-           
+
+	        if(run_t.gPower_flag ==POWER_ON){
             temp_decade=UART2_DATA.UART_Data[14]-0x30;
             temp_unit=UART2_DATA.UART_Data[15]-0x30;
             run_t.set_temperature_value = temp_decade*10 +  temp_unit;
 			SendWifiData_To_PanelTemp(run_t.set_temperature_value);
+			Buzzer_KeySound();
+	        }
     }
     else if(strstr((char *)UART2_DATA.UART_Data,"find")){
-          
+
+			if(run_t.gPower_flag ==POWER_ON){
             if(UART2_DATA.UART_Data[7]==0x31 && UART2_DATA.UART_Data[8]==0x30 && UART2_DATA.UART_Data[9]==0x30){
 		           run_t.set_wind_speed_value =100;
             }
@@ -348,9 +367,11 @@ void Tencent_Cloud_Rx_Handler(void)
                  run_t.set_wind_speed_value = wind_decade*10 + wind_unit;
 			}
     		SendWifiData_To_PanelWindSpeed(run_t.set_wind_speed_value);
+			Buzzer_KeySound();
+		}
     }
+   
    }
-
 }
 void Wifi_Rx_Beijing_Time_Handler(void)
 {
