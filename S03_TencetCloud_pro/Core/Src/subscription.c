@@ -322,6 +322,7 @@ void Tencent_Cloud_Rx_Handler(void)
             if(run_t.gPower_flag ==POWER_ON){
             run_t.gUlransonic=0;
             SendWifiCmd_To_Order(WIFI_SONIC_OFF);
+             Buzzer_KeySound(); 
             }
     }
     if(strstr((char *)UART2_DATA.UART_Data,"sonic\":1")){

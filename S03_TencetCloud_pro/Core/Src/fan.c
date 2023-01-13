@@ -4,7 +4,7 @@
 #include "run.h"
 #include "delay.h"
 
-static void Delay_BuzzerUs(uint8_t t);
+
 
 
 void FAN_CCW_RUN(void)

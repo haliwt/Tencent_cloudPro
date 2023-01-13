@@ -14,38 +14,19 @@
 ********************************************************************************/
 void Publish_Data_ToCloud_Handler(void)
 {
-    
-   if(esp8266data.esp8266_login_cloud_success==1){
+    if(esp8266data.esp8266_login_cloud_success==1){
           
-       switch(esp8266data.send_tencent_cloud_data_lable){
-
-        case tencent_cloud_init:
-			 MqttData_Publish_Init();
+       MqttData_Publish_Init();
 	         
-			 esp8266data.send_tencent_cloud_data_lable=tencent_cloud_real_times;
-	    break;
-
-		case tencent_cloud_real_times:
-		     Update_Dht11_Totencent_Value();
-			
-        break;
-
-
-		
-       }
-
-
 	}
-	
 
-   // free(device_pubmassage);
 }
-
+	
 
 void Publish_Data_ToCloud_Login_Handler(void)
 {
       MqttData_Publish_Login();
-      Update_Dht11_Totencent_Value();
+   //   Update_Dht11_Totencent_Value();
 
 }
 
