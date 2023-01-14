@@ -272,7 +272,7 @@ void Tencent_Cloud_Rx_Handler(void)
    
     static uint8_t wind_hundred, wind_decade,wind_unit,temp_decade,temp_unit;
     if( esp8266data.rx_data_success==1){
-        esp8266data.rx_data_success=0;
+         esp8266data.rx_data_success=0;
    if(strstr((char *)UART2_DATA.UART_Data,"open\":0")){
 			   
 
@@ -283,7 +283,7 @@ void Tencent_Cloud_Rx_Handler(void)
 		SendWifiCmd_To_Order(WIFI_POWER_OFF);
         Buzzer_KeySound();
 
-        
+       
             
 	}
 	if(strstr((char *)UART2_DATA.UART_Data,"open\":1")){
@@ -295,7 +295,7 @@ void Tencent_Cloud_Rx_Handler(void)
 	   
 	   Buzzer_KeySound();
 
-        
+      
 
 	}
 	if(strstr((char *)UART2_DATA.UART_Data,"ptc\":0")){
@@ -306,6 +306,7 @@ void Tencent_Cloud_Rx_Handler(void)
 			      Buzzer_KeySound();
                 
             }
+			
     }
     if(strstr((char *)UART2_DATA.UART_Data,"ptc\":1")){
             if(run_t.gPower_flag ==POWER_ON){
@@ -322,6 +323,7 @@ void Tencent_Cloud_Rx_Handler(void)
 		       Buzzer_KeySound();
                 
             }
+		 
     }
     if(strstr((char *)UART2_DATA.UART_Data,"Anion\":1")){
             if(run_t.gPower_flag ==POWER_ON){
@@ -341,6 +343,7 @@ void Tencent_Cloud_Rx_Handler(void)
                    Buzzer_KeySound();
                 
             }
+		
     }
     if(strstr((char *)UART2_DATA.UART_Data,"sonic\":1")){
             if(run_t.gPower_flag ==POWER_ON){
@@ -351,6 +354,7 @@ void Tencent_Cloud_Rx_Handler(void)
             
 			 
             }
+			
     }
     if(strstr((char *)UART2_DATA.UART_Data,"state\":1")){
            if(run_t.gPower_flag ==POWER_ON){
@@ -361,6 +365,7 @@ void Tencent_Cloud_Rx_Handler(void)
 
             
            	}
+		  
     }
     if(strstr((char *)UART2_DATA.UART_Data,"state\":2")){
             if(run_t.gPower_flag ==POWER_ON){
@@ -372,6 +377,7 @@ void Tencent_Cloud_Rx_Handler(void)
             
 			
             }
+			
     }
     if(strstr((char *)UART2_DATA.UART_Data,"temperature")){
 
@@ -384,6 +390,7 @@ void Tencent_Cloud_Rx_Handler(void)
 			     Buzzer_KeySound();
             
 	        }
+			
     }
    if(strstr((char *)UART2_DATA.UART_Data,"find")){
 
@@ -401,6 +408,7 @@ void Tencent_Cloud_Rx_Handler(void)
 			 Buzzer_KeySound();
             
 		}
+		
     }
    
    }

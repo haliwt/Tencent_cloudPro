@@ -143,23 +143,23 @@ void RunCommand_MainBoard_Fun(void)
 	        ActionEvent_Handler();
 	        
 	        
-	        run_t.RunCommand_Label= WIFI_RESTART_INIT;
+	        //run_t.RunCommand_Label= WIFI_RESTART_INIT;
 
      }
 	
     break;
 
-	case WIFI_RESTART_INIT:
-		if(wifi_t.restart_link_tencent_cloud ==1){
-		   wifi_t.restart_link_tencent_cloud++;
-		   InitWifiModule();
-		   HAL_Delay(1000);
-         
-           wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;//2 // wifi_link_tencent_cloud:
-		}
-			
-     run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
-	break;
+//	case WIFI_RESTART_INIT:
+//		if(wifi_t.restart_link_tencent_cloud ==1){
+//		   wifi_t.restart_link_tencent_cloud++;
+//		   InitWifiModule();
+//		   HAL_Delay(1000);
+//         
+//           wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;//2 // wifi_link_tencent_cloud:
+//		}
+//			
+//     run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
+//	break;
 
 	case POWER_OFF:
 		SetPowerOff_ForDoing();

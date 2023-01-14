@@ -110,7 +110,7 @@ void RunWifi_Command_Handler(void)
 			if(esp8266data.esp8266_login_cloud_success==1){
 			    wifi_t.runCommand_order_lable = wifi_tencent_publish_init_data;
 			}
-     
+           wifi_t.restart_link_tencent_cloud++;
 	    break;
 
 	  	
