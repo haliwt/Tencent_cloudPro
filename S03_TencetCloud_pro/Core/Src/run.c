@@ -34,6 +34,7 @@ void Decode_RunCmd(void)
           
 	       run_t.gPower_On=POWER_OFF;
            run_t.gPower_flag = POWER_OFF;
+            run_t.RunComman_Lable = POWER_OFF;
            Buzzer_KeySound();
            HAL_Delay(1000);
            MqttData_Publish_SetOpen(0x0);
@@ -44,6 +45,7 @@ void Decode_RunCmd(void)
          
          run_t.gPower_flag = POWER_ON;
 		 run_t.gPower_On = POWER_ON;
+         run_t.RunComman_Lable= POWER_ON;
 	     Buzzer_KeySound();
 
 	     cmdType_1 =0xff;
@@ -55,7 +57,8 @@ void Decode_RunCmd(void)
 	  case 'W': //wifi-function
 	      if(run_t.gPower_flag==POWER_ON){
 	      if(cmdType_2==1){
-			  wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;//2 // wifi_link_tencent_cloud:
+             run_t.RunComman_Lable = WIFI_RESTART_INIT;
+			  //wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;//2 // wifi_link_tencent_cloud:
 			  wifi_t.restart_link_tencent_cloud = 1;
 			  Buzzer_KeySound();	 
 		   }
@@ -120,12 +123,13 @@ void SystemReset(void)
 void RunCommand_MainBoard_Fun(void)
 {
    static uint8_t stop_fan_flag;
-   switch(run_t.gPower_On){
+   switch(run_t.RunComman_Lable){
 
 	case POWER_ON:
 		SetPowerOn_ForDoing();
 	    Update_DHT11_Value();
-	    run_t.gPower_On = UPDATE_TO_PANEL_DATA;
+	    run_t.RunComman_Lable= UPDATE_TO_PANEL_DATA;
+		
         run_t.gTimer_1s=0;
 		if(esp8266data.esp8266_login_cloud_success==1){
 	 	     SendWifiData_To_Cmd(0x01) ;
@@ -134,12 +138,28 @@ void RunCommand_MainBoard_Fun(void)
 	break;
 
    case UPDATE_TO_PANEL_DATA:
-       if(run_t.gTimer_senddata_panel >40){ //400ms
+      if(run_t.gTimer_senddata_panel >30 && run_t.gPower_On==POWER_ON){ //300ms
 	   	    run_t.gTimer_senddata_panel=0;
 	        ActionEvent_Handler();
+	        
+	        
+	        run_t.RunComman_Lable= WIFI_RESTART_INIT;
 
      }
+	
     break;
+
+	case WIFI_RESTART_INIT:
+		if(wifi_t.restart_link_tencent_cloud ==1){
+		   wifi_t.restart_link_tencent_cloud++;
+		   InitWifiModule();
+		   HAL_Delay(1000);
+         
+           wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;//2 // wifi_link_tencent_cloud:
+		}
+			
+      run_t.RunComman_Lable= UPDATE_TO_PANEL_DATA;
+	break;
 
 	case POWER_OFF:
 		SetPowerOff_ForDoing();
@@ -153,7 +173,7 @@ void RunCommand_MainBoard_Fun(void)
 
     }
 	
-    if(run_t.gTimer_1s>30 ){
+    if(run_t.gTimer_1s>30 && run_t.gPower_flag == POWER_ON){
 		run_t.gTimer_1s=0;
 		Update_DHT11_Value();
 	  }
