@@ -73,6 +73,14 @@ void RunWifi_Command_Handler(void)
      static uint8_t first_publish,first_sub, get_rx_beijing_time_flag;
 	 static uint8_t beijing_flag,wifi_jump_Num,gamt_recode;
 
+	if(wifi_t.restart_link_tencent_cloud ==1 && run_t.gPower_flag == POWER_ON){
+		wifi_t.restart_link_tencent_cloud ++;
+		 wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;
+        InitWifiModule();
+
+
+	}
+    else{
 	if(run_t.gPower_flag == POWER_ON){
      switch(wifi_t.runCommand_order_lable){
 
@@ -261,6 +269,7 @@ void RunWifi_Command_Handler(void)
 		  }
 
      }
+    }
 } 
 	 	
 

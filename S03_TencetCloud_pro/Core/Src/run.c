@@ -55,7 +55,8 @@ void Decode_RunCmd(void)
 	  case 'W': //wifi-function
 	      if(run_t.gPower_flag==POWER_ON){
 	      if(cmdType_2==1){
-			  wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;
+			  wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;//2 // wifi_link_tencent_cloud:
+			  wifi_t.restart_link_tencent_cloud = 1;
 			  Buzzer_KeySound();	 
 		   }
 		   else if(cmdType_2==0){

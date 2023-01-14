@@ -19,7 +19,7 @@ char *usart2_tx;
 uint8_t usart2_flag;
 
 
-void InitWifiModule(void);
+
 
 
 
@@ -52,7 +52,7 @@ uint8_t at_send_data(uint8_t* pdata, uint16_t len)
 *Return Ref:NO
 *
 ****************************************************************************************************/
-static void InitWifiModule(void)
+void InitWifiModule(void)
 {
 	
 	if(run_t.wifi_config_net_lable==0)

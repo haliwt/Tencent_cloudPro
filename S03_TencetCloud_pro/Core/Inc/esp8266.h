@@ -80,6 +80,9 @@ typedef struct ESP8266_DATA
 
 
 extern ESP8266DATATypedef esp8266data;
+
+void InitWifiModule(void);
+
 void Wifi_Link_SmartConfig_Handler(void);
 
 void SmartPhone_LinkTencent_Cloud(void);
