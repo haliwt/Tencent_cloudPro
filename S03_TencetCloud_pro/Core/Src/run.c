@@ -34,7 +34,7 @@ void Decode_RunCmd(void)
           
 	       run_t.gPower_On=POWER_OFF;
            run_t.gPower_flag = POWER_OFF;
-            run_t.RunComman_Lable = POWER_OFF;
+            run_t.RunCommand_Label = POWER_OFF;
            Buzzer_KeySound();
            HAL_Delay(1000);
            MqttData_Publish_SetOpen(0x0);
@@ -45,7 +45,7 @@ void Decode_RunCmd(void)
          
          run_t.gPower_flag = POWER_ON;
 		 run_t.gPower_On = POWER_ON;
-         run_t.RunComman_Lable= POWER_ON;
+         run_t.RunCommand_Label= POWER_ON;
 	     Buzzer_KeySound();
 
 	     cmdType_1 =0xff;
@@ -57,8 +57,8 @@ void Decode_RunCmd(void)
 	  case 'W': //wifi-function
 	      if(run_t.gPower_flag==POWER_ON){
 	      if(cmdType_2==1){
-             run_t.RunComman_Lable = WIFI_RESTART_INIT;
-			  //wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;//2 // wifi_link_tencent_cloud:
+               //run_t.RunCommand_Lable = WIFI_RESTART_INIT;
+			  wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;//2 // wifi_link_tencent_cloud:
 			  wifi_t.restart_link_tencent_cloud = 1;
 			  Buzzer_KeySound();	 
 		   }
@@ -123,12 +123,12 @@ void SystemReset(void)
 void RunCommand_MainBoard_Fun(void)
 {
    static uint8_t stop_fan_flag;
-   switch(run_t.RunComman_Lable){
+   switch(run_t.RunCommand_Label){
 
 	case POWER_ON:
 		SetPowerOn_ForDoing();
 	    Update_DHT11_Value();
-	    run_t.RunComman_Lable= UPDATE_TO_PANEL_DATA;
+	    run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
 		
         run_t.gTimer_1s=0;
 		if(esp8266data.esp8266_login_cloud_success==1){
@@ -143,7 +143,7 @@ void RunCommand_MainBoard_Fun(void)
 	        ActionEvent_Handler();
 	        
 	        
-	        run_t.RunComman_Lable= WIFI_RESTART_INIT;
+	        run_t.RunCommand_Label= WIFI_RESTART_INIT;
 
      }
 	
@@ -158,7 +158,7 @@ void RunCommand_MainBoard_Fun(void)
            wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;//2 // wifi_link_tencent_cloud:
 		}
 			
-      run_t.RunComman_Lable= UPDATE_TO_PANEL_DATA;
+     run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
 	break;
 
 	case POWER_OFF:

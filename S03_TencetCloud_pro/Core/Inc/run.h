@@ -49,7 +49,7 @@ typedef struct _RUN_T{
 
     uint8_t gFan_continueRun;
 
-	uint8_t RunComman_Lable;
+	uint8_t RunCommand_Label;
 	
   
     uint8_t decodeFlag;

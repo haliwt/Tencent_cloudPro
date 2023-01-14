@@ -279,6 +279,7 @@ void Tencent_Cloud_Rx_Handler(void)
 	    run_t.wifi_gPower_On= 0;
 	    run_t.gPower_On = POWER_OFF;
         run_t.gPower_flag =POWER_OFF;
+		 run_t.RunCommand_Label=POWER_OFF;
 		SendWifiCmd_To_Order(WIFI_POWER_OFF);
         Buzzer_KeySound();
 
@@ -289,8 +290,10 @@ void Tencent_Cloud_Rx_Handler(void)
 	   run_t.wifi_gPower_On= 1;
        run_t.gPower_On = POWER_ON;
 	   run_t.gPower_flag =POWER_ON;
+	   run_t.RunCommand_Label=POWER_ON;
 	   SendWifiCmd_To_Order(WIFI_POWER_ON);
-	  Buzzer_KeySound();
+	   
+	   Buzzer_KeySound();
 
         
 
