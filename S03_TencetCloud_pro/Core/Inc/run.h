@@ -57,6 +57,7 @@ typedef struct _RUN_T{
     uint8_t setup_timer_flag;
     uint8_t gmt_time_flag;
     uint8_t gTimer_send_0xaa;
+	uint8_t response_wifi_signal_label;
       
 
       uint8_t  gAi;

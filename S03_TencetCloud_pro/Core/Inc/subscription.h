@@ -20,6 +20,21 @@ typedef enum DISPLAY_STATE_T{
 
 }display_state_t;
 
+typedef enum _CLOUD_STATE{
+   OPEN_OFF_ITEM=0x01,
+   OPEN_ON_ITEM,
+   PTC_OFF_ITEM,
+   PTC_ON_ITEM,
+   ANION_OFF_ITEM,
+   ANION_ON_ITEM,
+   SONIC_OFF_ITEM,
+   SONIC_ON_ITEM,
+   STATE_ON_ITEM,
+   STATE_OFF_ITEM,
+   TEMPERATURE_ITEM,
+   FAN_ITEM
+}cloud_state;
+
 
 
 typedef enum _subSignal{ /* enumeration for CParser signals */

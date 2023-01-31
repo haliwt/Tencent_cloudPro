@@ -35,10 +35,10 @@ void Decode_RunCmd(void)
 	       run_t.gPower_On=POWER_OFF;
            run_t.gPower_flag = POWER_OFF;
             run_t.RunCommand_Label = POWER_OFF;
-           Buzzer_KeySound();
-           HAL_Delay(1000);
-           MqttData_Publish_SetOpen(0x0);
-           HAL_Delay(1000);
+           
+          MqttData_Publish_SetOpen(0x0);
+           
+		   Buzzer_KeySound();
            cmdType_1 =0xff;
 	  } 
       else if(cmdType_2 ==1){ //power on
@@ -46,6 +46,7 @@ void Decode_RunCmd(void)
          run_t.gPower_flag = POWER_ON;
 		 run_t.gPower_On = POWER_ON;
          run_t.RunCommand_Label= POWER_ON;
+		 MqttData_Publish_SetOpen(0x01);
 	     Buzzer_KeySound();
 
 	     cmdType_1 =0xff;
@@ -125,7 +126,7 @@ void RunCommand_MainBoard_Fun(void)
    static uint8_t stop_fan_flag;
    switch(run_t.RunCommand_Label){
 
-	case POWER_ON:
+	case POWER_ON: //1
 		SetPowerOn_ForDoing();
 	    Update_DHT11_Value();
 	    run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
@@ -137,31 +138,17 @@ void RunCommand_MainBoard_Fun(void)
 		stop_fan_flag=0;
 	break;
 
-   case UPDATE_TO_PANEL_DATA:
+   case UPDATE_TO_PANEL_DATA: //4
       if(run_t.gTimer_senddata_panel >30 && run_t.gPower_On==POWER_ON){ //300ms
 	   	    run_t.gTimer_senddata_panel=0;
 	        ActionEvent_Handler();
-	        
-	        
-	        //run_t.RunCommand_Label= WIFI_RESTART_INIT;
-
-     }
+	 }
 	
     break;
 
-//	case WIFI_RESTART_INIT:
-//		if(wifi_t.restart_link_tencent_cloud ==1){
-//		   wifi_t.restart_link_tencent_cloud++;
-//		   InitWifiModule();
-//		   HAL_Delay(1000);
-//         
-//           wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;//2 // wifi_link_tencent_cloud:
-//		}
-//			
-//     run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
-//	break;
 
-	case POWER_OFF:
+
+	case POWER_OFF: //2
 		SetPowerOff_ForDoing();
         if(run_t.gFan_continueRun==1 && stop_fan_flag==0){
             stop_fan_flag++;
