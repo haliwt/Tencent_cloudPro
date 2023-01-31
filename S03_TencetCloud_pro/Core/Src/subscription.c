@@ -315,8 +315,7 @@ void Tencent_Cloud_Rx_Handler(void)
             if(run_t.gPower_flag ==POWER_ON){
            // run_t.gUlransonic=0;
 			run_t.response_wifi_signal_label = SONIC_OFF_ITEM;
-           // SendWifiCmd_To_Order(WIFI_SONIC_OFF);
-           /// Buzzer_KeySound();
+        
                 
             }
 		
@@ -325,35 +324,21 @@ void Tencent_Cloud_Rx_Handler(void)
             if(run_t.gPower_flag ==POWER_ON){
             run_t.gUlransonic=1;
 			run_t.response_wifi_signal_label = SONIC_ON_ITEM;
-           // SendWifiCmd_To_Order(WIFI_SONIC_ON);
-           /// Buzzer_KeySound();
-            
-			 
-            }
+       
+           }
 			
     }
     if(strstr((char *)UART2_DATA.UART_Data,"state\":1")){
            if(run_t.gPower_flag ==POWER_ON){
             //run_t.gModel=1;
 			run_t.response_wifi_signal_label = STATE_ON_ITEM;
-           // SendWifiCmd_To_Order(WIFI_MODE_1);
-            
-			 //  Buzzer_KeySound();
-
-            
-           	}
+        	}
 		  
     }
     if(strstr((char *)UART2_DATA.UART_Data,"state\":2")){
             if(run_t.gPower_flag ==POWER_ON){
            // run_t.gModel=2;
 			run_t.response_wifi_signal_label = STATE_OFF_ITEM;
-           // SendWifiCmd_To_Order(WIFI_MODE_2);
-           
-              /// Buzzer_KeySound();
-
-            
-			
             }
 			
     }
@@ -361,13 +346,6 @@ void Tencent_Cloud_Rx_Handler(void)
 
 	        if(run_t.gPower_flag ==POWER_ON){
 			run_t.response_wifi_signal_label = TEMPERATURE_ITEM;
-           // temp_decade=UART2_DATA.UART_Data[14]-0x30;
-           /// temp_unit=UART2_DATA.UART_Data[15]-0x30;
-          //  run_t.set_temperature_value = temp_decade*10 +  temp_unit;
-			
-			//SendWifiData_To_PanelTemp(run_t.set_temperature_value);
-          
-			    /// Buzzer_KeySound();
             
 	        }
 			
@@ -377,21 +355,7 @@ void Tencent_Cloud_Rx_Handler(void)
 			if(run_t.gPower_flag ==POWER_ON){
 
 			run_t.response_wifi_signal_label= FAN_ITEM;
-			#if 0
-            if(UART2_DATA.UART_Data[7]==0x31 && UART2_DATA.UART_Data[8]==0x30 && UART2_DATA.UART_Data[9]==0x30){
-		           run_t.set_wind_speed_value =100;
-            }
-			else{
-           		 wind_decade=UART2_DATA.UART_Data[7]-0x30;
-	       		 wind_unit=UART2_DATA.UART_Data[8]-0x30;
-                 run_t.set_wind_speed_value = wind_decade*10 + wind_unit;
-			}
-
-
-    		SendWifiData_To_PanelWindSpeed(run_t.set_wind_speed_value);
-          
-			 Buzzer_KeySound();
-		  #endif 
+			
             
 		}
 		
@@ -497,7 +461,6 @@ void Tencent_Cloud_Rx_Handler(void)
 			SendWifiCmd_To_Order(WIFI_MODE_1);
 		    Buzzer_KeySound();
         }
-	  	Buzzer_KeySound();
 	    run_t.response_wifi_signal_label=0xff;
 	  	break;
 
