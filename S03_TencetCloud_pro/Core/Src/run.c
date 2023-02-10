@@ -8,10 +8,12 @@
 #include "buzzer.h"
 #include "esp8266.h"
 #include "mqtt_iot.h"
+#include "publish.h"
 
 
 RUN_T run_t; 
 
+static void Single_ReceiveCmd(uint8_t cmd);
 /**********************************************************************
 *
 *Function Name:void Decode_RunCmd(void)
@@ -29,28 +31,12 @@ void Decode_RunCmd(void)
   
       case 'P': //power on and off
         
-        
-       if(cmdType_2 == 0x00){ //power off
-          
-	       run_t.gPower_On=POWER_OFF;
-           run_t.gPower_flag = POWER_OFF;
-            run_t.RunCommand_Label = POWER_OFF;
+           Buzzer_KeySound();
+           Single_ReceiveCmd(cmdType_2);  
            
-          MqttData_Publish_SetOpen(0x0);
-           
-		   Buzzer_KeySound();
-           cmdType_1 =0xff;
-	  } 
-      else if(cmdType_2 ==1){ //power on
-         
-         run_t.gPower_flag = POWER_ON;
-		 run_t.gPower_On = POWER_ON;
-         run_t.RunCommand_Label= POWER_ON;
-		 MqttData_Publish_SetOpen(0x01);
-	     Buzzer_KeySound();
-
-	     cmdType_1 =0xff;
-      }       
+           cmdType_2 =0xff;
+           cmdType_1=0xff;
+             
           
       break;
       
@@ -75,9 +61,20 @@ void Decode_RunCmd(void)
                 run_t.gModel =1;  //turn on
                 Buzzer_KeySound();
             }
+           
             cmdType_2 =0xff;
         }
+         cmdType_1=0xff;
 	   break;
+        
+      case 'C':
+           if(run_t.gPower_flag==POWER_ON){
+               Single_ReceiveCmd(cmdType_2); 
+               cmdType_2 = 0xff; 
+           }
+         cmdType_1=0xff;
+         
+      break;
 
 
 	  case 'Z' ://buzzer sound 
@@ -86,12 +83,92 @@ void Decode_RunCmd(void)
 		    if(cmdType_2== 'Z'){//turn off AI
 			    Buzzer_KeySound();
 			}
-			 cmdType_1 =0xff;
+			 
+			 cmdType_2=0xff;
 		}
-
+       cmdType_1 =0xff;
 	    break;
  	}
     
+}
+/**********************************************************************
+	*
+	*Functin Name: void Single_ReceiveCmd(uint8_t cmd)
+	*Function : resolver is by usart port receive data  from display panle  
+	*Input Ref:  usart receive data
+	*Return Ref: NO
+	*
+**********************************************************************/
+static void Single_ReceiveCmd(uint8_t cmd)
+{
+  
+    
+    switch(cmd){
+
+    case 0x00: //power off
+        run_t.gPower_On=POWER_OFF;
+        run_t.gPower_flag = POWER_OFF;
+        run_t.RunCommand_Label = POWER_OFF;
+           
+         MqttData_Publish_SetOpen(0x0);
+           
+
+    cmd = 0xff;
+    break;
+
+    case 0x01: // power on
+     run_t.gPower_flag = POWER_ON;
+		 run_t.gPower_On = POWER_ON;
+         run_t.RunCommand_Label= POWER_ON;
+		 MqttData_Publish_SetOpen(0x01);
+         HAL_Delay(200);
+         Publish_Data_ToCloud_Handler();
+	 cmd=0xff;  
+     break;
+
+     default:
+
+     break;
+
+    
+    }
+
+   if( run_t.gPower_flag == POWER_ON){
+	switch(cmd){
+
+
+	 //dry key
+     case 0x12: //PTC turn on
+    
+         run_t.gDry = 1;
+         run_t.gFan_continueRun =0;
+		 MqttData_Publish_SetPtc(0x01);
+
+	break;
+
+     case 0x02: //PTC turn off
+		//Buzzer_KeySound();
+		run_t.gDry =0;
+		//Dry_Function(0) ;//
+        if(run_t.gPlasma ==0){ //plasma turn off flag
+			run_t.gFan_counter =0;
+			run_t.gFan_continueRun =1;
+
+		}
+		MqttData_Publish_SetPtc(0x0);
+
+     cmd=0xff; 
+       
+     break;
+
+     default:
+         
+     break;
+
+
+    }
+
+	}
 }
 /**********************************************************************
 	*
@@ -123,7 +200,7 @@ void SystemReset(void)
 **********************************************************************/
 void RunCommand_MainBoard_Fun(void)
 {
-   static uint8_t stop_fan_flag;
+  
    switch(run_t.RunCommand_Label){
 
 	case POWER_ON: //1
@@ -135,7 +212,7 @@ void RunCommand_MainBoard_Fun(void)
 		if(esp8266data.esp8266_login_cloud_success==1){
 	 	     SendWifiData_To_Cmd(0x01) ;
 		}
-		stop_fan_flag=0;
+
 	break;
 
    case UPDATE_TO_PANEL_DATA: //4
@@ -143,19 +220,19 @@ void RunCommand_MainBoard_Fun(void)
 	   	    run_t.gTimer_senddata_panel=0;
 	        ActionEvent_Handler();
 	 }
-	
+	 
     break;
 
 
 
 	case POWER_OFF: //2
 		SetPowerOff_ForDoing();
-        if(run_t.gFan_continueRun==1 && stop_fan_flag==0){
-            stop_fan_flag++;
-            run_t.gFan_counter=0;
-        }
+       run_t.gFan_continueRun =1;
+         run_t.gFan_counter=0;
+        
 	   run_t.gPower_flag =POWER_OFF;
-       run_t.gPower_On=0xff;
+		
+       run_t.RunCommand_Label =0xff;
 	break;
 
     }
@@ -180,11 +257,25 @@ void RunCommand_MainBoard_Fun(void)
 				   FAN_Stop();
 	           }
 	  }
-	  if((run_t.gPower_On !=POWER_OFF ) && run_t.gFan_continueRun ==0){
 
-	      FAN_CCW_RUN();
-      }
+	 if(run_t.gPlasma==0 && run_t.gDry==0 && run_t.gPower_flag ==POWER_ON && run_t.gFan_continueRun ==1){
 
+              if(run_t.gFan_counter < 60){
+          
+                       FAN_CCW_RUN();
+                  }       
+
+	           if(run_t.gFan_counter > 59){
+		           
+				   run_t.gFan_counter=0;
+				
+				   run_t.gFan_continueRun++;
+				   FAN_Stop();
+	           }
+
+	 }
+	
+	
       
       
  }

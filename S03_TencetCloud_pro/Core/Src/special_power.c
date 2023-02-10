@@ -12,7 +12,7 @@ void (*Single_Usart_ReceiveData)(uint8_t cmd);
 
 void SetPowerOn_ForDoing(void)
 {
-    run_t.gFan_counter=0;
+    
      run_t.gPower_flag = POWER_ON;
     run_t.gFan_continueRun =0;
     run_t.gPower_On=POWER_ON;
@@ -51,7 +51,7 @@ void SetPowerOff_ForDoing(void)
 	PLASMA_SetLow(); //
 	HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic Off 
 	PTC_SetLow();
-	//FAN_Stop();
+	FAN_Stop();
 
 }
 
@@ -90,6 +90,13 @@ void ActionEvent_Handler(void)
 	}
 	else{
 	  HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic off
+
+	}
+
+	if(run_t.gPlasma ==0 && run_t.gDry==0){
+
+        run_t.gFan_counter=0;
+		run_t.gFan_continueRun=1;        
 
 	}
 		

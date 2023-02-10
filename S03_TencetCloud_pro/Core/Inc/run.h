@@ -79,9 +79,10 @@ typedef struct _RUN_T{
       uint8_t wifi_config_net_lable;
 
 	
-    uint8_t gTimer_60s;
 	uint8_t gTimer_1s;
 	uint8_t gTimer_senddata_panel;
+	uint32_t randomName[1];
+	
 
 	
 

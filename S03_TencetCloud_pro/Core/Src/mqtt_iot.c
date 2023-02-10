@@ -63,7 +63,7 @@ void Mqtt_Value_Init(void)
     sg_info.ptc=1; 
     sg_info.anion=1;  //灭菌
 	sg_info.sonic =1;  //驱虫
-    sg_info.find=50;
+    sg_info.find=100;
 	sg_info.set_temperature = 20;
 }
 static void Mqtt_Value_login(void)
@@ -92,7 +92,8 @@ static void property_topic_publish(void)
     char topic[128] = {0};
     int  size;
 
-    size = snprintf(topic, sizeof(topic), "AT+TCMQTTPUB=\"$thing/up/property/%s/%s\",0,", PRODUCT_ID,DEVUICE_NAME);
+    
+    size = snprintf(topic, sizeof(topic), "AT+TCMQTTPUB=\"$thing/up/property/%s/UYIJIA01-%d\",0,", PRODUCT_ID,run_t.randomName[0]);
     at_send_data((uint8_t *)topic, size);
  
    
@@ -298,6 +299,12 @@ void MqttData_Publish_SetOpen(uint8_t open)
    property_report_SetOpen(open);
 }
 
+void MqttData_Publish_SetPtc(uint8_t ptc)
+{
+   property_topic_publish();
+    property_report_SetPtc(ptc);
+
+}
 
 /********************************************************************************
 	*

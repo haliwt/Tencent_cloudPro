@@ -70,8 +70,8 @@ void SetTemperatureHost(void(*temperatureHandler)(void))
 ***********************************************/
 void RunWifi_Command_Handler(void)
 {
-     static uint8_t first_publish,first_sub, get_rx_beijing_time_flag;
-	 static uint8_t beijing_flag,wifi_jump_Num,gamt_recode;
+     static uint8_t first_sub, get_rx_beijing_time_flag;
+	 static uint8_t beijing_flag,gamt_recode;
 
 	
 	if(run_t.gPower_flag == POWER_ON){
@@ -81,7 +81,7 @@ void RunWifi_Command_Handler(void)
 	    case wifi_has_been_connected:
 		  first_sub=0;
 		  first_connect=0;
-          first_publish=0;
+         
 		  wifi_t.get_rx_beijing_time_flag=0;
 		 SmartPhone_TryToLink_TencentCloud();
 	     if(esp8266data.esp8266_login_cloud_success==1){

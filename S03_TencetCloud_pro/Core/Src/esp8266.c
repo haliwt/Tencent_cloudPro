@@ -197,13 +197,15 @@ void Wifi_SoftAP_Config_Handler(void)
 			HAL_Delay(1000);
 			//HAL_UART_Transmit(&huart2, "AT+CIPMUX=1\r\n", strlen("AT+CIPMUX=1\r\n"), 5000);
 			run_t.wifi_config_net_lable =wifi_set_softap;
+			run_t.randomName[0]=HAL_GetUIDw0();
+		
 
 	 break;
 
 	  case wifi_set_softap:
             WIFI_IC_ENABLE();
 			
-            sprintf((char *)device_massage, "AT+TCPRDINFOSET=1,\"%s\",\"%s\",\"%s\"\r\n", PRODUCT_ID, DEVICE_SECRET,DEVUICE_NAME);
+            sprintf((char *)device_massage, "AT+TCPRDINFOSET=1,\"%s\",\"%s\",\"UYIJIA01-%d\"\r\n", PRODUCT_ID, DEVICE_SECRET,run_t.randomName[0]);
 			usart2_flag = at_send_data(device_massage, strlen((const char *)device_massage));
 	  		HAL_Delay(1000);
             HAL_Delay(1000);
@@ -231,11 +233,12 @@ void Wifi_SoftAP_Config_Handler(void)
 	 
           //  HAL_Delay(1000);
 		  //  HAL_Delay(1000);
+	       // run_t.randomName[0]=HAL_GetUIDw0();
             HAL_Delay(1000);
 		    HAL_Delay(1000);
 			HAL_Delay(1000);
 		    HAL_Delay(1000);
-	        sprintf((char *)device_massage, "AT+TCSAP=\"%s\"\r\n",DEVUICE_NAME);
+	        sprintf((char *)device_massage, "AT+TCSAP=\"UYIJIA01-%d\"\r\n",run_t.randomName[0]);
             usart2_flag = at_send_data(device_massage, strlen((const char *)device_massage));
 			 HAL_Delay(1000);
              HAL_Delay(1000);

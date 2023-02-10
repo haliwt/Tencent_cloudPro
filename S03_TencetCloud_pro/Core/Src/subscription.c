@@ -57,13 +57,13 @@ void Receive_Data_FromCloud_Data(int type, char *str)
 *Return Ref:NO
 *
 ********************************************************************************/
-void Subscriber_Data_FromCloud_Handler()
+void Subscriber_Data_FromCloud_Handler(void)
 {
    uint8_t *device_massage;
 
          device_massage = (uint8_t *)malloc(128);
       
-         sprintf((char *)device_massage,"AT+TCMQTTSUB=\"$thing/down/property/%s/%s\",0\r\n", PRODUCT_ID, DEVUICE_NAME);
+         sprintf((char *)device_massage,"AT+TCMQTTSUB=\"$thing/down/property/%s/UYIJIA01-%d\",0\r\n", PRODUCT_ID, run_t.randomName[0]);
          HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000); 
          free(device_massage);
   
