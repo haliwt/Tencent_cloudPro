@@ -231,9 +231,6 @@ void Wifi_SoftAP_Config_Handler(void)
 
 	 case wifi_set_tcsap:
 	 
-          //  HAL_Delay(1000);
-		  //  HAL_Delay(1000);
-	       // run_t.randomName[0]=HAL_GetUIDw0();
             HAL_Delay(1000);
 		    HAL_Delay(1000);
 			HAL_Delay(1000);
@@ -249,15 +246,8 @@ void Wifi_SoftAP_Config_Handler(void)
 			
 	 break;
 
-	
-
-	 
-	   
-  }
-
-  
-
-    free(device_massage);
+	}
+  free(device_massage);
 }
 
 /****************************************************************************************************

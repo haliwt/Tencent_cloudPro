@@ -14,6 +14,8 @@
 RUN_T run_t; 
 
 static void Single_ReceiveCmd(uint8_t cmd);
+static void TheFirst_PowerOn_Handler(void);
+
 /**********************************************************************
 *
 *Function Name:void Decode_RunCmd(void)
@@ -44,7 +46,7 @@ void Decode_RunCmd(void)
 	  case 'W': //wifi-function
 	      if(run_t.gPower_flag==POWER_ON){
 	      if(cmdType_2==1){
-               //run_t.RunCommand_Lable = WIFI_RESTART_INIT;
+              //run_t.RunCommand_Lable = PWOER_ON;
 			  wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;//2 // wifi_link_tencent_cloud:
 			  wifi_t.restart_link_tencent_cloud = 1;
 			  Buzzer_KeySound();	 
@@ -117,12 +119,15 @@ static void Single_ReceiveCmd(uint8_t cmd)
     break;
 
     case 0x01: // power on
-     run_t.gPower_flag = POWER_ON;
+         run_t.gPower_flag = POWER_ON;
 		 run_t.gPower_On = POWER_ON;
          run_t.RunCommand_Label= POWER_ON;
+		 Update_DHT11_Value();
+		 HAL_Delay(200);
 		 MqttData_Publish_SetOpen(0x01);
          HAL_Delay(200);
          Publish_Data_ToCloud_Handler();
+		 
 	 cmd=0xff;  
      break;
 
@@ -200,6 +205,8 @@ void SystemReset(void)
 **********************************************************************/
 void RunCommand_MainBoard_Fun(void)
 {
+
+   TheFirst_PowerOn_Handler();
   
    switch(run_t.RunCommand_Label){
 
@@ -209,6 +216,7 @@ void RunCommand_MainBoard_Fun(void)
 	    run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
 		
         run_t.gTimer_1s=0;
+		run_t.gTheFirst_powerOn=1;
 		if(esp8266data.esp8266_login_cloud_success==1){
 	 	     SendWifiData_To_Cmd(0x01) ;
 		}
@@ -227,7 +235,12 @@ void RunCommand_MainBoard_Fun(void)
 
 	case POWER_OFF: //2
 		SetPowerOff_ForDoing();
-       run_t.gFan_continueRun =1;
+		if(run_t.gTheFirst_powerOn ==0)
+         	run_t.gFan_continueRun =0;
+		else{
+		 run_t.gFan_continueRun =1;
+
+		}
          run_t.gFan_counter=0;
         
 	   run_t.gPower_flag =POWER_OFF;
@@ -282,7 +295,12 @@ void RunCommand_MainBoard_Fun(void)
 
 
 
- 
+static void TheFirst_PowerOn_Handler(void)
+{
+
+
+
+}
 
 
 

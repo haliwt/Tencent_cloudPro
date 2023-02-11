@@ -14,7 +14,7 @@
 
 
 #define PRODUCT_ID              "EHQB1P53IH" //production ID 
-#define DEVUICE_NAME            "UYIJIA01-afcc8"      //device Name:
+//#define DEVUICE_NAME            "UYIJIA01-afcc8"      //device Name:
 #define DEVICE_SECRET           "5xdQMgx7ZHznYyQK6wvdmolc"//"5xdQMgx7ZHznYyQK6wvdmolc"  //Secret key 
 #define PRODUCT_REGION          "ap-guangzhou" //filed name 
 
