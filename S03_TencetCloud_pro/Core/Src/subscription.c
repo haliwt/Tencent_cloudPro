@@ -200,8 +200,21 @@ void Subscribe_Rx_Interrupt_Handler(void)
             esp8266data.rx_counter=0;
             
           
-               
          }
+		 else if(UART2_DATA.UART_Data[8]==0x7D){
+		             esp8266data.rx_data_success=1;
+					 esp8266data.rx_data_state=0;
+					 esp8266data.rx_counter=0;
+
+
+		 }
+		 else if(esp8266data.rx_counter >9 && UART2_DATA.UART_Data[esp8266data.rx_counter] != 0x72){
+
+			esp8266data.rx_data_success=1;
+            esp8266data.rx_data_state=0;
+            esp8266data.rx_counter=0;
+
+		 }
          else{
 
             esp8266data.rx_data_state=10; 
@@ -269,7 +282,7 @@ void Wifi_Rx_InputInfo_Handler(void)
 ********************************************************************************/
 void Tencent_Cloud_Rx_Handler(void)
 {
-   
+    uint8_t i;
     static uint8_t wind_hundred, wind_decade,wind_unit,temp_decade,temp_unit;
     if( esp8266data.rx_data_success==1){
          esp8266data.rx_data_success=0;
@@ -501,7 +514,18 @@ void Tencent_Cloud_Rx_Handler(void)
 
    }
 
+   if(run_t.response_wifi_signal_label==0xff){
+		run_t.response_wifi_signal_label=0xf0;
+
+		for(i=0;i<17;i++){
+		UART2_DATA.UART_Data[i]=0;
+
+
+		}
+
+   }
 	
+   
 }
 void Wifi_Rx_Beijing_Time_Handler(void)
 {
