@@ -208,13 +208,19 @@ void Subscribe_Rx_Interrupt_Handler(void)
 
 
 		 }
-		 else if(esp8266data.rx_counter >9 && UART2_DATA.UART_Data[esp8266data.rx_counter] != 0x72){
+		 else if(esp8266data.rx_counter >9){ 
+		 	if(UART2_DATA.UART_Data[esp8266data.rx_counter ] != 0x72){
 
-			esp8266data.rx_data_success=1;
-            esp8266data.rx_data_state=0;
-            esp8266data.rx_counter=0;
+			   esp8266data.rx_data_state=10; 
 
-		 }
+		 	}
+			else{
+				esp8266data.rx_data_success=1;
+	            esp8266data.rx_data_state=0;
+	            esp8266data.rx_counter=0;
+			}
+
+		  }
          else{
 
             esp8266data.rx_data_state=10; 
