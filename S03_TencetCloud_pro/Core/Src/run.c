@@ -78,6 +78,17 @@ void Decode_RunCmd(void)
          
       break;
 
+	  case 'T':
+	  	if(run_t.gPower_flag==POWER_ON){
+              
+             run_t.set_temperature_value = cmdType_2;
+			 MqttData_Publis_SetTemp(run_t.set_temperature_value);
+			   
+         }
+	   cmdType_1=0xff;
+
+	  break;
+
 
 	  case 'Z' ://buzzer sound 
 	    if(run_t.gPower_flag==POWER_ON){

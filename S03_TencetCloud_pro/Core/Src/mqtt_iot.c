@@ -64,7 +64,10 @@ void Mqtt_Value_Init(void)
     sg_info.anion=1;  //灭菌
 	sg_info.sonic =1;  //驱虫
     sg_info.find=100;
-	sg_info.set_temperature = 20;
+	if(run_t.set_temperature_value <20)run_t.set_temperature_value = 20;
+	if(run_t.set_temperature_value > 40)run_t.set_temperature_value = 40;
+	sg_info.set_temperature =  run_t.set_temperature_value ;
+	
 }
 static void Mqtt_Value_login(void)
 {
@@ -159,8 +162,7 @@ static void property_report_ReadTempHum(uint8_t tempvalue,uint8_t humvalue)
 	*
 	*Function Name:static void property_report_SetTempFan(void)
 	*Function : sensor of data to tencent cloud  temperature and humidity of data
-	*Input Ref: only read temperature value and humidiy value
-	*           
+	*Input Ref: write temperature value          
 	*Return Ref:
 	*
 ********************************************************************************/
@@ -170,7 +172,7 @@ static void property_report_SetTemp(uint8_t temp)
 	 int	message_len	  = 0;
 	
 	
-	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up03\\\"\\,\\\"params\\\":{\\\"nowtemperature\\\":%d}}\"\r\n",temp);
+	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up03\\\"\\,\\\"params\\\":{\\\"temperature\\\":%d}}\"\r\n",temp);
 								  
 	at_send_data((uint8_t *)message, message_len);
 
