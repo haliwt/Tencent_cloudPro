@@ -75,6 +75,7 @@ void InitWifiModule(void)
 }
 
 
+
 /****************************************************************************************************
 	**
 	*Function Name:void Wifi_Link_SmartConfig_Fun(void)

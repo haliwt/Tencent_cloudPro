@@ -53,6 +53,9 @@ void Decode_RunCmd(void)
 		   }
 		   else if(cmdType_2==0){
                	wifi_t.runCommand_order_lable= wifi_has_been_connected;
+                run_t.wifi_config_net_lable=0;
+		         InitWifiModule();
+                 SmartPhone_TryToLink_TencentCloud();
                	Buzzer_KeySound();
 		   }
 		   else if(cmdType_2==0x14){
@@ -136,6 +139,7 @@ static void Single_ReceiveCmd(uint8_t cmd)
          run_t.RunCommand_Label= POWER_ON;
 		 Update_DHT11_Value();
 		 HAL_Delay(200);
+         wifi_t.runCommand_order_lable= wifi_has_been_connected;
 		 if(esp8266data.esp8266_login_cloud_success==1){
 			 MqttData_Publish_SetOpen(0x01);
 	         HAL_Delay(200);

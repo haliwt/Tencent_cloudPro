@@ -83,7 +83,8 @@ void RunWifi_Command_Handler(void)
 		  first_connect=0;
          
 		  wifi_t.get_rx_beijing_time_flag=0;
-		 SmartPhone_TryToLink_TencentCloud();
+		 run_t.wifi_config_net_lable=0;
+		 
 	     if(esp8266data.esp8266_login_cloud_success==1){
 		  	esp8266data.rx_link_cloud_flag=0;
 			esp8266data.gTimer_publish_timing=0;
@@ -94,7 +95,11 @@ void RunWifi_Command_Handler(void)
 				
 		  }
 		  else{
+		  	    InitWifiModule();
 		  		wifi_t.runCommand_order_lable =0xff;
+				
+				Wifi_SoftAP_Config_Handler();
+		        SmartPhone_TryToLink_TencentCloud();
 
 		  }
 		  if(wifi_t.restart_link_tencent_cloud ==1)wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;
