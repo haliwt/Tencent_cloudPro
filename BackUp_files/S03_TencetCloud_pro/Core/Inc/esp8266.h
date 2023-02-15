@@ -96,6 +96,6 @@ void wifi_Disconnect_Fun(void);
 void Get_BeiJing_Time_Cmd(void);
 void Get_Beijing_Time(void);
 
-void Wifi_Smart_Config_Handler(void);
+
 
 #endif 

@@ -47,7 +47,7 @@ void Decode_RunCmd(void)
 	      if(run_t.gPower_flag==POWER_ON){
 	      if(cmdType_2==1){
               //run_t.RunCommand_Lable = PWOER_ON;
-			  wifi_t.runCommand_order_lable= wifi_link_tencent_cloud_init;//wifi_link_tencent_cloud;//2 // wifi_link_tencent_cloud:
+			  wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;//2 // wifi_link_tencent_cloud:
 			  wifi_t.restart_link_tencent_cloud = 1;
 			  Buzzer_KeySound();	 
 		   }
@@ -82,8 +82,7 @@ void Decode_RunCmd(void)
 	  	if(run_t.gPower_flag==POWER_ON){
               
              run_t.set_temperature_value = cmdType_2;
-             if(esp8266data.esp8266_login_cloud_success==1)
-                    MqttData_Publis_SetTemp(run_t.set_temperature_value);
+			 MqttData_Publis_SetTemp(run_t.set_temperature_value);
 			   
          }
 	   cmdType_1=0xff;
@@ -136,11 +135,9 @@ static void Single_ReceiveCmd(uint8_t cmd)
          run_t.RunCommand_Label= POWER_ON;
 		 Update_DHT11_Value();
 		 HAL_Delay(200);
-        if(esp8266data.esp8266_login_cloud_success==1){
 		 MqttData_Publish_SetOpen(0x01);
          HAL_Delay(200);
          Publish_Data_ToCloud_Handler();
-        }
 		 
 	 cmd=0xff;  
      break;
@@ -161,7 +158,6 @@ static void Single_ReceiveCmd(uint8_t cmd)
     
          run_t.gDry = 1;
          run_t.gFan_continueRun =0;
-         if(esp8266data.esp8266_login_cloud_success==1)
 		 MqttData_Publish_SetPtc(0x01);
 
 	break;
@@ -175,8 +171,7 @@ static void Single_ReceiveCmd(uint8_t cmd)
 			run_t.gFan_continueRun =1;
 
 		}
-        if(esp8266data.esp8266_login_cloud_success==1)
-            MqttData_Publish_SetPtc(0x0);
+		MqttData_Publish_SetPtc(0x0);
 
      cmd=0xff; 
        
@@ -238,8 +233,6 @@ void RunCommand_MainBoard_Fun(void)
 		if(esp8266data.esp8266_login_cloud_success==1){
 	 	     SendWifiData_To_Cmd(0x01) ;
 		}
-        else
-            
 
 	break;
 

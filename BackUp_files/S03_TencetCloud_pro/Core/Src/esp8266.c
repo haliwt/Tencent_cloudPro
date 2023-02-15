@@ -243,8 +243,7 @@ void Wifi_SoftAP_Config_Handler(void)
 			 esp8266data.rx_link_cloud_flag =1; //enable usart2 receive wifi  data
 			 UART2_DATA.UART_Cnt=0;
 			 run_t.wifi_config_net_lable=0xff;
-			 wifi_t.runCommand_order_lable=wifi_link_tencent_cloud;
-			 
+			
 	 break;
 
 	}
@@ -314,86 +313,3 @@ void Get_Beijing_Time(void)
 
 }
 
-void Wifi_Smart_Config_Handler(void)
-{
-     uint8_t *device_massage;
-    
-
-    device_massage = (uint8_t *)malloc(128);
-
-
-   switch (run_t.wifi_config_net_lable)
-  {
-
-    case wifi_set_restor:
-           InitWifiModule();
-		   HAL_Delay(1000);
-           run_t.wifi_config_net_lable =wifi_set_cwmode;
-	break;
-
-
-	 case wifi_set_cwmode:
-    	    WIFI_IC_ENABLE();
-         	HAL_UART_Transmit(&huart2, "AT+CWMODE=1\r\n", strlen("AT+CWMODE=1\r\n"), 5000);
-        	HAL_Delay(1000);
-			HAL_Delay(1000);
-			HAL_UART_Transmit(&huart2, "AT+CWSTARTSMART=3\r\n", strlen("AT+CWSTARTSMART=3\r\n"), 5000);
-			HAL_Delay(1000);
-			HAL_Delay(1000);
-			HAL_Delay(1000);
-			HAL_Delay(1000);
-			//HAL_UART_Transmit(&huart2, "AT+CIPMUX=1\r\n", strlen("AT+CIPMUX=1\r\n"), 5000);
-			run_t.wifi_config_net_lable =wifi_set_softap;
-			run_t.randomName[0]=HAL_GetUIDw0();
-		
-
-	 break;
-
-	  case wifi_set_softap:
-            WIFI_IC_ENABLE();
-			
-            sprintf((char *)device_massage, "AT+TCPRDINFOSET=1,\"%s\",\"%s\",\"UYIJIA01-%d\"\r\n", PRODUCT_ID, DEVICE_SECRET,run_t.randomName[0]);
-			usart2_flag = at_send_data(device_massage, strlen((const char *)device_massage));
-	  		HAL_Delay(1000);
-            HAL_Delay(1000);
-			 HAL_Delay(1000);
-	        
-			run_t.wifi_config_net_lable=wifi_set_tcdevreg;
-		
-	  break;
-
-
-	 case wifi_set_tcdevreg://dynamic register
-		 HAL_UART_Transmit(&huart2, "AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"), 0xffff); //动态注册 
-	      HAL_Delay(1000);
-		 HAL_Delay(1000);
-		HAL_Delay(1000);
-		HAL_Delay(1000);
-
-	  
-	     run_t.wifi_config_net_lable=wifi_set_tcsap;
-
-	 break;
-
-
-	 case wifi_set_tcsap:
-	 
-            HAL_Delay(1000);
-		    HAL_Delay(1000);
-			HAL_Delay(1000);
-		    HAL_Delay(1000);
-	        sprintf((char *)device_massage, "AT+TCSAP=\"UYIJIA01-%d\"\r\n",run_t.randomName[0]);
-            usart2_flag = at_send_data(device_massage, strlen((const char *)device_massage));
-			 HAL_Delay(1000);
-             HAL_Delay(1000);
-			 wifi_t.soft_ap_config_flag =1;
-			 esp8266data.rx_link_cloud_flag =1; //enable usart2 receive wifi  data
-			 UART2_DATA.UART_Cnt=0;
-			 run_t.wifi_config_net_lable=0xff;
-			 wifi_t.runCommand_order_lable=wifi_link_tencent_cloud;
-			 
-	 break;
-
-	}
-  free(device_massage);
-}
