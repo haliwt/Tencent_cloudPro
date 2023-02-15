@@ -9,14 +9,13 @@
 #include "esp8266.h"
 #include "mqtt_iot.h"
 #include "publish.h"
-#include "flash.h"
 
 
 RUN_T run_t; 
 
 static void Single_ReceiveCmd(uint8_t cmd);
+static void TheFirst_PowerOn_Handler(void);
 
-uint8_t self_power_on_flag=0;
 /**********************************************************************
 *
 *Function Name:void Decode_RunCmd(void)
@@ -47,15 +46,16 @@ void Decode_RunCmd(void)
 	  case 'W': //wifi-function
 	      if(run_t.gPower_flag==POWER_ON){
 	      if(cmdType_2==1){
-              run_t.flash_write_data_flag = 2;
-			  Wifi_Disconnect_Net();
-		      Wifi_Iinit();
+              //run_t.RunCommand_Lable = PWOER_ON;
 			  wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;//2 // wifi_link_tencent_cloud:
-	
+			  wifi_t.restart_link_tencent_cloud = 1;
 			  Buzzer_KeySound();	 
 		   }
 		   else if(cmdType_2==0){
                	wifi_t.runCommand_order_lable= wifi_has_been_connected;
+                run_t.wifi_config_net_lable=0;
+		         InitWifiModule();
+                 SmartPhone_TryToLink_TencentCloud();
                	Buzzer_KeySound();
 		   }
 		   else if(cmdType_2==0x14){
@@ -86,7 +86,7 @@ void Decode_RunCmd(void)
               
              run_t.set_temperature_value = cmdType_2;
 			 if(esp8266data.esp8266_login_cloud_success==1)
-			    MqttData_Publis_SetTemp(run_t.set_temperature_value);
+			 MqttData_Publis_SetTemp(run_t.set_temperature_value);
 			   
          }
 	   cmdType_1=0xff;
@@ -126,7 +126,7 @@ static void Single_ReceiveCmd(uint8_t cmd)
         run_t.gPower_On=POWER_OFF;
         run_t.gPower_flag = POWER_OFF;
         run_t.RunCommand_Label = POWER_OFF;
-        if(esp8266data.esp8266_login_cloud_success==1)
+         if(esp8266data.esp8266_login_cloud_success==1)  
          MqttData_Publish_SetOpen(0x0);
            
 
@@ -139,12 +139,13 @@ static void Single_ReceiveCmd(uint8_t cmd)
          run_t.RunCommand_Label= POWER_ON;
 		 Update_DHT11_Value();
 		 HAL_Delay(200);
-		  if(esp8266data.esp8266_login_cloud_success==1){
-			
+         wifi_t.runCommand_order_lable= wifi_has_been_connected;
+		 if(esp8266data.esp8266_login_cloud_success==1){
 			 MqttData_Publish_SetOpen(0x01);
 	         HAL_Delay(200);
 	         Publish_Data_ToCloud_Handler();
-		  }
+		 }
+		 
 	 cmd=0xff;  
      break;
 
@@ -164,7 +165,7 @@ static void Single_ReceiveCmd(uint8_t cmd)
     
          run_t.gDry = 1;
          run_t.gFan_continueRun =0;
-	    if(esp8266data.esp8266_login_cloud_success==1)
+	 if(esp8266data.esp8266_login_cloud_success==1)
 		 MqttData_Publish_SetPtc(0x01);
 
 	break;
@@ -225,7 +226,9 @@ void SystemReset(void)
 void RunCommand_MainBoard_Fun(void)
 {
 
-  switch(run_t.RunCommand_Label){
+   TheFirst_PowerOn_Handler();
+  
+   switch(run_t.RunCommand_Label){
 
 	case POWER_ON: //1
 		SetPowerOn_ForDoing();
@@ -312,42 +315,12 @@ void RunCommand_MainBoard_Fun(void)
       
  }
 
-/**********************************************************************
-	*
-	*Functin Name: void MainBoard_Itself_PowerOn_Fun(void)
-	*Function :
-	*Input Ref:  key of value
-	*Return Ref: NO
-	*
-**********************************************************************/
-void MainBoard_Self_Inspection_PowerOn_Fun(void)
+
+
+static void TheFirst_PowerOn_Handler(void)
 {
-    //static uint8_t self_power_on_flag=0;
-
-	if(self_power_on_flag==0){
-        self_power_on_flag ++ ;
-		run_t.flash_read_data =Flash_Read_Data();
-		switch(run_t.flash_read_data){
-
-	     case error: //wifi don't link to tencent cloud ,need manual operation
-		      wifi_t.runCommand_order_lable = 0xff;
-		      run_t.flash_write_data_flag = 0;
-		 break;
-
-		 case success: //wifi has been linked to tencent cloud,need auto link to tencent cloud
-		 	//wifi_t.runCommand_order_lable = wifi_link_tencent_cloud;
-			run_t.flash_write_data_flag = 1;
-		     Wifi_Iinit();
-		     Wifi_Disconnect_Net();
-             SmartPhone_TryToLink_TencentCloud();
-         break;
 
 
-
-		}
-	}
-  //  Wifi_SoftAP_Config_Handler();
-    SmartPhone_TryToLink_TencentCloud();
 
 }
 
