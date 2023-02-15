@@ -85,7 +85,8 @@ void Decode_RunCmd(void)
 	  	if(run_t.gPower_flag==POWER_ON){
               
              run_t.set_temperature_value = cmdType_2;
-			 MqttData_Publis_SetTemp(run_t.set_temperature_value);
+			 if(esp8266data.esp8266_login_cloud_success==1)
+			    MqttData_Publis_SetTemp(run_t.set_temperature_value);
 			   
          }
 	   cmdType_1=0xff;
@@ -125,7 +126,7 @@ static void Single_ReceiveCmd(uint8_t cmd)
         run_t.gPower_On=POWER_OFF;
         run_t.gPower_flag = POWER_OFF;
         run_t.RunCommand_Label = POWER_OFF;
-           
+        if(esp8266data.esp8266_login_cloud_success==1)
          MqttData_Publish_SetOpen(0x0);
            
 
@@ -138,10 +139,12 @@ static void Single_ReceiveCmd(uint8_t cmd)
          run_t.RunCommand_Label= POWER_ON;
 		 Update_DHT11_Value();
 		 HAL_Delay(200);
-		 MqttData_Publish_SetOpen(0x01);
-         HAL_Delay(200);
-         Publish_Data_ToCloud_Handler();
-		 
+		  if(esp8266data.esp8266_login_cloud_success==1){
+			
+			 MqttData_Publish_SetOpen(0x01);
+	         HAL_Delay(200);
+	         Publish_Data_ToCloud_Handler();
+		  }
 	 cmd=0xff;  
      break;
 
@@ -161,6 +164,7 @@ static void Single_ReceiveCmd(uint8_t cmd)
     
          run_t.gDry = 1;
          run_t.gFan_continueRun =0;
+	    if(esp8266data.esp8266_login_cloud_success==1)
 		 MqttData_Publish_SetPtc(0x01);
 
 	break;
@@ -174,7 +178,8 @@ static void Single_ReceiveCmd(uint8_t cmd)
 			run_t.gFan_continueRun =1;
 
 		}
-		MqttData_Publish_SetPtc(0x0);
+		if(esp8266data.esp8266_login_cloud_success==1)
+			MqttData_Publish_SetPtc(0x0);
 
      cmd=0xff; 
        
@@ -332,7 +337,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 		 case success: //wifi has been linked to tencent cloud,need auto link to tencent cloud
 		 	//wifi_t.runCommand_order_lable = wifi_link_tencent_cloud;
 			run_t.flash_write_data_flag = 1;
-		    //Wifi_Iinit();
+		     Wifi_Iinit();
 		     Wifi_Disconnect_Net();
              SmartPhone_TryToLink_TencentCloud();
          break;
@@ -341,6 +346,8 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 
 		}
 	}
+  //  Wifi_SoftAP_Config_Handler();
+    SmartPhone_TryToLink_TencentCloud();
 
 }
 

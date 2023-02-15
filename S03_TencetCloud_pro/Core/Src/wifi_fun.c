@@ -272,7 +272,7 @@ void RunWifi_Command_Handler(void)
      else{
 	 	if(run_t.gPower_flag == POWER_ON){
 	         if(run_t.flash_write_data_flag==1){
-	          Wifi_Disconnect_Net();
+	         // Wifi_Disconnect_Net();
 	          SmartPhone_TryToLink_TencentCloud();
 	         }
 	 	}
