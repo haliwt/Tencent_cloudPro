@@ -507,7 +507,7 @@ void Tencent_Cloud_Rx_Handler(void)
 			
     		SendWifiData_To_PanelWindSpeed(run_t.set_wind_speed_value);
           
-			 Buzzer_KeySound();
+			Buzzer_KeySound();
             
 		}
 	  

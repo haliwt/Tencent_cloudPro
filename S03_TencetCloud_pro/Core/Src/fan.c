@@ -21,7 +21,25 @@ void FAN_Stop(void)
 }
 
 
+void Fan_Slowly_Speed(void)
+{
+    static uint16_t fan_speed;
+	fan_speed ++ ;
+	FAN_CW_SetLow();
+	
+	if(fan_speed < 21){
+	   FAN_CCW_SetHigh(); //Run fan
+    }
 
+	if(fan_speed > 20 && fan_speed < 41){
+  
+	  FAN_CCW_SetLow(); //brake
+
+	}
+
+	if(fan_speed > 40) fan_speed =0;
+	
+}
 
 
 
