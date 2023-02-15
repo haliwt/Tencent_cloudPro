@@ -16,7 +16,7 @@ RUN_T run_t;
 
 static void Single_ReceiveCmd(uint8_t cmd);
 
-
+uint8_t self_power_on_flag=0;
 /**********************************************************************
 *
 *Function Name:void Decode_RunCmd(void)
@@ -229,7 +229,6 @@ void RunCommand_MainBoard_Fun(void)
 		run_t.gTheFirst_powerOn=1;
 		Update_DHT11_Value();
 		HAL_Delay(200);
-		wifi_t.runCommand_order_lable = wifi_has_been_connected; //WT.EDIT 2023.02.14
 		if(esp8266data.esp8266_login_cloud_success==1){
 	 	     SendWifiData_To_Cmd(0x01) ;
 		}
@@ -316,7 +315,7 @@ void RunCommand_MainBoard_Fun(void)
 **********************************************************************/
 void MainBoard_Self_Inspection_PowerOn_Fun(void)
 {
-    static uint8_t self_power_on_flag=0;
+    //static uint8_t self_power_on_flag=0;
 
 	if(self_power_on_flag==0){
         self_power_on_flag ++ ;

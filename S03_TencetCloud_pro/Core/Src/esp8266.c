@@ -81,8 +81,8 @@ void Wifi_Iinit(void)
 	at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
 	HAL_Delay(1000);
 	at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
-
-	HAL_Delay(500);
+	HAL_Delay(100);
+	
 
 }
 /****************************************************************************************************
