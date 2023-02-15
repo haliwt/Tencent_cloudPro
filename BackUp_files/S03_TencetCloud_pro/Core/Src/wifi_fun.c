@@ -96,12 +96,12 @@ void RunWifi_Command_Handler(void)
 		  }
 		  else{
 		  	    InitWifiModule();
-		  		wifi_t.runCommand_order_lable =0xff;
+		  		
 				
 				Wifi_SoftAP_Config_Handler();
 		        SmartPhone_TryToLink_TencentCloud();
 				if(esp8266data.esp8266_login_cloud_success==1)wifi_t.runCommand_order_lable = wifi_tencent_subscription_data;
-
+                else wifi_t.runCommand_order_lable =0xff;
 		  }
 		//  if(wifi_t.restart_link_tencent_cloud ==1)wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;
 		break;
