@@ -30,9 +30,13 @@ typedef enum{
    UPDATE_TO_PANEL_DATA,
    WIFI_RESTART_INIT
 
-   
-
 }run_state_t;
+
+typedef enum{
+   error,
+   success
+
+}flash_state_t;
 
 
 
@@ -51,6 +55,9 @@ typedef struct _RUN_T{
     uint8_t gFan_continueRun;
 
 	uint8_t RunCommand_Label;
+	uint8_t flash_read_data;
+	uint8_t flash_write_data_flag;
+    uint8_t flas_write_data_error ;
 	
   
     uint8_t decodeFlag;
@@ -110,6 +117,7 @@ void Single_Mode(void);
 void Single_ReceiveCmd(uint8_t cmd);
 void SystemReset(void);
 
+void MainBoard_Self_Inspection_PowerOn_Fun(void);
 
 #endif 
 

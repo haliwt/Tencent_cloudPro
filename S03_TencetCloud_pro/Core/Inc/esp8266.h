@@ -82,6 +82,8 @@ typedef struct ESP8266_DATA
 extern ESP8266DATATypedef esp8266data;
 
 void InitWifiModule(void);
+void Wifi_Iinit(void);
+
 
 void Wifi_Link_SmartConfig_Handler(void);
 
