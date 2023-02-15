@@ -47,7 +47,9 @@ void Decode_RunCmd(void)
 	  case 'W': //wifi-function
 	      if(run_t.gPower_flag==POWER_ON){
 	      if(cmdType_2==1){
-              //run_t.RunCommand_Lable = PWOER_ON;
+              run_t.flash_write_data_flag = 2;
+			  Wifi_Disconnect_Net();
+		      Wifi_Iinit();
 			  wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;//2 // wifi_link_tencent_cloud:
 	
 			  Buzzer_KeySound();	 
@@ -324,14 +326,15 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 
 	     case error: //wifi don't link to tencent cloud ,need manual operation
 		      wifi_t.runCommand_order_lable = 0xff;
-		      run_t.flash_write_data_flag = 1;
+		      run_t.flash_write_data_flag = 0;
 		 break;
 
 		 case success: //wifi has been linked to tencent cloud,need auto link to tencent cloud
-		 	wifi_t.runCommand_order_lable = wifi_link_tencent_cloud;
-			run_t.flash_write_data_flag = 0;
-		    Wifi_Iinit();
-
+		 	//wifi_t.runCommand_order_lable = wifi_link_tencent_cloud;
+			run_t.flash_write_data_flag = 1;
+		    //Wifi_Iinit();
+		     Wifi_Disconnect_Net();
+             SmartPhone_TryToLink_TencentCloud();
          break;
 
 

@@ -193,7 +193,7 @@ void SmartPhone_LinkTencent_Cloud(void)
 	   HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
        HAL_Delay(1000);
        HAL_Delay(1000);
-       SendWifiData_To_Cmd(1);//To tell display panel wifi be connetor to tencent cloud is success
+     //  SendWifiData_To_Cmd(1);//To tell display panel wifi be connetor to tencent cloud is success
 	 
      }
 	
@@ -234,3 +234,9 @@ void Get_Beijing_Time(void)
 
 }
 
+void Wifi_Disconnect_Net(void)
+{
+  	at_send_data("AT+CWQAP\r\n", strlen("AT+CWQAP\r\n"));
+	HAL_Delay(500);
+
+}
