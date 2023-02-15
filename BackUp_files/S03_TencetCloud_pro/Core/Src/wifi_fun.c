@@ -70,7 +70,7 @@ void SetTemperatureHost(void(*temperatureHandler)(void))
 ***********************************************/
 void RunWifi_Command_Handler(void)
 {
-     static uint8_t first_sub, get_rx_beijing_time_flag;
+     static uint8_t first_sub, get_rx_beijing_time_flag,subscription_flag;
 	 static uint8_t beijing_flag,gamt_recode;
 
 	
@@ -100,7 +100,9 @@ void RunWifi_Command_Handler(void)
 				
 				Wifi_SoftAP_Config_Handler();
 		        SmartPhone_TryToLink_TencentCloud();
-				if(esp8266data.esp8266_login_cloud_success==1)wifi_t.runCommand_order_lable = wifi_tencent_subscription_data;
+				if(esp8266data.esp8266_login_cloud_success==1){
+					wifi_t.runCommand_order_lable = wifi_tencent_subscription_data;
+				}
                 else wifi_t.runCommand_order_lable =0xff;
 		  }
 		//  if(wifi_t.restart_link_tencent_cloud ==1)wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;
@@ -115,6 +117,7 @@ void RunWifi_Command_Handler(void)
 
 			if(esp8266data.esp8266_login_cloud_success==1){
 			    wifi_t.runCommand_order_lable = wifi_tencent_publish_init_data;
+				esp8266data.gTimer_subscription_timing=0;
 			}
            wifi_t.restart_link_tencent_cloud++;
 	    break;
@@ -172,7 +175,8 @@ void RunWifi_Command_Handler(void)
 			 
 		   	  wifi_t.runCommand_order_lable= wifi_tencent_publish_dht11_data;
            	}
-            if(esp8266data.gTimer_subscription_timing>10){
+            if(esp8266data.gTimer_subscription_timing>5 && subscription_flag==0){
+				 subscription_flag ++;
 				 esp8266data.gTimer_subscription_timing=0;
 		         Subscriber_Data_FromCloud_Handler();
 
