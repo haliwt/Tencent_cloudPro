@@ -77,7 +77,7 @@ typedef struct ESP8266_DATA
 	
 }ESP8266DATATypedef;
 
-
+void InitWifiModule_Hardware(void);
 
 extern ESP8266DATATypedef esp8266data;
 
@@ -95,7 +95,6 @@ void SmartPhone_TryToLink_TencentCloud(void);
 void wifi_Disconnect_Fun(void);
 void Get_BeiJing_Time_Cmd(void);
 void Get_Beijing_Time(void);
-void Wifi_Break_Link(void);
 
 
 

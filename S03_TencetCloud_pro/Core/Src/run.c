@@ -48,21 +48,20 @@ void Decode_RunCmd(void)
 	      if(run_t.gPower_flag==POWER_ON){
 	      if(cmdType_2==1){
               //fast blink led for link to tencent cloud
-             WIFI_IC_ENABLE();
-             esp8266data.esp8266_login_cloud_success=0;
-               wifi_t.runCommand_order_lable= 0xff;
+              WIFI_IC_ENABLE();
+              esp8266data.esp8266_login_cloud_success=0;
+			  // wifi_link_tencent_cloud:
 			  Buzzer_KeySound();	
-		      InitWifiModule();
-              HAL_Delay(1000);
-               wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;
+		      InitWifiModule_Hardware();
+               esp8266data.esp8266_login_cloud_success=0;
+              wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;//2 
 		   }
 		   else if(cmdType_2==0){
-		   	   if(run_t.flash_write_data_flag == 1){
-	               	wifi_t.runCommand_order_lable= wifi_has_been_connected;
-	                run_t.wifi_config_net_lable=0;
-			        SmartPhone_TryToLink_TencentCloud();
-	               	Buzzer_KeySound();
-		   	   	}
+                
+               	wifi_t.runCommand_order_lable= wifi_has_been_connected;
+                run_t.wifi_config_net_lable=0;
+		        SmartPhone_TryToLink_TencentCloud();
+               	Buzzer_KeySound();
 		   }
 		   else if(cmdType_2==0x14){
                 run_t.gModel =2; //turn off

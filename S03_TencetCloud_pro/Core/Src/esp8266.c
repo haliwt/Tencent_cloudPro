@@ -55,8 +55,9 @@ uint8_t at_send_data(uint8_t* pdata, uint16_t len)
 void InitWifiModule(void)
 {
 	
-	
-		
+	if(run_t.wifi_config_net_lable==0)
+		{
+			run_t.wifi_config_net_lable++;
 			
 			WIFI_IC_ENABLE();
 	
@@ -67,9 +68,32 @@ void InitWifiModule(void)
 		
 			HAL_Delay(100);
 			
+			
+		}
+		//HAL_UART_Abort(&huart2);
+
+}
+
+void InitWifiModule_Hardware(void)
+{
+	
+	
+			
+			
+			WIFI_IC_ENABLE();
+	
+	
+			at_send_data("AT+RESTORE\r\n", strlen("AT+RESTORE\r\n"));
+			HAL_Delay(100);
+			at_send_data("AT+RESTORE\r\n", strlen("AT+RESTORE\r\n"));
+		
+			HAL_Delay(100);
+			
+			
 		
 
 }
+
 
 
 
@@ -311,10 +335,3 @@ void Get_Beijing_Time(void)
 
 }
 
-void Wifi_Break_Link(void)
-{
-
-  HAL_UART_Transmit(&huart2, "AT+CWQAP\r\n", strlen("AT+CWQAP\r\n"), 3000);
-
-
-}

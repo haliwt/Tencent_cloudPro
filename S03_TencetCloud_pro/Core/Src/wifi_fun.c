@@ -110,7 +110,7 @@ void RunWifi_Command_Handler(void)
 		//  if(wifi_t.restart_link_tencent_cloud ==1)wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;
 		break;
 
-        case wifi_link_tencent_cloud:
+        case wifi_link_tencent_cloud: //02
 			
 			Wifi_SoftAP_Config_Handler();
 	        SmartPhone_LinkTencent_Cloud();
@@ -142,6 +142,7 @@ void RunWifi_Command_Handler(void)
 
 		
 		case wifi_tencent_subscription_data://04
+           
 			if(esp8266data.gTimer_subscription_timing>3 && first_sub==0  ){
 				first_sub++;
 			esp8266data.gTimer_subscription_timing=0;
@@ -174,11 +175,11 @@ void RunWifi_Command_Handler(void)
            }
            if(esp8266data.gTimer_publish_dht11 >60){
 		   	  esp8266data.gTimer_publish_dht11=0;
-			 
+			  subscription_flag =0;
 		   	  wifi_t.runCommand_order_lable= wifi_tencent_publish_dht11_data;
            	}
-            if(esp8266data.gTimer_subscription_timing>5 && subscription_flag==0){
-				 subscription_flag ++;
+            if(esp8266data.gTimer_subscription_timing>10 && subscription_flag==0){
+				 subscription_flag =0;
 				 esp8266data.gTimer_subscription_timing=0;
 		         Subscriber_Data_FromCloud_Handler();
 
