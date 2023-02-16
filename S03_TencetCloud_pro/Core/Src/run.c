@@ -311,13 +311,7 @@ void RunCommand_MainBoard_Fun(void)
 
 	 }
 	
-	
-      
-      
- }
-
-
-
+}
 /**********************************************************************
 	*
 	*Functin Name: void MainBoard_Itself_PowerOn_Fun(void)
@@ -363,7 +357,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
       	InitWifiModule();
 		Wifi_SoftAP_Config_Handler();
         SmartPhone_TryToLink_TencentCloud();
-        HAL_Delay(500);
+        HAL_Delay(100);
 		if(esp8266data.esp8266_login_cloud_success==1){
 			wifi_t.runCommand_order_lable = wifi_tencent_subscription_data;
 		}
@@ -374,6 +368,8 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 
 	}
    }
+
+
 
 }
 

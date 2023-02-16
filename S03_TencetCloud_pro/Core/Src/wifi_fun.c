@@ -75,7 +75,7 @@ void RunWifi_Command_Handler(void)
 	 static uint8_t beijing_flag,gamt_recode;
 
 	
-	if(run_t.gPower_flag == POWER_ON){
+	//if(run_t.gPower_flag == POWER_ON){
      switch(wifi_t.runCommand_order_lable){
 
          
@@ -95,20 +95,7 @@ void RunWifi_Command_Handler(void)
 			
 				
 		  }
-//		  else{
-//		  	    if(run_t.flash_write_data_flag == 1){
-//			  	    InitWifiModule();
-//			  		
-//					
-//					Wifi_SoftAP_Config_Handler();
-//			        SmartPhone_TryToLink_TencentCloud();
-//					if(esp8266data.esp8266_login_cloud_success==1){
-//						wifi_t.runCommand_order_lable = wifi_tencent_subscription_data;
-//					}
-//	                else wifi_t.runCommand_order_lable =0xff;
-//		  	    }
-//		  }
-		//  if(wifi_t.restart_link_tencent_cloud ==1)wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;
+
 		break;
 
         case wifi_link_tencent_cloud: //02
@@ -266,7 +253,7 @@ void RunWifi_Command_Handler(void)
 	   break;
 	 
      }
-     }//run_t.gPower_flag ==POWER_ON
+  //   }//run_t.gPower_flag ==POWER_ON
 	if(esp8266data.esp8266_login_cloud_success==1){
 	 	 esp8266data.rx_link_cloud_flag=0;
 	 	  if(first_connect == 0 ){

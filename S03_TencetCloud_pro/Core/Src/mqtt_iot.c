@@ -57,7 +57,7 @@ static serviceInfo    sg_info;
 //static char *sg_property_name[] = {"opne", "sonic", "find", "nowtemperature","state","ptc","Anion","temperature","Humidity"};
 void Mqtt_Value_Init(void)
 {
-    
+    run_t.set_wind_speed_value=90;
    	sg_info.open=1;
     sg_info.state=1;
     sg_info.ptc=1; 
@@ -71,6 +71,7 @@ void Mqtt_Value_Init(void)
 }
 static void Mqtt_Value_login(void)
 {
+     run_t.set_wind_speed_value=90;
     sg_info.open = run_t.wifi_gPower_On;
 	sg_info.state = run_t.gModel;
 	sg_info.ptc  = run_t.gDry;
