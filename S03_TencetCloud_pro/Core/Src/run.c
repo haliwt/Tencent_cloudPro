@@ -9,12 +9,13 @@
 #include "esp8266.h"
 #include "mqtt_iot.h"
 #include "publish.h"
+#include "flash.h"
 
 
 RUN_T run_t; 
 
 static void Single_ReceiveCmd(uint8_t cmd);
-static void TheFirst_PowerOn_Handler(void);
+
 
 /**********************************************************************
 *
@@ -48,7 +49,7 @@ void Decode_RunCmd(void)
 	      if(cmdType_2==1){
               //run_t.RunCommand_Lable = PWOER_ON;
 			  wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;//2 // wifi_link_tencent_cloud:
-			  wifi_t.restart_link_tencent_cloud = 1;
+			
 			  Buzzer_KeySound();	 
 		   }
 		   else if(cmdType_2==0){
@@ -226,7 +227,7 @@ void SystemReset(void)
 void RunCommand_MainBoard_Fun(void)
 {
 
-   TheFirst_PowerOn_Handler();
+  
   
    switch(run_t.RunCommand_Label){
 
@@ -317,13 +318,42 @@ void RunCommand_MainBoard_Fun(void)
 
 
 
-static void TheFirst_PowerOn_Handler(void)
+/**********************************************************************
+	*
+	*Functin Name: void MainBoard_Itself_PowerOn_Fun(void)
+	*Function :
+	*Input Ref:  key of value
+	*Return Ref: NO
+	*
+**********************************************************************/
+void MainBoard_Self_Inspection_PowerOn_Fun(void)
 {
+    static uint8_t self_power_on_flag=0;
+    
+
+	if(self_power_on_flag==0){
+        self_power_on_flag ++ ;
+		run_t.flash_read_data =Flash_Read_Data();
+		switch(run_t.flash_read_data){
+
+	     case error: //wifi don't link to tencent cloud ,need manual operation
+		      wifi_t.runCommand_order_lable = 0xff;
+		      run_t.flash_write_data_flag = 0;
+		 break;
+
+		 case success: //wifi has been linked to tencent cloud,need auto link to tencent cloud
+		 	//wifi_t.runCommand_order_lable = wifi_link_tencent_cloud;
+			run_t.flash_write_data_flag = 1;
+		  
+         break;
 
 
+
+		}
+	}
+ 
 
 }
-
 
 
 

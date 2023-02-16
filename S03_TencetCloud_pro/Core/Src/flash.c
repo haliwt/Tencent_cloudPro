@@ -77,7 +77,7 @@ void Flash_Write_Data(void)
 		if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, Address, DATA_64) == HAL_OK)
 		{
 		  Address = Address + 8;
-		  run_t.flas_write_data_error = 0;
+		  run_t.flash_write_data_error = 0;
 		}
 	   else
 		{
@@ -87,7 +87,7 @@ void Flash_Write_Data(void)
 		  {
 			/* Make LED0 blink (100ms on, 2s off) to indicate error in Write operation */
 		     //HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_4);
-		     run_t.flas_write_data_error = 1;
+		     run_t.flash_write_data_error = 1;
 		     
 		  }
 		}
