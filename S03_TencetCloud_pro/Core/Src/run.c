@@ -227,19 +227,19 @@ void SystemReset(void)
 void RunCommand_MainBoard_Fun(void)
 {
 
-  
+   static uint8_t power_just_on ;
   
    switch(run_t.RunCommand_Label){
 
 	case POWER_ON: //1
 		SetPowerOn_ForDoing();
-	    Update_DHT11_Value();
 	    run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
-		
+		power_just_on=0;
         run_t.gTimer_1s=0;
 		run_t.gTheFirst_powerOn=1;
 		Update_DHT11_Value();
 		HAL_Delay(200);
+
 		if(esp8266data.esp8266_login_cloud_success==1){
 	 	     SendWifiData_To_Cmd(0x01) ;
 		}
@@ -247,11 +247,11 @@ void RunCommand_MainBoard_Fun(void)
 	break;
 
    case UPDATE_TO_PANEL_DATA: //4
-      if(run_t.gTimer_senddata_panel >30 && run_t.gPower_On==POWER_ON){ //300ms
+     if(run_t.gTimer_senddata_panel >30 && run_t.gPower_On==POWER_ON){ //300ms
 	   	    run_t.gTimer_senddata_panel=0;
 	        ActionEvent_Handler();
 	 }
-	 
+
     break;
 
 
@@ -273,7 +273,8 @@ void RunCommand_MainBoard_Fun(void)
 
     }
 	
-    if(run_t.gTimer_1s>30 && run_t.gPower_flag == POWER_ON){
+    if((run_t.gTimer_1s>30 && run_t.gPower_flag == POWER_ON)||power_just_on < 10){
+    	power_just_on ++ ;
 		run_t.gTimer_1s=0;
 		Update_DHT11_Value();
 	  }

@@ -58,6 +58,7 @@ static serviceInfo    sg_info;
 void Mqtt_Value_Init(void)
 {
     run_t.set_wind_speed_value=90;
+     run_t.set_temperature_value=20 ;
    	sg_info.open=1;
     sg_info.state=1;
     sg_info.ptc=1; 
@@ -65,12 +66,13 @@ void Mqtt_Value_Init(void)
 	sg_info.sonic =1;  //驱虫
     sg_info.find=100;
 	if(run_t.set_temperature_value <20)run_t.set_temperature_value = 20;
-	if(run_t.set_temperature_value > 40)run_t.set_temperature_value = 40;
+	else if(run_t.set_temperature_value > 40)run_t.set_temperature_value = 40;
 	sg_info.set_temperature =  run_t.set_temperature_value ;
 	
 }
 static void Mqtt_Value_login(void)
 {
+     run_t.set_temperature_value=20;
      run_t.set_wind_speed_value=90;
     sg_info.open = run_t.wifi_gPower_On;
 	sg_info.state = run_t.gModel;
@@ -78,6 +80,8 @@ static void Mqtt_Value_login(void)
 	sg_info.anion = run_t.gPlasma;
 	sg_info.sonic = run_t.gUlransonic ;
     sg_info.find = run_t.set_wind_speed_value;
+    if(run_t.set_temperature_value <20)run_t.set_temperature_value = 20;
+	else if(run_t.set_temperature_value > 40)run_t.set_temperature_value = 40;
 	sg_info.set_temperature = run_t.set_temperature_value;
 
 }
