@@ -275,6 +275,12 @@ void RunWifi_Command_Handler(void)
 		  if(wifi_t.get_rx_beijing_time_flag==0){
 	          Tencent_Cloud_Rx_Handler();
 		  }
+		  if(run_t.flash_write_data_flag == 0){
+			run_t.flash_write_data_flag=2;
+               Flash_Erase_Data();
+			Flash_Write_Data();
+
+		 }
 		
 
      }
