@@ -10,6 +10,7 @@
 #include "dht11.h"
 #include "usart.h"
 #include "mqtt_iot.h"
+#include "flash.h"
 
 
 WIFI_FUN   wifi_t;
@@ -94,19 +95,19 @@ void RunWifi_Command_Handler(void)
 			
 				
 		  }
-		  else{
-		  	    if(run_t.flash_write_data_flag == 1){
-			  	    InitWifiModule();
-			  		
-					
-					Wifi_SoftAP_Config_Handler();
-			        SmartPhone_TryToLink_TencentCloud();
-					if(esp8266data.esp8266_login_cloud_success==1){
-						wifi_t.runCommand_order_lable = wifi_tencent_subscription_data;
-					}
-	                else wifi_t.runCommand_order_lable =0xff;
-		  	    }
-		  }
+//		  else{
+//		  	    if(run_t.flash_write_data_flag == 1){
+//			  	    InitWifiModule();
+//			  		
+//					
+//					Wifi_SoftAP_Config_Handler();
+//			        SmartPhone_TryToLink_TencentCloud();
+//					if(esp8266data.esp8266_login_cloud_success==1){
+//						wifi_t.runCommand_order_lable = wifi_tencent_subscription_data;
+//					}
+//	                else wifi_t.runCommand_order_lable =0xff;
+//		  	    }
+//		  }
 		//  if(wifi_t.restart_link_tencent_cloud ==1)wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;
 		break;
 
@@ -278,7 +279,7 @@ void RunWifi_Command_Handler(void)
 		  if(run_t.flash_write_data_flag == 0){
 			run_t.flash_write_data_flag=2;
                Flash_Erase_Data();
-			Flash_Write_Data();
+                Flash_Write_Data();
 
 		 }
 		

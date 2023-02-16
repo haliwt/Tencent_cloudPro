@@ -58,10 +58,7 @@ void Decode_RunCmd(void)
 		   }
 		   else if(cmdType_2==0){
                 
-               	wifi_t.runCommand_order_lable= wifi_has_been_connected;
-                run_t.wifi_config_net_lable=0;
-		        SmartPhone_TryToLink_TencentCloud();
-               	Buzzer_KeySound();
+                Buzzer_KeySound();
 		   }
 		   else if(cmdType_2==0x14){
                 run_t.gModel =2; //turn off
@@ -144,7 +141,6 @@ static void Single_ReceiveCmd(uint8_t cmd)
          run_t.RunCommand_Label= POWER_ON;
 		 Update_DHT11_Value();
 		 HAL_Delay(200);
-         wifi_t.runCommand_order_lable= wifi_has_been_connected;
 		 if(esp8266data.esp8266_login_cloud_success==1){
 			 MqttData_Publish_SetOpen(0x01);
 	         HAL_Delay(200);
@@ -354,8 +350,30 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 
 
 		}
+	
+
+	switch(run_t.flash_write_data_flag){
+
+      case 0:
+
+      break;
+
+      case 1:
+        WIFI_IC_ENABLE();
+      	InitWifiModule();
+		Wifi_SoftAP_Config_Handler();
+        SmartPhone_TryToLink_TencentCloud();
+        HAL_Delay(500);
+		if(esp8266data.esp8266_login_cloud_success==1){
+			wifi_t.runCommand_order_lable = wifi_tencent_subscription_data;
+		}
+        else wifi_t.runCommand_order_lable =0xff;
+
+      break;
+
+
 	}
- 
+   }
 
 }
 
