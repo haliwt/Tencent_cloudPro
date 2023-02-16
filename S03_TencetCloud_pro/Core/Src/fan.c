@@ -27,17 +27,17 @@ void Fan_Slowly_Speed(void)
 	fan_speed ++ ;
 	FAN_CW_SetLow();
 	
-	if(fan_speed < 21){
+	if(fan_speed < 4){
 	   FAN_CCW_SetHigh(); //Run fan
     }
 
-	if(fan_speed > 20 && fan_speed < 41){
+	if(fan_speed > 3 && fan_speed < 8){
   
 	  FAN_CCW_SetLow(); //brake
 
 	}
 
-	if(fan_speed > 40) fan_speed =0;
+	if(fan_speed > 8 || fan_speed==8) fan_speed =0;
 	
 }
 
