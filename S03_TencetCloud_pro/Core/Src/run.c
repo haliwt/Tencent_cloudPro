@@ -364,8 +364,8 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
       
         HAL_Delay(100);
 		if(esp8266data.esp8266_login_cloud_success==1){
-			wifi_t.runCommand_order_lable = wifi_publish_update_tencent_cloud_data;//wifi_tencent_subscription_data;
-			esp8266data.gTimer_subscription_timing=0;
+			wifi_t.runCommand_order_lable = wifi_tencent_subscription_data;//wifi_publish_update_tencent_cloud_data;
+			//esp8266data.gTimer_subscription_timing=0;
 		}
         else wifi_t.runCommand_order_lable =0xff;
 
