@@ -163,13 +163,19 @@ void RunWifi_Command_Handler(void)
            }
            if(esp8266data.gTimer_publish_dht11 >60){
 		   	  esp8266data.gTimer_publish_dht11=0;
-			  subscription_flag =0;
+			 //  subscription_flag =0;
 		   	  wifi_t.runCommand_order_lable= wifi_tencent_publish_dht11_data;
            	}
-            if(esp8266data.gTimer_subscription_timing>10 && subscription_flag==0){
-				 subscription_flag =0;
+            if(esp8266data.gTimer_subscription_timing>5 && subscription_flag < 10){
+				 subscription_flag ++;
+				 wifi_t.gTimer_publish_times =0;
 				 esp8266data.gTimer_subscription_timing=0;
 		         Subscriber_Data_FromCloud_Handler();
+
+            }
+            if(wifi_t.gTimer_publish_times > 3  ){
+            	wifi_t.gTimer_publish_times=0;
+            	Publish_Data_ToCloud_Handler();
 
             }
 		
