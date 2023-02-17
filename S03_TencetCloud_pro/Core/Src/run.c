@@ -34,7 +34,7 @@ void Decode_RunCmd(void)
   
       case 'P': //power on and off
         
-        //   Buzzer_KeySound();
+           Buzzer_KeySound();
            Single_ReceiveCmd(cmdType_2);  
            
            cmdType_2 =0xff;
@@ -126,7 +126,6 @@ static void Single_ReceiveCmd(uint8_t cmd)
     switch(cmd){
 
     case 0x00: //power off
-        Buzzer_KeySound();
         run_t.gPower_On=POWER_OFF;
         run_t.gPower_flag = POWER_OFF;
         run_t.RunCommand_Label = POWER_OFF;
@@ -138,7 +137,6 @@ static void Single_ReceiveCmd(uint8_t cmd)
     break;
 
     case 0x01: // power on
-         Buzzer_KeySound();
          run_t.gPower_flag = POWER_ON;
 		 run_t.gPower_On = POWER_ON;
          run_t.RunCommand_Label= POWER_ON;
@@ -150,7 +148,7 @@ static void Single_ReceiveCmd(uint8_t cmd)
 	         Publish_Data_ToCloud_Handler();
 		 }
 		 
-	// cmd=0xff;  
+	 cmd=0xff;  
      break;
 
      default:
@@ -362,9 +360,9 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
       	InitWifiModule();
 		//Wifi_SoftAP_Config_Handler();
 		PowerOn_Self_Auto_Link_Tencent_Cloud();
-		Decode_Function();
         SmartPhone_TryToLink_TencentCloud();
-        Decode_Function();
+      
+        HAL_Delay(100);
 		if(esp8266data.esp8266_login_cloud_success==1){
 			wifi_t.runCommand_order_lable = wifi_publish_update_tencent_cloud_data;
 			//esp8266data.gTimer_subscription_timing=0;
