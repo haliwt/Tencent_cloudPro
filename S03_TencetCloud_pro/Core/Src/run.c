@@ -48,12 +48,13 @@ void Decode_RunCmd(void)
 	      if(run_t.gPower_flag==POWER_ON){
 	      if(cmdType_2==1){
               //fast blink led for link to tencent cloud
-              WIFI_IC_ENABLE();
+             // WIFI_IC_ENABLE();
               esp8266data.esp8266_login_cloud_success=0;
 			  // wifi_link_tencent_cloud:
 			  Buzzer_KeySound();	
-		      InitWifiModule_Hardware();
+		     // InitWifiModule_Hardware();
                esp8266data.esp8266_login_cloud_success=0;
+               run_t.wifi_config_net_lable=wifi_set_restor;
               wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;//2 
 		   }
 		   else if(cmdType_2==0){
@@ -329,6 +330,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 	if(self_power_on_flag==0){
         self_power_on_flag ++ ;
 		run_t.flash_read_data =Flash_Read_Data();
+		Decode_Function();
 		switch(run_t.flash_read_data){
 
 	     case error: //wifi don't link to tencent cloud ,need manual operation
@@ -356,11 +358,14 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
       case 1:
         WIFI_IC_ENABLE();
       	InitWifiModule();
-		Wifi_SoftAP_Config_Handler();
+		//Wifi_SoftAP_Config_Handler();
+		PowerOn_Self_Auto_Link_Tencent_Cloud();
         SmartPhone_TryToLink_TencentCloud();
+      
         HAL_Delay(100);
 		if(esp8266data.esp8266_login_cloud_success==1){
-			wifi_t.runCommand_order_lable = wifi_tencent_subscription_data;
+			wifi_t.runCommand_order_lable = wifi_publish_update_tencent_cloud_data;//wifi_tencent_subscription_data;
+			esp8266data.gTimer_subscription_timing=0;
 		}
         else wifi_t.runCommand_order_lable =0xff;
 

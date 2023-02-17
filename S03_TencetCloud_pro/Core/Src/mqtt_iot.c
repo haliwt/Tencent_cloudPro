@@ -100,7 +100,7 @@ static void property_topic_publish(void)
     char topic[128] = {0};
     int  size;
 
-    
+    run_t.randomName[0]=HAL_GetUIDw0();
     size = snprintf(topic, sizeof(topic), "AT+TCMQTTPUB=\"$thing/up/property/%s/UYIJIA01-%d\",0,", PRODUCT_ID,run_t.randomName[0]);
     at_send_data((uint8_t *)topic, size);
  

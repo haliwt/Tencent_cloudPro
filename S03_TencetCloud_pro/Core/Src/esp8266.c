@@ -84,10 +84,10 @@ void InitWifiModule_Hardware(void)
 	
 	
 			at_send_data("AT+RESTORE\r\n", strlen("AT+RESTORE\r\n"));
-			HAL_Delay(100);
-			at_send_data("AT+RESTORE\r\n", strlen("AT+RESTORE\r\n"));
+			HAL_Delay(1000);
+			//at_send_data("AT+RESTORE\r\n", strlen("AT+RESTORE\r\n"));
 		
-			HAL_Delay(100);
+			//HAL_Delay(100);
 			
 			
 		
@@ -97,95 +97,7 @@ void InitWifiModule_Hardware(void)
 
 
 
-/****************************************************************************************************
-	**
-	*Function Name:void Wifi_Link_SmartConfig_Fun(void)
-	*Function: 
-	*Input Ref: 
-	*Return Ref:NO
-	*
-****************************************************************************************************/
-#if 0
-void Wifi_Link_SmartConfig_Handler(void)
-{
-       uint8_t *device_massage;
-  
 
-    device_massage = (uint8_t *)malloc(128);
-
-   InitWifiModule();
-    
-   switch(run_t.wifi_config_net_lable){
-
-   	case 1:
-
-   			WIFI_IC_ENABLE();
-         	HAL_UART_Transmit(&huart2, "AT+CWMODE=2\r\n", strlen("AT+CWMODE=2\r\n"), 5000);
-        	HAL_Delay(1000);
-			HAL_UART_Transmit(&huart2, "AT+CIPMUX=1\r\n", strlen("AT+CIPMUX=1\r\n"), 5000);
-			run_t.wifi_config_net_lable=2;
-
-	break;
-
-	case 2:
-	  
-	    WIFI_IC_ENABLE();
-	     // sprintf((char *)device_massage, "AT+TCSAP=\"%s\"\r\n", DEVUICE_NAME,);
-         //HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000);
-
-         HAL_UART_Transmit(&huart2, "AT+CWJAP=\"UYIKIA\",\"20329263\"\r\n", strlen("AT+CWJAP=\"UYIKIA\",\"20329263\"\r\n"), 5000);
-         HAL_Delay(10000);
-		 HAL_Delay(10000);
-         run_t.wifi_config_net_lable=3;
-	 break;
-
-	 case 3:
-
-		sprintf((char *)device_massage, "AT+TCPRDINFOSET=1,\"%s\",\"%s\",\"%s\"\r\n", PRODUCT_ID, DEVICE_SECRET,DEVUICE_NAME);
-	      HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000);
-          HAL_Delay(1000);
-		  HAL_Delay(1000);
-		  
-	      run_t.wifi_config_net_lable=4;
-
-		
-     break;
-
-     case 4:
-
-         esp8266data.esp8266_dynamic_reg_flag=0;
-		 HAL_UART_Transmit(&huart2, "AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"), 5000); //动态注册 
-	     HAL_Delay(1000);
-		 HAL_Delay(1000);
-	     HAL_Delay(1000);
-		run_t.wifi_config_net_lable=5;
-
-    break;
-
-    case 5:
-	   
-	   HAL_Delay(1000);
-
-       HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
-       
-	   HAL_Delay(1000);
-	   HAL_Delay(1000);
-	   HAL_Delay(1000);
-	   run_t.wifi_config_net_lable=0x06;
-	break;
-
-	case 6:
-       HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
-	  run_t.wifi_config_net_lable=0xff;
-       esp8266data.esp8266_login_cloud_success=1;
-	break;
-	  
-
-   
-   }
-    free(device_massage);
-}
-#endif 
 /****************************************************************************************************
 	**
 	*Function Name:void Wifi_SoftAP_Config_Handler(void)
@@ -206,7 +118,8 @@ void Wifi_SoftAP_Config_Handler(void)
   {
 
     case wifi_set_restor:
-           InitWifiModule();
+           //InitWifiModule();
+           InitWifiModule_Hardware();
 		   HAL_Delay(1000);
            run_t.wifi_config_net_lable =wifi_set_cwmode;
 	break;
@@ -332,6 +245,86 @@ void Get_Beijing_Time(void)
 
    HAL_UART_Transmit(&huart2, "AT+CIPSNTPTIME?\r\n", strlen("AT+CIPSNTPTIME?\r\n"), 3000);//开始连接
 
+
+}
+
+void PowerOn_Self_Auto_Link_Tencent_Cloud(void)
+{
+
+	 uint8_t *device_massage,auto_link_cloud_flag=0;
+    
+
+    device_massage = (uint8_t *)malloc(128);
+
+
+   switch (auto_link_cloud_flag)
+  {
+
+    case 0:
+           InitWifiModule();
+		   HAL_Delay(1000);
+           auto_link_cloud_flag =wifi_set_cwmode;
+	break;
+
+
+	 case wifi_set_cwmode:
+    	    WIFI_IC_ENABLE();
+         	HAL_UART_Transmit(&huart2, "AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"), 5000);
+        	HAL_Delay(1000);
+			HAL_Delay(1000);
+			//HAL_UART_Transmit(&huart2, "AT+CIPMUX=1\r\n", strlen("AT+CIPMUX=1\r\n"), 5000);
+			auto_link_cloud_flag =wifi_set_softap;
+			run_t.randomName[0]=HAL_GetUIDw0();
+		
+
+	 break;
+
+	  case wifi_set_softap:
+            WIFI_IC_ENABLE();
+			
+            sprintf((char *)device_massage, "AT+TCPRDINFOSET=1,\"%s\",\"%s\",\"UYIJIA01-%d\"\r\n", PRODUCT_ID, DEVICE_SECRET,run_t.randomName[0]);
+			usart2_flag = at_send_data(device_massage, strlen((const char *)device_massage));
+	  		HAL_Delay(1000);
+            HAL_Delay(1000);
+			 HAL_Delay(1000);
+	        
+			auto_link_cloud_flag=wifi_set_tcdevreg;
+		
+	  break;
+
+
+	 case wifi_set_tcdevreg://dynamic register
+		 HAL_UART_Transmit(&huart2, "AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"), 0xffff); //动态注册 
+	      HAL_Delay(1000);
+		 HAL_Delay(1000);
+		HAL_Delay(1000);
+		HAL_Delay(1000);
+
+	  
+	     auto_link_cloud_flag=wifi_set_tcsap;
+
+	 break;
+
+
+	 case wifi_set_tcsap:
+	 
+            HAL_Delay(1000);
+		    HAL_Delay(1000);
+			HAL_Delay(1000);
+		    HAL_Delay(1000);
+	        sprintf((char *)device_massage, "AT+TCSAP=\"UYIJIA01-%d\"\r\n",run_t.randomName[0]);
+            usart2_flag = at_send_data(device_massage, strlen((const char *)device_massage));
+			 HAL_Delay(1000);
+             HAL_Delay(1000);
+			 wifi_t.soft_ap_config_flag =1;
+			 esp8266data.rx_link_cloud_flag =1; //enable usart2 receive wifi  data
+			 UART2_DATA.UART_Cnt=0;
+			 auto_link_cloud_flag=0xff;
+			
+	 break;
+
+	}
+  free(device_massage);
 
 }
 
