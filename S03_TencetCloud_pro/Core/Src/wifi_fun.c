@@ -72,7 +72,7 @@ void SetTemperatureHost(void(*temperatureHandler)(void))
 void RunWifi_Command_Handler(void)
 {
      static uint8_t first_sub, get_rx_beijing_time_flag,subscription_flag;
-	 static uint8_t beijing_flag,gamt_recode;
+	 static uint8_t beijing_flag,gamt_recode,publish_flag ;
 
 	
 	//if(run_t.gPower_flag == POWER_ON){
@@ -166,14 +166,15 @@ void RunWifi_Command_Handler(void)
 			 //  subscription_flag =0;
 		   	  wifi_t.runCommand_order_lable= wifi_tencent_publish_dht11_data;
            	}
-            if(esp8266data.gTimer_subscription_timing>5 && subscription_flag < 10){
+            if(esp8266data.gTimer_subscription_timing>5 && subscription_flag < 5){
 				 subscription_flag ++;
 				 wifi_t.gTimer_publish_times =0;
 				 esp8266data.gTimer_subscription_timing=0;
 		         Subscriber_Data_FromCloud_Handler();
 
             }
-            if(wifi_t.gTimer_publish_times > 3  ){
+            if(wifi_t.gTimer_publish_times > 3 && publish_flag < 2 ){
+                publish_flag ++ ;
             	wifi_t.gTimer_publish_times=0;
             	Publish_Data_ToCloud_Handler();
 
