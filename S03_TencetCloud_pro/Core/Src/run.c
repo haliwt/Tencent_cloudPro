@@ -15,6 +15,7 @@
 RUN_T run_t; 
 
 static void Single_ReceiveCmd(uint8_t cmd);
+uint8_t tencent_cloud_flag;
 
 
 /**********************************************************************
@@ -46,6 +47,7 @@ void Decode_RunCmd(void)
               //fast blink led for link to tencent cloud
              // WIFI_IC_ENABLE();
               esp8266data.esp8266_login_cloud_success=0;
+			  tencent_cloud_flag=0;
 			  // wifi_link_tencent_cloud:
 			  Buzzer_KeySound();	
 		     // InitWifiModule_Hardware();
@@ -226,7 +228,7 @@ void SystemReset(void)
 void RunCommand_MainBoard_Fun(void)
 {
 
-   static uint8_t power_just_on ;
+   static uint8_t power_just_on;
   
    switch(run_t.RunCommand_Label){
 
@@ -240,7 +242,15 @@ void RunCommand_MainBoard_Fun(void)
 		HAL_Delay(200);
 
 		if(esp8266data.esp8266_login_cloud_success==1){
+			tencent_cloud_flag =1;
 	 	     SendWifiData_To_Cmd(0x01) ;
+		}
+		
+		if(tencent_cloud_flag ==1){
+
+		   esp8266data.esp8266_login_cloud_success=1;
+		   SendWifiData_To_Cmd(0x01) ;
+
 		}
 
 	break;
@@ -257,6 +267,9 @@ void RunCommand_MainBoard_Fun(void)
 
 	case POWER_OFF: //2
 		SetPowerOff_ForDoing();
+		if(esp8266data.esp8266_login_cloud_success==1){
+	 	     tencent_cloud_flag = 1;
+		}
 		if(run_t.gTheFirst_powerOn ==0)
          	run_t.gFan_continueRun =0;
 		else{
@@ -276,7 +289,12 @@ void RunCommand_MainBoard_Fun(void)
     	power_just_on ++ ;
 		run_t.gTimer_1s=0;
 		Update_DHT11_Value();
+
+		
+		
 	  }
+
+	
 
 	if(run_t.gFan_continueRun ==1 && run_t.gPower_flag == POWER_OFF){
           

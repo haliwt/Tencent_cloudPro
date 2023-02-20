@@ -46,19 +46,19 @@ uint8_t first_connect;
 ****************************************************************/
 void AI_Function_Host(void(*AIhandler)(uint8_t sig))
 {
-         Ai_Fun=AIhandler;
+    Ai_Fun=AIhandler;
 }
 
 void SetTimeHost(void(*timesHandler)(void))
 {
-     SetTimes = timesHandler;
+    SetTimes = timesHandler;
 
 }
 
 
 void SetTemperatureHost(void(*temperatureHandler)(void))
 {
-      SetTemperature = temperatureHandler ;
+    SetTemperature = temperatureHandler ;
 
 }
 
