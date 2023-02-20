@@ -37,10 +37,6 @@ void Decode_RunCmd(void)
         //   Buzzer_KeySound();
            Single_ReceiveCmd(cmdType_2);  
            
-           cmdType_2 =0xff;
-           cmdType_1=0xff;
-             
-          
       break;
       
 
@@ -70,17 +66,17 @@ void Decode_RunCmd(void)
                 Buzzer_KeySound();
             }
            
-            cmdType_2 =0xff;
+           
         }
-         cmdType_1=0xff;
+       
 	   break;
         
       case 'C':
            if(run_t.gPower_flag==POWER_ON){
                Single_ReceiveCmd(cmdType_2); 
-               cmdType_2 = 0xff; 
+              
            }
-         cmdType_1=0xff;
+     
          
       break;
 
@@ -92,7 +88,7 @@ void Decode_RunCmd(void)
 			 MqttData_Publis_SetTemp(run_t.set_temperature_value);
 			   
          }
-	   cmdType_1=0xff;
+	  
 
 	  break;
 
@@ -104,9 +100,9 @@ void Decode_RunCmd(void)
 			    Buzzer_KeySound();
 			}
 			 
-			 cmdType_2=0xff;
+		
 		}
-       cmdType_1 =0xff;
+     
 	    break;
  	}
     
