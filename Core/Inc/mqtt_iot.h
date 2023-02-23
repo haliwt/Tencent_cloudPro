@@ -47,6 +47,8 @@ void MqttData_Publis_SetTime(uint8_t temp);
 
 void MqttData_Publish_Login(void);
 
+void MqttData_Publish_SetPlasma(uint8_t pla) ;//杀菌
 
+void MqttData_Publish_SetUltrasonic(uint8_t datsonic); //超声波;
 
 #endif /* QCLOUD_IOT_EXPORT_MQTT_H_ */
