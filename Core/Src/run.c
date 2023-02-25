@@ -358,7 +358,6 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 	if(self_power_on_flag==0){
         self_power_on_flag ++ ;
 		run_t.flash_read_data =Flash_Read_Data();
-		Decode_Function();
 		switch(run_t.flash_read_data){
 
 	     case error: //wifi don't link to tencent cloud ,need manual operation
@@ -388,9 +387,9 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
       	InitWifiModule();
 		//Wifi_SoftAP_Config_Handler();
 		PowerOn_Self_Auto_Link_Tencent_Cloud();
-		Decode_Function();
+		
         SmartPhone_TryToLink_TencentCloud();
-        Decode_Function();
+ 
 		if(esp8266data.esp8266_login_cloud_success==1){
 			wifi_t.runCommand_order_lable = wifi_publish_update_tencent_cloud_data;
 			//esp8266data.gTimer_subscription_timing=0;
