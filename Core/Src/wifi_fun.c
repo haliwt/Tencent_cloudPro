@@ -99,6 +99,8 @@ void RunWifi_Command_Handler(void)
 		break;
 
         case wifi_link_tencent_cloud: //02
+
+		   if(run_t.gPower_flag == POWER_ON){
 			
 			Wifi_SoftAP_Config_Handler();
 	        SmartPhone_LinkTencent_Cloud();
@@ -109,7 +111,7 @@ void RunWifi_Command_Handler(void)
 			    wifi_t.runCommand_order_lable = wifi_tencent_publish_init_data;
 				esp8266data.gTimer_subscription_timing=0;
 			}
-         
+		    }
 	    break;
 
 	  	
