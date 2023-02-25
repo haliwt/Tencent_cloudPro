@@ -394,6 +394,7 @@ void Tencent_Cloud_Rx_Handler(void)
    switch(run_t.response_wifi_signal_label){
 
       case OPEN_OFF_ITEM:
+	  
         MqttData_Publish_SetOpen(0); //WT.EDIT add
         run_t.wifi_gPower_On= 0;
 	    run_t.gPower_On = POWER_OFF;
@@ -402,19 +403,20 @@ void Tencent_Cloud_Rx_Handler(void)
 
 		SendWifiCmd_To_Order(WIFI_POWER_OFF);
 
-        Buzzer_KeySound();
+       	 Buzzer_KeySound();
    
         run_t.response_wifi_signal_label=0xff;
 	  break;
 
 	  case OPEN_ON_ITEM:
+	  	
         MqttData_Publish_SetOpen(1);  //WT.EDIT new add item
 	   run_t.wifi_gPower_On= POWER_ON;
        run_t.gPower_On = POWER_ON;
 	   run_t.gPower_flag =POWER_ON;
 	   run_t.RunCommand_Label=POWER_ON;
 	   SendWifiCmd_To_Order(WIFI_POWER_ON);
-	   Buzzer_KeySound();
+	     Buzzer_KeySound();
 	   run_t.response_wifi_signal_label=0xff;
 
 	  break;

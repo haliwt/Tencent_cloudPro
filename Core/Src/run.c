@@ -251,7 +251,7 @@ void RunCommand_MainBoard_Fun(void)
         run_t.gTimer_1s=0;
 		run_t.gTheFirst_powerOn=1;
 		Update_DHT11_Value();
-		HAL_Delay(200);
+		HAL_Delay(10);
 
 		if(esp8266data.esp8266_login_cloud_success==1){
 			tencent_cloud_flag =1;
