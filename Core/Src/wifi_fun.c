@@ -74,8 +74,6 @@ void RunWifi_Command_Handler(void)
      static uint8_t first_sub, get_rx_beijing_time_flag,subscription_flag;
 	 static uint8_t beijing_flag,gamt_recode,publish_flag ;
 
-	
-	//if(run_t.gPower_flag == POWER_ON){
      switch(wifi_t.runCommand_order_lable){
 
          
@@ -262,7 +260,7 @@ void RunWifi_Command_Handler(void)
 	   break;
 	 
      }
-  //   }//run_t.gPower_flag ==POWER_ON
+  
 	if(esp8266data.esp8266_login_cloud_success==1){
 	 	 esp8266data.rx_link_cloud_flag=0;
 	 	  if(first_connect == 0 ){
