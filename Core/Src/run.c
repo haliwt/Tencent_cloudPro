@@ -14,7 +14,8 @@
 
 RUN_T run_t; 
 
-static void Single_ReceiveCmd(uint8_t cmd);
+static void Single_Power_ReceiveCmd(uint8_t cmd);
+static void Single_Command_ReceiveCmd(uint8_t cmd); 
 uint8_t tencent_cloud_flag;
 
 
@@ -36,7 +37,7 @@ void Decode_RunCmd(void)
       case 'P': //power on and off
         
         //   Buzzer_KeySound();
-           Single_ReceiveCmd(cmdType_2);  
+           Single_Power_ReceiveCmd(cmdType_2);  
            
       break;
       
@@ -75,7 +76,7 @@ void Decode_RunCmd(void)
         
       case 'C':
            if(run_t.gPower_flag==POWER_ON){
-               Single_ReceiveCmd(cmdType_2); 
+              Single_Command_ReceiveCmd(cmdType_2); //Single_ReceiveCmd(cmdType_2); 
               
            }
      
@@ -129,7 +130,7 @@ void Decode_RunCmd(void)
 	*Return Ref: NO
 	*
 **********************************************************************/
-static void Single_ReceiveCmd(uint8_t cmd)
+static void Single_Power_ReceiveCmd(uint8_t cmd)
 {
   
     
@@ -163,51 +164,93 @@ static void Single_ReceiveCmd(uint8_t cmd)
 	// cmd=0xff;  
      break;
 
+    
+
      default:
 
      break;
 
-    
     }
 
-   if( run_t.gPower_flag == POWER_ON){
-	switch(cmd){
+}
+/**********************************************************************
+	*
+	*Functin Name: void Single_ReceiveCmd(uint8_t cmd)
+	*Function : resolver is by usart port receive data  from display panle  
+	*Input Ref:  usart receive data
+	*Return Ref: NO
+	*
+**********************************************************************/
+static void Single_Command_ReceiveCmd(uint8_t cmd)
+{
+    switch(cmd){
 
-
-	 //dry key
-     case 0x12: //PTC turn on
-    
+       case DRY_ON:
          run_t.gDry = 1;
-         run_t.gFan_continueRun =0;
-	 if(esp8266data.esp8266_login_cloud_success==1)
-		 MqttData_Publish_SetPtc(0x01);
-
-	break;
-
-     case 0x02: //PTC turn off
-		//Buzzer_KeySound();
-		run_t.gDry =0;
-		//Dry_Function(0) ;//
-        if(run_t.gPlasma ==0){ //plasma turn off flag
-			run_t.gFan_counter =0;
-			run_t.gFan_continueRun =1;
-
-		}
+	      run_t.gFan_continueRun =0;
 		if(esp8266data.esp8266_login_cloud_success==1)
+		 MqttData_Publish_SetPtc(0x01);
+         Buzzer_KeySound();
+       break;
+
+       case DRY_OFF:
+ 			run_t.gDry = 0;
+			 if(run_t.gPlasma ==0){ //plasma turn off flag
+			  run_t.gFan_counter =0;
+			   run_t.gFan_continueRun =1;
+
+		     }
+			if(esp8266data.esp8266_login_cloud_success==1)
 			MqttData_Publish_SetPtc(0x0);
+			Buzzer_KeySound();
+       break;
 
-     cmd=0xff; 
-       
-     break;
+       case PLASMA_ON:
+       		run_t.gPlasma=1;
+       		run_t.gUlransonic =1;
+	   if(esp8266data.esp8266_login_cloud_success==1){
+	        MqttData_Publish_SetPlasma(1) ;//杀菌
+	        HAL_Delay(200);
+	        MqttData_Publish_SetUltrasonic(1); //超声波
+	   	}
+	    Buzzer_KeySound();
+       break;
 
-     default:
-         
-     break;
+       case PLASMA_OFF:
+           run_t.gPlasma=0;
+           run_t.gUlransonic =0;
+	   if(esp8266data.esp8266_login_cloud_success==1){
+	       MqttData_Publish_SetPlasma(0) ;//杀菌
+	        HAL_Delay(200);
+	        MqttData_Publish_SetUltrasonic(0); //超声波
+	   	}
+	    Buzzer_KeySound();
+       break;
+
+       case FAN_ON:
+          run_t.set_wind_speed_value=100;
+		  if(esp8266data.esp8266_login_cloud_success==1)
+		  MqttData_Publis_SetFan(100);
+		   Buzzer_KeySound();
+       break;
+
+       case FAN_OFF:
+           run_t.set_wind_speed_value = 50;
+		   if(esp8266data.esp8266_login_cloud_success==1)
+		       MqttData_Publis_SetFan(50);
+		    Buzzer_KeySound();
+       break;
+
+      default :
+        cmd =0;
+
+      break; 
 
 
     }
 
-	}
+
+
 }
 /**********************************************************************
 	*

@@ -34,6 +34,21 @@ typedef enum{
 
 }run_state_t;
 
+typedef enum{
+
+	 DRY_ON = 0x40,
+	 DRY_OFF = 0x41,
+
+	 PLASMA_ON = 0x20,
+	 PLASMA_OFF = 0x21,
+
+	 FAN_ON =0x10,
+	 FAN_OFF = 0x11
+
+
+
+}works_t;
+
 
 
 typedef struct _RUN_T{
