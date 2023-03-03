@@ -315,7 +315,12 @@ void RunCommand_MainBoard_Fun(void)
 	   	    run_t.gTimer_senddata_panel=0;
 	        ActionEvent_Handler();
 	 }
-
+	 if(esp8266data.esp8266_login_cloud_success==1){
+	 	   if(run_t.gTimer_send_login_sucess > 11){
+	 	        SendWifiData_To_Cmd(0x01) ;
+	 	   	}
+	   }
+    
     break;
 
 
@@ -345,7 +350,7 @@ void RunCommand_MainBoard_Fun(void)
 		run_t.gTimer_1s=0;
 		Update_DHT11_Value();
 
-		
+	
 		
 	  }
 

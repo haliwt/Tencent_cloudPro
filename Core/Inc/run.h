@@ -96,6 +96,7 @@ typedef struct _RUN_T{
 	  uint8_t  wind_speed_decade;
 	  uint8_t  wind_speed_unit;
       uint8_t wifi_config_net_lable;
+	  uint8_t gTimer_send_login_sucess;
 
 	
 	uint8_t gTimer_1s;

@@ -106,6 +106,8 @@ void RunWifi_Command_Handler(void)
 	        esp8266data.gTimer_subscription_timing=0;
 
 			if(esp8266data.esp8266_login_cloud_success==1){
+				esp8266data.gTimer_publish_timing=0;
+				 SendWifiData_To_Cmd(0x01) ;	//WT.EDIT 2023.03.02
 			    wifi_t.runCommand_order_lable = wifi_tencent_publish_init_data;
 				esp8266data.gTimer_subscription_timing=0;
 			}
@@ -115,15 +117,16 @@ void RunWifi_Command_Handler(void)
 	  	
 	  	case wifi_tencent_publish_init_data://03
 		  
-	       if(esp8266data.gTimer_publish_timing>2 ){
+	       if(esp8266data.gTimer_publish_timing>10 ){
 	           esp8266data.gTimer_publish_timing=0;
 	           esp8266data.gTimer_subscription_timing=0;
 			   esp8266data.gTimer_publish_dht11 =0;
 				Publish_Data_ToCloud_Handler();
+				HAL_Delay(1000); //WT.EDIT 2023.03.02
 				wifi_t.runCommand_order_lable= wifi_tencent_subscription_data;
 	           
 	   	    }
-		  
+		   
 		
 		 
        	break;
@@ -133,6 +136,7 @@ void RunWifi_Command_Handler(void)
            
 			if(esp8266data.gTimer_subscription_timing>3 && first_sub==0  ){
 				first_sub++;
+				 SendWifiData_To_Cmd(0x01) ;	//WT.EDIT 2023.03.02
 			esp8266data.gTimer_subscription_timing=0;
 			 esp8266data.gTimer_publish_timing=0;
 			 Subscriber_Data_FromCloud_Handler();
