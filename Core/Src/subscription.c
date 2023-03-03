@@ -8,7 +8,7 @@
 #include "wifi_fun.h"
 #include "usart.h"
 #include "buzzer.h"
-
+#include "mqtt_iot.h"
  
 //处理腾讯云下发的数据
 /*******************************************************************************
@@ -394,7 +394,7 @@ void Tencent_Cloud_Rx_Handler(void)
    switch(run_t.response_wifi_signal_label){
 
       case OPEN_OFF_ITEM:
-	  
+	 //  Buzzer_KeySound();
         MqttData_Publish_SetOpen(0); //WT.EDIT add
         run_t.wifi_gPower_On= 0;
 	    run_t.gPower_On = POWER_OFF;
@@ -402,107 +402,115 @@ void Tencent_Cloud_Rx_Handler(void)
 		run_t.RunCommand_Label=POWER_OFF;
 
 		SendWifiCmd_To_Order(WIFI_POWER_OFF);
-
-       	 Buzzer_KeySound();
-   
-        run_t.response_wifi_signal_label=0xff;
+        run_t.response_wifi_signal_label = 0xff;
 	  break;
 
 	  case OPEN_ON_ITEM:
-	  	
+	  //	Buzzer_KeySound();
         MqttData_Publish_SetOpen(1);  //WT.EDIT new add item
 	   run_t.wifi_gPower_On= POWER_ON;
        run_t.gPower_On = POWER_ON;
 	   run_t.gPower_flag =POWER_ON;
 	   run_t.RunCommand_Label=POWER_ON;
 	   SendWifiCmd_To_Order(WIFI_POWER_ON);
-	     Buzzer_KeySound();
-	   run_t.response_wifi_signal_label=0xff;
+	     
+	  run_t.response_wifi_signal_label = 0xff;
 
 	  break;
 
 	  case PTC_ON_ITEM:
 	  if(run_t.gPower_flag ==POWER_ON){
+	  //	 Buzzer_KeySound();
          MqttData_Publish_SetPtc(0x01);
 	     run_t.gDry=1;
 		 SendWifiCmd_To_Order(WIFI_PTC_ON);
-         Buzzer_KeySound();
+        
 	  	}
-	   run_t.response_wifi_signal_label=0xff;
+	 run_t.response_wifi_signal_label = 0xff;
 	   break;
 
 	  case PTC_OFF_ITEM:
 	  	if(run_t.gPower_flag ==POWER_ON){
+		//Buzzer_KeySound();
          MqttData_Publish_SetPtc(0);
 	     run_t.gDry=0;
 		 SendWifiCmd_To_Order(WIFI_PTC_OFF);
-         Buzzer_KeySound();
+         
 	  	}
-	     run_t.response_wifi_signal_label=0xff;
+	     run_t.response_wifi_signal_label = 0xff;
 	  	break;
 
 	  case ANION_OFF_ITEM: //"杀菌"
 	  	if(run_t.gPower_flag ==POWER_ON){
+			// Buzzer_KeySound();
             MqttData_Publish_SetPlasma(0);
             run_t.gPlasma=0;
 			SendWifiCmd_To_Order(WIFI_KILL_OFF);
-	  	    Buzzer_KeySound();
+	  	   
 	  	}
-	   run_t.response_wifi_signal_label=0xff;
+	   run_t.response_wifi_signal_label = 0xff;
 	  	break;
 		
 	  case ANION_ON_ITEM:
 	  	if(run_t.gPower_flag ==POWER_ON){
+		//	 Buzzer_KeySound();
             MqttData_Publish_SetPlasma(1);
             run_t.gPlasma=1;
 			SendWifiCmd_To_Order(WIFI_KILL_ON);
-	  	    Buzzer_KeySound();
+	  	   
 	  	}
 	   run_t.response_wifi_signal_label=0xff;
 	    break;
 
 	  case SONIC_OFF_ITEM:
         if(run_t.gPower_flag ==POWER_ON){
+
+		 //   Buzzer_KeySound();
             MqttData_Publish_SetUltrasonic(0);
             run_t.gUlransonic=0;
 			SendWifiCmd_To_Order(WIFI_SONIC_OFF);
-			Buzzer_KeySound();
+			
         }
 	   run_t.response_wifi_signal_label=0xff;
 	  	break;
 
 	  case SONIC_ON_ITEM:
 	    if(run_t.gPower_flag ==POWER_ON){
+		//	Buzzer_KeySound();
              MqttData_Publish_SetUltrasonic(1);
             run_t.gUlransonic=1;
 			SendWifiCmd_To_Order(WIFI_SONIC_ON);
-			Buzzer_KeySound();
+			
         }
 	   run_t.response_wifi_signal_label=0xff;
 	  	break;
 
 	  case STATE_OFF_ITEM:
 	  if(run_t.gPower_flag ==POWER_ON){
+	  	//   Buzzer_KeySound();
             MqttData_Publish_SetState(2);
             run_t.gModel=2;
 			SendWifiCmd_To_Order(WIFI_MODE_2);
-		    Buzzer_KeySound();
+		   
         }
-	   run_t.response_wifi_signal_label=0xff;
+	   run_t.response_wifi_signal_label = 0xff;
 	  break;
 		
 	  case STATE_ON_ITEM:
 	  	 if(run_t.gPower_flag ==POWER_ON){
+		//	 Buzzer_KeySound();
+		 
             MqttData_Publish_SetState(1);
             run_t.gModel=1;
 			SendWifiCmd_To_Order(WIFI_MODE_1);
-		    Buzzer_KeySound();
+		   
         }
-	    run_t.response_wifi_signal_label=0xff;
+	   run_t.response_wifi_signal_label = 0xff;
 	  	break;
 
 	  case TEMPERATURE_ITEM:
 	   if(run_t.gPower_flag ==POWER_ON){
+		//	Buzzer_KeySound();
 
             temp_decade=UART2_DATA.UART_Data[14]-0x30;
             temp_unit=UART2_DATA.UART_Data[15]-0x30;
@@ -511,13 +519,14 @@ void Tencent_Cloud_Rx_Handler(void)
             if( run_t.set_temperature_value <20 )   run_t.set_temperature_value=20;
             MqttData_Publis_SetTemp(run_t.set_temperature_value);
 			SendWifiData_To_PanelTemp(run_t.set_temperature_value);
-            Buzzer_KeySound();
+          
          }
-	   run_t.response_wifi_signal_label=0xff;
+	  run_t.response_wifi_signal_label = 0xff;
 	  break;
 
 	  case FAN_ITEM:
 	    if(run_t.gPower_flag ==POWER_ON){
+			//Buzzer_KeySound();
             if(UART2_DATA.UART_Data[7]==0x31 && UART2_DATA.UART_Data[8]==0x30 && UART2_DATA.UART_Data[9]==0x30){
 		           run_t.set_wind_speed_value =100;
             }
@@ -531,11 +540,11 @@ void Tencent_Cloud_Rx_Handler(void)
 			  MqttData_Publis_SetFan(run_t.set_wind_speed_value);
     		SendWifiData_To_PanelWindSpeed(run_t.set_wind_speed_value);
           
-			Buzzer_KeySound();
+			
             
 		}
 	  
-	    run_t.response_wifi_signal_label=0xff;
+	    run_t.response_wifi_signal_label = 0xff;
 	  	break;
 
 	  default :
@@ -545,6 +554,7 @@ void Tencent_Cloud_Rx_Handler(void)
    }
 
    if(run_t.response_wifi_signal_label==0xff){
+   	     Buzzer_KeySound();
 		run_t.response_wifi_signal_label=0xf0;
 
 		for(i=0;i<17;i++){
