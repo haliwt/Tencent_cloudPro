@@ -19,6 +19,8 @@ static void Single_Command_ReceiveCmd(uint8_t cmd);
 uint8_t tencent_cloud_flag;
 
 
+
+
 /**********************************************************************
 *
 *Function Name:void Decode_RunCmd(void)
@@ -183,14 +185,21 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 **********************************************************************/
 static void Single_Command_ReceiveCmd(uint8_t cmd)
 {
-    switch(cmd){
+  
+	switch(cmd){
+
+	    case DRY_ON_NO_BUZZER:
+
+	        run_t.noBuzzer_sound_dry_flag =1;
 
        case DRY_ON:
          run_t.gDry = 1;
 	      run_t.gFan_continueRun =0;
 		if(esp8266data.esp8266_login_cloud_success==1)
 		 MqttData_Publish_SetPtc(0x01);
-         Buzzer_KeySound();
+		 if(run_t.noBuzzer_sound_dry_flag !=1){
+		     Buzzer_KeySound();
+		 }
        break;
 
        case DRY_OFF:
@@ -240,6 +249,14 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 		       MqttData_Publis_SetFan(50);
 		    Buzzer_KeySound();
        break;
+
+	   case WIFI_CONNECT_FAIL:
+
+	       run_t.dp_link_wifi_fail =1;
+
+
+	   break;
+
 
       default :
         cmd =0;
@@ -298,7 +315,7 @@ void RunCommand_MainBoard_Fun(void)
 
 		if(esp8266data.esp8266_login_cloud_success==1){
 			tencent_cloud_flag =1;
-	 	     SendWifiData_To_Cmd(0x01) ;
+	 	    SendWifiData_To_Cmd(0x01) ;
 		}
 		
 		if(tencent_cloud_flag ==1){
@@ -350,9 +367,7 @@ void RunCommand_MainBoard_Fun(void)
 		run_t.gTimer_1s=0;
 		Update_DHT11_Value();
 
-	
-		
-	  }
+     }
 
 	
 
@@ -388,6 +403,12 @@ void RunCommand_MainBoard_Fun(void)
 	           }
 
 	 }
+
+	 if(esp8266data.esp8266_login_cloud_success==1 && run_t.dp_link_wifi_fail ==1){
+	 	     run_t.dp_link_wifi_fail=0;
+	 	    SendWifiData_To_Cmd(0x01) ;
+	 }
+		
 	
 }
 /**********************************************************************

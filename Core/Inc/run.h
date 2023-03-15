@@ -39,11 +39,16 @@ typedef enum{
 	 DRY_ON = 0x40,
 	 DRY_OFF = 0x41,
 
+	 DRY_ON_NO_BUZZER = 0x90,
+
 	 PLASMA_ON = 0x20,
 	 PLASMA_OFF = 0x21,
 
 	 FAN_ON =0x10,
-	 FAN_OFF = 0x11
+	 FAN_OFF = 0x11,
+
+	 WIFI_CONNECT_FAIL = 0x55,
+     WIFI_CONNECT_SUCCESS= 0xAA
 
 
 
@@ -66,6 +71,7 @@ typedef struct _RUN_T{
     uint8_t gFan_continueRun;
 
 	uint8_t RunCommand_Label;
+	uint8_t dp_link_wifi_fail;
 	
   
     uint8_t decodeFlag;
@@ -87,6 +93,7 @@ typedef struct _RUN_T{
 	  uint8_t  gModel;
       uint8_t Single_cmd ;
 	  uint8_t gFan_counter;
+	  uint8_t noBuzzer_sound_dry_flag;
 	  
 	  uint8_t  set_temperature_value;
 	  uint8_t  set_temperature_decade;
