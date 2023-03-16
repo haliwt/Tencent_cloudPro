@@ -291,7 +291,7 @@ void Tencent_Cloud_Rx_Handler(void)
 {
     uint8_t i;
     static uint8_t wind_hundred, wind_decade,wind_unit,temp_decade,temp_unit;
-	static uint8_t buzzer_temperature_flag,buzzer_temp_on;
+	static uint8_t buzzer_temperature_flag,buzzer_temp_on,wifi_set_temp_value;
     if( esp8266data.rx_data_success==1){
          esp8266data.rx_data_success=0;
     
@@ -525,16 +525,12 @@ void Tencent_Cloud_Rx_Handler(void)
             temp_unit=UART2_DATA.UART_Data[15]-0x30;
             run_t.set_temperature_value = temp_decade*10 +  temp_unit;
             if( run_t.set_temperature_value > 40)  run_t.set_temperature_value=40;
-            if( run_t.set_temperature_value <20 )   run_t.set_temperature_value=20;
+            if( run_t.set_temperature_value <20 )  run_t.set_temperature_value=20;
             MqttData_Publis_SetTemp(run_t.set_temperature_value);
-			SendWifiData_To_PanelTemp(run_t.set_temperature_value);
-            buzzer_temp_on = 1;
-			//
-			if(buzzer_temperature_flag != run_t.set_temperature_value){
-
-			    buzzer_temperature_flag = run_t.set_temperature_value;
-				Buzzer_KeySound();
-            }
+			//SendWifiData_To_PanelTemp(run_t.set_temperature_value);
+			SendWifiData_To_WifiSetTemp(run_t.set_temperature_value);
+            Buzzer_KeySound();
+           // run_t.wifi_set_temperature_value_flag =1;
           
          }
 	 

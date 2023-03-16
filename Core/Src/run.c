@@ -90,7 +90,7 @@ void Decode_RunCmd(void)
               
              run_t.set_temperature_value = cmdType_2;
 			 if(esp8266data.esp8266_login_cloud_success==1)
-			 MqttData_Publis_SetTemp(run_t.set_temperature_value);
+			       MqttData_Publis_SetTemp(run_t.set_temperature_value);
 			   
          }
 	  
@@ -185,7 +185,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 **********************************************************************/
 static void Single_Command_ReceiveCmd(uint8_t cmd)
 {
-  
+    static uint8_t no_buzzer_sound_dry_off;
 	switch(cmd){
 
 	    case DRY_ON_NO_BUZZER:
@@ -202,7 +202,11 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 		 }
        break;
 
-       case DRY_OFF:
+	   case DRY_OFF_NO_BUZZER :
+
+	         no_buzzer_sound_dry_off=1;
+
+	  case DRY_OFF:
  			run_t.gDry = 0;
 			 if(run_t.gPlasma ==0){ //plasma turn off flag
 			  run_t.gFan_counter =0;
@@ -211,7 +215,8 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 		     }
 			if(esp8266data.esp8266_login_cloud_success==1)
 			MqttData_Publish_SetPtc(0x0);
-			Buzzer_KeySound();
+			if( no_buzzer_sound_dry_off !=1)
+			    Buzzer_KeySound();
        break;
 
        case PLASMA_ON:
@@ -354,6 +359,7 @@ void RunCommand_MainBoard_Fun(void)
 
 		}
          run_t.gFan_counter=0;
+		
         
 	   run_t.gPower_flag =POWER_OFF;
 		

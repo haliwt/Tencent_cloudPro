@@ -25,6 +25,7 @@ void SendWifiCmd_To_Order(uint8_t odata);
 void SendData_Real_GMT(uint8_t hdata,uint8_t mdata,uint8_t sdata);
 void Eesp8266_TxData_ToSmartPhone(void);
 
+void SendWifiData_To_WifiSetTemp(uint8_t dat1);
 
 
 

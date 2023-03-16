@@ -40,6 +40,7 @@ typedef enum{
 	 DRY_OFF = 0x41,
 
 	 DRY_ON_NO_BUZZER = 0x90,
+	 DRY_OFF_NO_BUZZER = 0x91,
 
 	 PLASMA_ON = 0x20,
 	 PLASMA_OFF = 0x21,
@@ -72,6 +73,7 @@ typedef struct _RUN_T{
 
 	uint8_t RunCommand_Label;
 	uint8_t dp_link_wifi_fail;
+	uint8_t wifi_set_temperature_value_flag;
 	
   
     uint8_t decodeFlag;
