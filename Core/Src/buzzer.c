@@ -5,7 +5,7 @@
 void Buzzer_KeySound(void)
 {
 
-  unsigned int m=80;//
+  unsigned int m=80;//80
 	while(m--){
 
     HAL_GPIO_TogglePin(BUZZER_GPIO,BUZZER_PIN);//BEEP=!BEEP;

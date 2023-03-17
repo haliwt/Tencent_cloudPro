@@ -114,7 +114,8 @@ void Decode_RunCmd(void)
 	    if(run_t.gPower_flag==POWER_ON){
 
 		    if(cmdType_2== 'Z'){//turn off AI
-			    Buzzer_KeySound();
+		        run_t.buzzer_sound_flag = 1;
+			   // Buzzer_KeySound();
 			}
 			 
 		
@@ -306,6 +307,12 @@ void RunCommand_MainBoard_Fun(void)
 {
 
    static uint8_t power_just_on;
+    
+    if(run_t.buzzer_sound_flag == 1){
+	 	run_t.buzzer_sound_flag = 0;
+	    Buzzer_KeySound();
+
+	 }
   
    switch(run_t.RunCommand_Label){
 
@@ -414,6 +421,7 @@ void RunCommand_MainBoard_Fun(void)
 	 	     run_t.dp_link_wifi_fail=0;
 	 	    SendWifiData_To_Cmd(0x01) ;
 	 }
+	 
 		
 	
 }
