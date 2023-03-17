@@ -440,6 +440,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 
 	if(self_power_on_flag==0){
         self_power_on_flag ++ ;
+        Buzzer_KeySound();
 		run_t.flash_read_data =Flash_Read_Data();
 		switch(run_t.flash_read_data){
 

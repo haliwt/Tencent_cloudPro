@@ -34,6 +34,7 @@
 #include "interrupt_manager.h"
 #include "wifi_fun.h"
 #include "buzzer.h"
+#include "dht11.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -118,7 +119,6 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	MainBoard_Self_Inspection_PowerOn_Fun();
 	Decode_Function();
-	
     RunCommand_MainBoard_Fun();
     RunWifi_Command_Handler();
 	
