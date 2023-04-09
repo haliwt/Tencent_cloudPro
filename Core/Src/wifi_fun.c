@@ -283,6 +283,11 @@ void RunWifi_Command_Handler(void)
 		
 
      }
+	if(run_t.gPower_flag==POWER_OFF){
+        run_t.iwdg_feed_success_flag =1;
+        IWDG_Feed();
+        
+    }
   }
  
 	 	

@@ -128,6 +128,7 @@ void Decode_Function(void)
    if(run_t.decodeFlag==1){
    
       run_t.decodeFlag =0;
+	  run_t.process_run_guarantee_flag=1;
       Decode_RunCmd();
       
      }
@@ -135,7 +136,7 @@ void Decode_Function(void)
 
 void USART1_Cmd_Error_Handler(void)
 {
-
+   uint32_t temp;
     static uint8_t repeat_power_on;
 	   __HAL_UART_GET_FLAG(&huart1,UART_FLAG_ORE);
          if(UART_FLAG_ORE==1){
@@ -184,8 +185,8 @@ void USART1_Cmd_Error_Handler(void)
          
          }
 
-}
-
+      }
+  }
 /********************************************************************************
 	**
 	*Function Name:sendData_Real_TimeHum(uint8_t hum,uint8_t temp)

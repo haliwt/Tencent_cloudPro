@@ -28,11 +28,10 @@ typedef enum{
    POWER_OFF,
    POWER_CONNECTOR_WIFI,
    UPDATE_TO_PANEL_DATA,
-   WIFI_RESTART_INIT
+   WIFI_RESTART_INIT,
+   POWER_REF
 
-   
-
-}run_state_t;
+ }run_state_t;
 
 typedef enum{
 
@@ -75,11 +74,14 @@ typedef struct _RUN_T{
 	uint8_t dp_link_wifi_fail;
 	uint8_t wifi_set_temperature_value_flag;
 	uint8_t buzzer_sound_flag ;
-
+    //iwdg ref
 	uint8_t process_run_guarantee_flag;
     uint8_t  iwdg_feed_success_flag;
 	uint8_t gTimer_check_iwdg_flag;
-  
+	uint8_t gTimer_iwdg;
+	uint8_t iwdg_the_first_falg;
+    uint8_t gPower_repeat_times_flag;
+    
     uint8_t decodeFlag;
 	uint8_t sendtimes;
     uint8_t setup_timer_flag;
@@ -105,6 +107,7 @@ typedef struct _RUN_T{
 	  uint8_t  set_temperature_decade;
 	  uint8_t  set_temperature_unit;
 	  uint8_t  set_wind_speed_value;
+      
   
 	  uint8_t  wind_speed_decade;
 	  uint8_t  wind_speed_unit;

@@ -322,6 +322,7 @@ void RunCommand_MainBoard_Fun(void)
 		power_just_on=0;
         run_t.gTimer_1s=0;
 		run_t.gTheFirst_powerOn=1;
+        run_t.gPower_repeat_times_flag =1;
 		Update_DHT11_Value();
 		HAL_Delay(10);
 
@@ -369,9 +370,20 @@ void RunCommand_MainBoard_Fun(void)
 		
         
 	   run_t.gPower_flag =POWER_OFF;
+	   if(run_t.iwdg_the_first_falg==1){
+		    run_t.RunCommand_Label =POWER_REF;
+       }
+        else
+            run_t.RunCommand_Label=0xff;
 		
-       run_t.RunCommand_Label =0xff;
+      
 	break;
+
+	 case POWER_REF:
+         run_t.iwdg_feed_success_flag =1;
+         run_t.process_run_guarantee_flag =1;
+        IWDG_Feed();
+    break;
 
     }
 	
@@ -440,7 +452,10 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 
 	if(self_power_on_flag==0){
         self_power_on_flag ++ ;
+		run_t.iwdg_the_first_falg ++ ;
+		IWDG_Feed();
         Buzzer_KeySound();
+	    run_t.iwdg_feed_success_flag =1;
 		run_t.flash_read_data =Flash_Read_Data();
 		switch(run_t.flash_read_data){
 
