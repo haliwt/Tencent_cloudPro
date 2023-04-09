@@ -150,6 +150,20 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 
     cmd = 0xff;
     break;
+         
+    case 0xAA:
+         run_t.gPower_flag = POWER_ON;
+		run_t.gPower_On = POWER_ON;
+         run_t.RunCommand_Label= POWER_ON;
+		 Update_DHT11_Value();
+		 HAL_Delay(200);
+		 if(esp8266data.esp8266_login_cloud_success==1){
+			 MqttData_Publish_SetOpen(0x01);
+	         HAL_Delay(200);
+	         Publish_Data_ToCloud_Handler();
+		 }
+        
+    break;
 
     case 0x01: // power on
          Buzzer_KeySound();
@@ -260,6 +274,12 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 
 	       run_t.dp_link_wifi_fail =1;
 
+
+	   break;
+
+	    case IWDG_RECEIVE_DATA:
+
+	     run_t.process_run_guarantee_flag=1;
 
 	   break;
 

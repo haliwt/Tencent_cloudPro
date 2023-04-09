@@ -138,6 +138,9 @@ void USART1_Cmd_Error_Handler(void)
 {
    uint32_t temp;
     static uint8_t repeat_power_on;
+
+	  if(run_t.gTimer_usart_error >2){
+	  	run_t.gTimer_usart_error=0;
 	   __HAL_UART_GET_FLAG(&huart1,UART_FLAG_ORE);
          if(UART_FLAG_ORE==1){
           __HAL_UART_CLEAR_OREFLAG(&huart1);
@@ -145,11 +148,14 @@ void USART1_Cmd_Error_Handler(void)
           temp = USART1->RDR;
           IWDG_Init(IWDG_PRESCALER_128,2000); //8s =(128*2000)/32(ms)=2000
           MX_USART1_UART_Init();
+		  HAL_Delay(5);
           repeat_power_on=1;
+		  UART_Start_Receive_IT(&huart1,inputBuf,1);
           run_t.gPower_repeat_times_flag =0;
 		  
           
          }
+	  	}
          
         if(repeat_power_on==1){
             run_t.RunCommand_Label = POWER_ON;
@@ -170,7 +176,7 @@ void USART1_Cmd_Error_Handler(void)
       
      if(run_t.gTimer_iwdg > 1){
           run_t.gTimer_iwdg = 0;
-         SendWifiData_To_Cmd(0xB0);
+         SendWifiCmd_To_Order(0xB0);
      }
      if(run_t.gTimer_check_iwdg_flag >3){
          run_t.gTimer_check_iwdg_flag=0;
@@ -181,6 +187,12 @@ void USART1_Cmd_Error_Handler(void)
          else{
                run_t.gPower_repeat_times_flag =0;
               run_t.RunCommand_Label = POWER_ON;
+
+			  IWDG_Init(IWDG_PRESCALER_128,2000); //8s =(128*2000)/32(ms)=2000
+          MX_USART1_UART_Init();
+		  HAL_Delay(5);
+          repeat_power_on=1;
+           UART_Start_Receive_IT(&huart1,inputBuf,1);
 		    
          
          }

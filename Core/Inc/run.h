@@ -48,7 +48,9 @@ typedef enum{
 	 FAN_OFF = 0x11,
 
 	 WIFI_CONNECT_FAIL = 0x55,
-     WIFI_CONNECT_SUCCESS= 0xAA
+     WIFI_CONNECT_SUCCESS= 0xAA,
+
+	 IWDG_RECEIVE_DATA=0xB0
 
 
 
@@ -81,6 +83,7 @@ typedef struct _RUN_T{
 	uint8_t gTimer_iwdg;
 	uint8_t iwdg_the_first_falg;
     uint8_t gPower_repeat_times_flag;
+	uint8_t gTimer_usart_error;
     
     uint8_t decodeFlag;
 	uint8_t sendtimes;
