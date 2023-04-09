@@ -32,6 +32,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	   wifi_t.gTimer_publish_times;
 	   run_t.gTimer_send_cloud_state++;
 	   run_t.gTimer_send_login_sucess++;
+	   run_t.gTimer_check_iwdg_flag++;
 	  
 	   if(run_t.gFan_continueRun ==1){
            run_t.gFan_counter++;

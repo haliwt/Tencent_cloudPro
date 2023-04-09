@@ -75,6 +75,10 @@ typedef struct _RUN_T{
 	uint8_t dp_link_wifi_fail;
 	uint8_t wifi_set_temperature_value_flag;
 	uint8_t buzzer_sound_flag ;
+
+	uint8_t process_run_guarantee_flag;
+    uint8_t  iwdg_feed_success_flag;
+	uint8_t gTimer_check_iwdg_flag;
   
     uint8_t decodeFlag;
 	uint8_t sendtimes;

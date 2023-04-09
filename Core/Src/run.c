@@ -99,10 +99,10 @@ void Decode_RunCmd(void)
 
 	  case 'T':
 		  if(run_t.gPower_flag==POWER_ON){
-             #if 0 
+             #if 1
              run_t.set_temperature_value = cmdType_2;
 			 if(esp8266data.esp8266_login_cloud_success==1)
-			 MqttData_Publis_SetTime(run_t.set_temperature_value);
+				 MqttData_Publis_SetTime(run_t.set_temperature_value);
 			#endif    
          }
 	  

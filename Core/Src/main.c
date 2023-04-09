@@ -99,6 +99,7 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM1_Init();
   MX_TIM3_Init();
+  IWDG_Init(IWDG_PRESCALER_128,2000); //8s =(128*1000)/32(ms)=2000
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
@@ -121,6 +122,7 @@ int main(void)
 	Decode_Function();
     RunCommand_MainBoard_Fun();
     RunWifi_Command_Handler();
+	USART1_Cmd_Error_Handler();
 	
    }
   /* USER CODE END 3 */

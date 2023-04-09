@@ -385,12 +385,8 @@ void Tencent_Cloud_Rx_Handler(void)
 			if(run_t.gPower_flag ==POWER_ON){
 
 			run_t.response_wifi_signal_label= FAN_ITEM;
-			
-            
 		}
-		
-    }
-   
+	}
    }
    switch(run_t.response_wifi_signal_label){
 
