@@ -54,6 +54,7 @@ void Fan_One_Speed(void);
 void Fan_Full_Speed(void);
 void Fan_Two_Speed(void);
 
+void Fan_RunSpeed_Fun(void);
 
 
 #endif 

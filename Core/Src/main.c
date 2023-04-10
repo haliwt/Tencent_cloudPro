@@ -122,6 +122,8 @@ int main(void)
     RunCommand_MainBoard_Fun();
     RunWifi_Command_Handler();
 	USART1_Cmd_Error_Handler(&huart1);
+	 Fan_RunSpeed_Fun();
+	
 	
    }
   /* USER CODE END 3 */
