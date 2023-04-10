@@ -10,6 +10,13 @@ extern uint8_t inputBuf[4];
 extern uint8_t  inputCmd[2];
 extern uint8_t wifiInputBuf[1];
 
+
+
+extern void (*EUSART_TxDefaultInterruptHandler)(void);
+extern void (*EUSART_RxDefaultInterruptHandler)(void);
+
+void EUSART_SetRxInterruptHandler(void (* interruptHandler)(void));
+
 void Decode_Function(void);
 
 void sendData_Real_TimeHum(uint8_t hum,uint8_t temp);
@@ -27,7 +34,8 @@ void Eesp8266_TxData_ToSmartPhone(void);
 
 void SendWifiData_To_WifiSetTemp(uint8_t dat1);
 
-void USART1_Cmd_Error_Handler(void);
 
+
+void USART1_Cmd_Error_Handler(UART_HandleTypeDef *huart);
 
 #endif 

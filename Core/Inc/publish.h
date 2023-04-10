@@ -11,8 +11,8 @@ enum pub_Signal {                   /* enumeration for CParser signals */
 
 
 
-void Publish_Data_ToCloud_Handler(void);
-void Publish_Data_ToCloud_Login_Handler(void);
+void Publish_Data_ToTencent_Initial_Data(void);
+void Publish_Data_ToTencent_Update_Data(void);
 
 
 #endif 

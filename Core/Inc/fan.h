@@ -49,6 +49,10 @@ void SterIlization(uint8_t sel);
 void ShutDown_AllFunction(void);
 void Dry_Function(uint8_t sel);
 void Fan_Slowly_Speed(void);
+void Fan_One_Speed(void);
+
+void Fan_Full_Speed(void);
+void Fan_Two_Speed(void);
 
 
 

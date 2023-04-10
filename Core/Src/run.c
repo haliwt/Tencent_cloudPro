@@ -160,7 +160,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 		 if(esp8266data.esp8266_login_cloud_success==1){
 			 MqttData_Publish_SetOpen(0x01);
 	         HAL_Delay(200);
-	         Publish_Data_ToCloud_Handler();
+	         Publish_Data_ToTencent_Initial_Data();
 		 }
         
     break;
@@ -175,7 +175,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 		 if(esp8266data.esp8266_login_cloud_success==1){
 			 MqttData_Publish_SetOpen(0x01);
 	         HAL_Delay(200);
-	         Publish_Data_ToCloud_Handler();
+	         Publish_Data_ToTencent_Initial_Data();
 		 }
 		 
 	// cmd=0xff;  
@@ -399,11 +399,6 @@ void RunCommand_MainBoard_Fun(void)
       
 	break;
 
-	 case POWER_REF:
-         run_t.iwdg_feed_success_flag =1;
-         run_t.process_run_guarantee_flag =1;
-        IWDG_Feed();
-    break;
 
     }
 	
@@ -472,8 +467,6 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 
 	if(self_power_on_flag==0){
         self_power_on_flag ++ ;
-		run_t.iwdg_the_first_falg ++ ;
-		IWDG_Feed();
         Buzzer_KeySound();
 	    run_t.iwdg_feed_success_flag =1;
 		run_t.flash_read_data =Flash_Read_Data();

@@ -65,19 +65,27 @@ void Single_Usart_RxData(void(*rxHandler)(uint8_t dat))
 void ActionEvent_Handler(void)
 {
      
-	if(run_t.gDry == 1){
-		 if(run_t.set_wind_speed_value < 67){
-            Fan_Slowly_Speed();
+      if(run_t.set_wind_speed_value < 33){
+              Fan_One_Speed();
+		 }
+		 else if(run_t.set_wind_speed_value > 32 && run_t.set_wind_speed_value < 67 ){
+
+             Fan_Two_Speed();
+
 		 }
 		 else
 		 	FAN_CCW_RUN();
 	
-	    PTC_SetHigh();
+	   
 	     
+	if(run_t.gDry == 1){
+
+	   PTC_SetHigh();
+
 	}
 	else{
-	   PTC_SetLow();
-
+		   PTC_SetLow();
+	
 	}
 	//kill
 	if(run_t.gPlasma == 1){

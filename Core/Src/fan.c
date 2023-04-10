@@ -20,6 +20,55 @@ void FAN_Stop(void)
     FAN_CW_SetLow(); //brake
 }
 
+void Fan_One_Speed(void)
+{
+    static uint16_t fan_speed;
+	fan_speed ++ ;
+	FAN_CW_SetLow();
+	
+	if(fan_speed < 100){
+	   FAN_CCW_SetHigh(); //Run fan
+    } 
+	else if(fan_speed > 99  && fan_speed < 103){
+  
+	  FAN_CCW_SetLow(); //brake
+
+	}
+    else if(fan_speed > 102){
+		 FAN_CCW_SetHigh(); //Run fan
+		fan_speed =0;
+	 }
+
+
+}
+
+void Fan_Two_Speed(void)
+{
+    static uint16_t fan_speed;
+	fan_speed ++ ;
+	FAN_CW_SetLow();
+	
+	if(fan_speed < 200){
+	   FAN_CCW_SetHigh(); //Run fan
+    }
+    else if(fan_speed > 99  && fan_speed < 103){
+  
+	  FAN_CCW_SetLow(); //brake
+
+	}
+    else if(fan_speed > 102){
+		 FAN_CCW_SetHigh(); //Run fan
+		fan_speed =0;
+	}
+
+
+}
+
+void Fan_Full_Speed(void)
+{
+     FAN_CCW_RUN();
+
+}
 
 void Fan_Slowly_Speed(void)
 {
@@ -31,13 +80,16 @@ void Fan_Slowly_Speed(void)
 	   FAN_CCW_SetHigh(); //Run fan
     }
 
-	if(fan_speed > 99  && fan_speed <  106){
+	if(fan_speed > 99  && fan_speed < 103){
   
 	  FAN_CCW_SetLow(); //brake
 
 	}
 
-	if(fan_speed > 106|| fan_speed==106) fan_speed =0;
+	if(fan_speed > 102){
+		 FAN_CCW_SetHigh(); //Run fan
+		fan_speed =0;
+	 }
 	
 }
 

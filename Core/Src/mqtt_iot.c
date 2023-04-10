@@ -21,7 +21,7 @@
 
 
 static void property_report_SetOpen(uint8_t open);
-static void Mqtt_Value_login(void);
+static void Mqtt_Value_update_data(void);
 
 
 static void property_topic_publish(void);
@@ -60,22 +60,22 @@ static serviceInfo    sg_info;
 void Mqtt_Value_Init(void)
 {
     run_t.set_wind_speed_value=90;
-     run_t.set_temperature_value=20 ;
+     run_t.set_temperature_value=40 ;
    	sg_info.open=1;
     sg_info.state=1;
     sg_info.ptc=1; 
     sg_info.anion=1;  //灭菌
 	sg_info.sonic =1;  //驱虫
     sg_info.find=100;
-	if(run_t.set_temperature_value <20)run_t.set_temperature_value = 20;
-	else if(run_t.set_temperature_value > 40)run_t.set_temperature_value = 40;
+	//if(run_t.set_temperature_value <20)run_t.set_temperature_value = 20;
+	//else if(run_t.set_temperature_value > 40 )run_t.set_temperature_value = 40;
 	sg_info.set_temperature =  run_t.set_temperature_value ;
 	
 }
-static void Mqtt_Value_login(void)
+static void Mqtt_Value_update_data(void)
 {
-     run_t.set_temperature_value=20;
-     run_t.set_wind_speed_value=90;
+     //run_t.set_temperature_value=20;
+     ///run_t.set_wind_speed_value=90;
     sg_info.open = run_t.wifi_gPower_On;
 	sg_info.state = run_t.gModel;
 	sg_info.ptc  = run_t.gDry;
@@ -131,12 +131,12 @@ static void property_report_state(void)
    
 }
 
-void property_report_login(void)
+void property_report_update_data(void)
 {
 	char  message[256]    = {0};
 	int   message_len	   = 0;
 	
-	 Mqtt_Value_login();
+	 Mqtt_Value_update_data();
 	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up02\\\"\\,\\\"params\\\":{\\\"open\\\":%d\\,\\\"Anion\\\":%d\\,\\\"ptc\\\":%d\\,\\\"sonic\\\":%d\\,\\\"state\\\":%d\\,\\\"find\\\":%d\\,\\\"temperature\\\":%d}}\"\r\n",
 								 sg_info.open,sg_info.anion,sg_info.ptc,sg_info.sonic,sg_info.state,sg_info.find,sg_info.set_temperature);
 								   
@@ -326,10 +326,10 @@ void MqttData_Publish_Init(void)
 
 }
 
-void MqttData_Publish_Login(void)
+void MqttData_Publish_Update_Data(void)
 {
     property_topic_publish();
-	property_report_login();
+	property_report_update_data();
 
 }
 

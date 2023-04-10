@@ -12,7 +12,7 @@
 *Return Ref:NO
 *
 ********************************************************************************/
-void Publish_Data_ToCloud_Handler(void)
+void Publish_Data_ToTencent_Initial_Data(void)
 {
     if(esp8266data.esp8266_login_cloud_success==1){
           
@@ -23,10 +23,10 @@ void Publish_Data_ToCloud_Handler(void)
 }
 	
 
-void Publish_Data_ToCloud_Login_Handler(void)
+void Publish_Data_ToTencent_Update_Data(void)
 {
-      MqttData_Publish_Login();
-   //   Update_Dht11_Totencent_Value();
+      MqttData_Publish_Update_Data();
+  
 
 }
 

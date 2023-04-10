@@ -27,6 +27,15 @@ static uint8_t outputBuf[MAX_BUFFER_SIZE];
 volatile uint8_t transOngoingFlag;
 volatile uint8_t usart2_transOngoingFlag;
 
+void USART1_ERROR_Callback(void);
+void (*EUSART_TxDefaultInterruptHandler)(void);
+void (*EUSART_RxDefaultInterruptHandler)(void);
+
+//void (*EUSART_FramingErrorHandler)(void);
+//void (*EUSART_OverrunErrorHandler)(void);
+//void (*EUSART_ErrorHandler)(void);
+
+
 
 /********************************************************************************
 	**
@@ -134,71 +143,68 @@ void Decode_Function(void)
      }
 }
 
-void USART1_Cmd_Error_Handler(void)
+void USART1_Cmd_Error_Handler(UART_HandleTypeDef *huart)
 {
-   uint32_t temp;
-    static uint8_t repeat_power_on;
 
-	  if(run_t.gTimer_usart_error >2){
+   if(huart==&huart1){
+
+   if(run_t.gPower_On == 1){
+
+   uint32_t temp;
+    static uint8_t error_usart_flag;
+
+	  if(run_t.gTimer_usart_error >23){
 	  	run_t.gTimer_usart_error=0;
-	   __HAL_UART_GET_FLAG(&huart1,UART_FLAG_ORE);
-         if(UART_FLAG_ORE==1){
-          __HAL_UART_CLEAR_OREFLAG(&huart1);
+	      __HAL_UART_GET_FLAG(&huart1,UART_FLAG_ORE);//UART_FLAG_NE
+         __HAL_UART_GET_FLAG(&huart1,UART_FLAG_NE); //USART_ISR_FE
+         __HAL_UART_GET_FLAG(&huart1,USART_ISR_FE);
+         if(UART_FLAG_ORE==1 || UART_FLAG_NE==1 ||USART_ISR_FE==1  ||error_usart_flag ==1){
+           __HAL_UART_CLEAR_OREFLAG(&huart1);
+              __HAL_UART_CLEAR_NEFLAG(&huart1);
+               __HAL_UART_CLEAR_FEFLAG(&huart1);
+             error_usart_flag=0;
+          
           temp=USART1->ISR;
           temp = USART1->RDR;
-          IWDG_Init(IWDG_PRESCALER_128,2000); //8s =(128*2000)/32(ms)=2000
-          MX_USART1_UART_Init();
 		  HAL_Delay(5);
-          repeat_power_on=1;
+          
 		  UART_Start_Receive_IT(&huart1,inputBuf,1);
-          run_t.gPower_repeat_times_flag =0;
+          
 		  
           
          }
 	  	}
          
-        if(repeat_power_on==1){
-            run_t.RunCommand_Label = POWER_ON;
-        }
-
-        if(run_t.gPower_repeat_times_flag ==1){
-               repeat_power_on=2;
-         
-         }
+     
         
      if(run_t.process_run_guarantee_flag ==1){
         run_t.process_run_guarantee_flag=0;
        run_t.iwdg_feed_success_flag =1;
        run_t.gTimer_check_iwdg_flag =0;
-       IWDG_Feed();
+       
       }
     
-      
-     if(run_t.gTimer_iwdg > 1){
+      if(run_t.gTimer_iwdg > 20){
           run_t.gTimer_iwdg = 0;
          SendWifiCmd_To_Order(0xB0);
      }
-     if(run_t.gTimer_check_iwdg_flag >3){
+     if(run_t.gTimer_check_iwdg_flag >20){
          run_t.gTimer_check_iwdg_flag=0;
          if(run_t.iwdg_feed_success_flag==1){
             run_t.iwdg_feed_success_flag=0;
+            error_usart_flag=0;
          
          }
          else{
-               run_t.gPower_repeat_times_flag =0;
-              run_t.RunCommand_Label = POWER_ON;
-
-			  IWDG_Init(IWDG_PRESCALER_128,2000); //8s =(128*2000)/32(ms)=2000
-          MX_USART1_UART_Init();
-		  HAL_Delay(5);
-          repeat_power_on=1;
-           UART_Start_Receive_IT(&huart1,inputBuf,1);
+             error_usart_flag=1;
 		    
          
          }
 
       }
+   	}
   }
+}
 /********************************************************************************
 	**
 	*Function Name:sendData_Real_TimeHum(uint8_t hum,uint8_t temp)
@@ -399,6 +405,10 @@ void SendData_Real_GMT(uint8_t hdata,uint8_t mdata,uint8_t sdata)
 
 }
 
+void EUSART_SetTxInterruptHandler(void (* interruptHandler)(void))
+{
+    EUSART_TxDefaultInterruptHandler = interruptHandler;
+}
 
 
 /********************************************************************************
