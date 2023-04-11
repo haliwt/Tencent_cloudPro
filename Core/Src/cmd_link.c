@@ -13,12 +13,12 @@
 uint8_t  inputBuf[4];
 uint8_t  inputCmd[2];
 uint8_t  wifiInputBuf[1];
-uint8_t test_counter;
-uint8_t test_counter_usat1;
+//uint8_t test_counter;
+//uint8_t test_counter_usat1;
 
 uint8_t rx_wifi_data[7];
 
-uint8_t wifi_rx_temp_data[25];
+//uint8_t wifi_rx_temp_data[25];
 
 
 static uint8_t transferSize;
@@ -70,9 +70,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	      } 
 		  else{
 		         
-                  wifi_rx_temp_data[test_counter];
-                  test_counter++;
-                  if( test_counter==24) test_counter=0;
+                 // wifi_rx_temp_data[test_counter];
+                 // test_counter++;
+               
 				  if(wifi_t.get_rx_beijing_time_flag==1){
 				  	UART2_DATA.UART_Data[UART2_DATA.UART_Cnt] = UART2_DATA.UART_DataBuf[0];
 					UART2_DATA.UART_Cnt++;
@@ -88,7 +88,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	
 	if(huart->Instance==USART1)//if(huart==&huart1) // Motor Board receive data (filter)
 	{
-        test_counter_usat1++;
+        //test_counter_usat1++;
 		switch(state)
 		{
 		case 0:  //#0

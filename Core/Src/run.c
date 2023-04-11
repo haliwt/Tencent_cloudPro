@@ -540,6 +540,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 		}
         else wifi_t.runCommand_order_lable =0xff;
 
+
       break;
 
 

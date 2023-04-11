@@ -196,6 +196,25 @@ void RunWifi_Command_Handler(void)
 
 
 			}
+
+			if(wifi_t.wifi_reconnect_read_flag == 0x30){
+
+                  WIFI_IC_ENABLE();
+			      InitWifiModule();
+				   //Wifi_SoftAP_Config_Handler();
+				  PowerOn_Self_Auto_Link_Tencent_Cloud();
+					
+			      SmartPhone_TryToLink_TencentCloud();
+
+				  if(esp8266data.esp8266_login_cloud_success==1){
+						//wifi_t.runCommand_order_lable = wifi_publish_update_tencent_cloud_data;
+						//esp8266data.gTimer_subscription_timing=0;
+						SendWifiData_To_Cmd(0x01) ;
+					}
+				    else
+			           SendWifiData_To_Cmd(0x0) ;
+
+			}
 		
 	   break;
 
@@ -212,7 +231,7 @@ void RunWifi_Command_Handler(void)
 			
             esp8266data.gTimer_publish_dht11=0;
 			Update_Dht11_Totencent_Value();
-			if(wifi_t.gTimer_get_beijing_time > 300){//180
+			if(wifi_t.gTimer_get_beijing_time > 240){//180
 			   wifi_t.gTimer_get_beijing_time=0;
 			   gamt_recode=0;
 			   wifi_t.get_rx_beijing_time_flag=1;
