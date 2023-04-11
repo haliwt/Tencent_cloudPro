@@ -77,7 +77,7 @@ void ActionEvent_Handler(void)
 //		 	FAN_CCW_RUN();
 //	
 	   
-	     
+   if(run_t.works_break_power_on==0) {   
 	if(run_t.gDry == 1){
 
 	   PTC_SetHigh();
@@ -89,11 +89,7 @@ void ActionEvent_Handler(void)
 	}
 	//kill
 	if(run_t.gPlasma == 1){
-		 if(run_t.set_wind_speed_value < 67){
-            Fan_Slowly_Speed();
-		 }
-		 else
-		 	FAN_CCW_RUN();
+		
 	     PLASMA_SetHigh();
 	}
 	else{
@@ -102,11 +98,7 @@ void ActionEvent_Handler(void)
 	}
 	//driver bug
 	if(run_t.gUlransonic ==1){
-		 if(run_t.set_wind_speed_value < 67){
-            Fan_Slowly_Speed();
-		 }
-		 else
-		 	FAN_CCW_RUN();
+	
 	 
 		HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);//ultrasnoic ON 
 	}
@@ -122,7 +114,7 @@ void ActionEvent_Handler(void)
 
 	}
 		
-
+   }
 
 
 }

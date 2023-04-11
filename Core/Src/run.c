@@ -145,25 +145,25 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
         run_t.gPower_flag = POWER_OFF;
         run_t.RunCommand_Label = POWER_OFF;
          if(esp8266data.esp8266_login_cloud_success==1)  
-         MqttData_Publish_SetOpen(0x0);
+         	MqttData_Publish_SetOpen(0x0);
            
 
     cmd = 0xff;
     break;
          
-    case 0xAA:
-         run_t.gPower_flag = POWER_ON;
-		run_t.gPower_On = POWER_ON;
-         run_t.RunCommand_Label= POWER_ON;
-		 Update_DHT11_Value();
-		 HAL_Delay(200);
-		 if(esp8266data.esp8266_login_cloud_success==1){
-			 MqttData_Publish_SetOpen(0x01);
-	         HAL_Delay(200);
-	         Publish_Data_ToTencent_Initial_Data();
-		 }
-        
+    case 0xAA: //power_on 
+       run_t.works_break_power_on = 0;
+	   
     break;
+
+	case 0x55: //power off
+		PTC_SetLow();
+		PLASMA_SetLow();
+		HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic off	
+        run_t.gFan_continueRun=1; 
+		run_t.works_break_power_on = 1;
+
+	break;
 
     case 0x01: // power on
          Buzzer_KeySound();
