@@ -10,6 +10,7 @@
 #include "mqtt_iot.h"
 #include "publish.h"
 #include "flash.h"
+#include "usart.h"
 
 
 RUN_T run_t; 
@@ -33,6 +34,7 @@ void Decode_RunCmd(void)
 {
 
  uint8_t cmdType_1=inputCmd[0],cmdType_2 = inputCmd[1];
+ uint32_t temp;
     
   switch(cmdType_1){
   
@@ -47,9 +49,9 @@ void Decode_RunCmd(void)
 	  case 'W': //wifi-function
 	      if(run_t.gPower_flag==POWER_ON){
 	      if(cmdType_2==1){
-              //fast blink led for link to tencent cloud
-             // WIFI_IC_ENABLE();
-              esp8266data.esp8266_login_cloud_success=0;
+    
+           
+               WIFI_IC_ENABLE();
 			  tencent_cloud_flag=0;
 			  // wifi_link_tencent_cloud:
 			  Buzzer_KeySound();	
@@ -57,6 +59,12 @@ void Decode_RunCmd(void)
                esp8266data.esp8266_login_cloud_success=0;
                run_t.wifi_config_net_lable=wifi_set_restor;
               wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;//2 
+                temp =USART2->ISR;
+	     		temp = USART2->RDR;
+				__HAL_UART_CLEAR_OREFLAG(&huart2);
+              __HAL_UART_CLEAR_NEFLAG(&huart2);
+               __HAL_UART_CLEAR_FEFLAG(&huart2);
+				UART_Start_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,1);
 		   }
 		   else if(cmdType_2==0){
                 
@@ -364,6 +372,7 @@ void RunCommand_MainBoard_Fun(void)
      if(run_t.gTimer_senddata_panel >30 && run_t.gPower_On==POWER_ON){ //300ms
 	   	    run_t.gTimer_senddata_panel=0;
 	        ActionEvent_Handler();
+	        
 	 }
 	 if(esp8266data.esp8266_login_cloud_success==1){
 	 	   if(run_t.gTimer_send_login_sucess > 11){

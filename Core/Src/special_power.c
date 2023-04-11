@@ -77,7 +77,9 @@ void ActionEvent_Handler(void)
 //		 	FAN_CCW_RUN();
 //	
 	   
-   if(run_t.works_break_power_on==0) {   
+   if(run_t.works_break_power_on==0) { 
+
+    Fan_RunSpeed_Fun();
 	if(run_t.gDry == 1){
 
 	   PTC_SetHigh();
