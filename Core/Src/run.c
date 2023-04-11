@@ -50,18 +50,7 @@ void Decode_RunCmd(void)
 	      if(run_t.gPower_flag==POWER_ON){
 	      if(cmdType_2==1){
 
-		    HAL_Init();
-       		SystemClock_Config();
-             
-
-		  MX_USART2_UART_Init();
-		  /* USER CODE BEGIN 2 */
-		
-		 
-		   //DMA usart2
-		   UART_Start_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,1);
-		  
-               WIFI_IC_ENABLE();
+		      WIFI_IC_ENABLE();
 			  tencent_cloud_flag=0;
 			  // wifi_link_tencent_cloud:
 			  Buzzer_KeySound();	
@@ -77,7 +66,7 @@ void Decode_RunCmd(void)
               __HAL_UART_CLEAR_NEFLAG(&huart2);
                __HAL_UART_CLEAR_FEFLAG(&huart2);
 
-			
+			  UART_Start_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,1);
 				
 	
 				for(i=0;i<100;i++){
