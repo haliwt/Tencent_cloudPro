@@ -55,8 +55,7 @@ uint8_t at_send_data(uint8_t* pdata, uint16_t len)
 void InitWifiModule(void)
 {
 	
-	if(run_t.wifi_config_net_lable==0)
-		{
+	if(run_t.wifi_config_net_lable==0){
 			run_t.wifi_config_net_lable++;
 			
 			WIFI_IC_ENABLE();

@@ -8,8 +8,6 @@
 #include "wifi_fun.h"
 #include "buzzer.h"
 
-
-
 #define MAX_BUFFER_SIZE  30
 
 uint8_t  inputBuf[4];
@@ -19,6 +17,8 @@ uint8_t test_counter;
 uint8_t test_counter_usat1;
 
 uint8_t rx_wifi_data[7];
+
+uint8_t wifi_rx_temp_data[25];
 
 
 static uint8_t transferSize;
@@ -69,7 +69,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 	      } 
 		  else{
-		          test_counter++;
+		         
+                  wifi_rx_temp_data[test_counter];
+                  test_counter++;
+                  if( test_counter==24) test_counter=0;
 				  if(wifi_t.get_rx_beijing_time_flag==1){
 				  	UART2_DATA.UART_Data[UART2_DATA.UART_Cnt] = UART2_DATA.UART_DataBuf[0];
 					UART2_DATA.UART_Cnt++;
@@ -170,11 +173,8 @@ void USART1_Cmd_Error_Handler(UART_HandleTypeDef *huart)
           temp=USART1->ISR;
           temp = USART1->RDR;
 
-		  temp=USART2->ISR;
-          temp = USART2->RDR;
-		
-          
 		  UART_Start_Receive_IT(&huart1,inputBuf,1);
+		
 		
           
 		  

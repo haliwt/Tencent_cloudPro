@@ -33,8 +33,8 @@ uint8_t tencent_cloud_flag;
 void Decode_RunCmd(void)
 {
 
- uint8_t cmdType_1=inputCmd[0],cmdType_2 = inputCmd[1];
- uint32_t temp;
+ uint8_t cmdType_1=inputCmd[0],cmdType_2 = inputCmd[1],i;
+ uint32_t temp,temp1;
     
   switch(cmdType_1){
   
@@ -49,8 +49,18 @@ void Decode_RunCmd(void)
 	  case 'W': //wifi-function
 	      if(run_t.gPower_flag==POWER_ON){
 	      if(cmdType_2==1){
-    
-           
+
+		    HAL_Init();
+       		SystemClock_Config();
+             
+
+		  MX_USART2_UART_Init();
+		  /* USER CODE BEGIN 2 */
+		
+		 
+		   //DMA usart2
+		   UART_Start_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,1);
+		  
                WIFI_IC_ENABLE();
 			  tencent_cloud_flag=0;
 			  // wifi_link_tencent_cloud:
@@ -61,10 +71,18 @@ void Decode_RunCmd(void)
               wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;//2 
                 temp =USART2->ISR;
 	     		temp = USART2->RDR;
+			
+				
 				__HAL_UART_CLEAR_OREFLAG(&huart2);
               __HAL_UART_CLEAR_NEFLAG(&huart2);
                __HAL_UART_CLEAR_FEFLAG(&huart2);
-				UART_Start_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,1);
+
+			
+				
+	
+				for(i=0;i<100;i++){
+                    UART2_DATA.UART_Data[i]=0;
+				}
 		   }
 		   else if(cmdType_2==0){
                 
@@ -313,13 +331,11 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 **********************************************************************/
 void SystemReset(void)
 {
-    if(run_t.gPower_flag ==POWER_ON){
-		run_t.gPower_flag=0xff;
-		run_t.gPower_On=POWER_ON;
+    
 		
 		__set_PRIMASK(1) ;
 		HAL_NVIC_SystemReset();
-    }
+		
 
 }
 

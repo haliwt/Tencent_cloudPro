@@ -117,12 +117,13 @@ void RunWifi_Command_Handler(void)
 	  	
 	  	case wifi_tencent_publish_init_data://03
 		  
-	       if(esp8266data.gTimer_publish_timing>3 ){ //10
+	       if(esp8266data.gTimer_publish_timing>4 ){ //10
 	           esp8266data.gTimer_publish_timing=0;
 	           esp8266data.gTimer_subscription_timing=0;
 			   esp8266data.gTimer_publish_dht11 =0;
 				Publish_Data_ToTencent_Initial_Data();
 				HAL_Delay(1000); //WT.EDIT 2023.03.02
+				Subscriber_Data_FromCloud_Handler();
 				wifi_t.runCommand_order_lable= wifi_tencent_subscription_data;
 	           
 	   	    }
@@ -137,10 +138,12 @@ void RunWifi_Command_Handler(void)
 			if(esp8266data.gTimer_subscription_timing>3 && first_sub==0  ){
 				first_sub++;
 				 SendWifiData_To_Cmd(0x01) ;	//WT.EDIT 2023.03.02
-			esp8266data.gTimer_subscription_timing=0;
-			 esp8266data.gTimer_publish_timing=0;
-			 Subscriber_Data_FromCloud_Handler();
-			 wifi_t.runCommand_order_lable= wifi_publish_update_tencent_cloud_data;
+				 HAL_Delay(500);
+				esp8266data.gTimer_subscription_timing=0;
+			 	esp8266data.gTimer_publish_timing=0;
+			 	Subscriber_Data_FromCloud_Handler();
+				HAL_Delay(1000);
+			 	wifi_t.runCommand_order_lable= wifi_publish_update_tencent_cloud_data;
 					
 			}
 			
@@ -168,6 +171,7 @@ void RunWifi_Command_Handler(void)
            if(esp8266data.gTimer_publish_dht11 >60){
 		   	  esp8266data.gTimer_publish_dht11=0;
 			 //  subscription_flag =0;
+			  wifi_t.gTimer_get_beijing_time=0;
 		   	  wifi_t.runCommand_order_lable= wifi_tencent_publish_dht11_data;
            	}
             if(esp8266data.gTimer_subscription_timing>5 && subscription_flag < 5){
@@ -199,7 +203,7 @@ void RunWifi_Command_Handler(void)
 			
             esp8266data.gTimer_publish_dht11=0;
 			Update_Dht11_Totencent_Value();
-			if(wifi_t.gTimer_get_beijing_time > 180){
+			if(wifi_t.gTimer_get_beijing_time > 300){//180
 			   wifi_t.gTimer_get_beijing_time=0;
 			   gamt_recode=0;
 			   wifi_t.get_rx_beijing_time_flag=1;
@@ -224,8 +228,7 @@ void RunWifi_Command_Handler(void)
 	 
 		  esp8266data.rx_link_cloud_flag =0;
 	   	  wifi_t.get_rx_beijing_time_flag=1;
-	   	  if(beijing_flag ==0 && wifi_t.gTimer_beijing_time>1){
-			 beijing_flag++;
+	   	  if(wifi_t.gTimer_beijing_time>29){
 			 wifi_t.gTimer_beijing_time=0;
              UART2_DATA.UART_Cnt=0;
              Get_BeiJing_Time_Cmd();

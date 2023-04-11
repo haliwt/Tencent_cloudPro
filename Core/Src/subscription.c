@@ -577,7 +577,7 @@ void Tencent_Cloud_Rx_Handler(void)
 		}
 		 temp =USART2->ISR;
 	     temp = USART2->RDR;
-		UART_Start_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,1);
+		
 
    }
 	
