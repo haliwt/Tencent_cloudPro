@@ -272,6 +272,8 @@ void RunWifi_Command_Handler(void)
 	 	 esp8266data.rx_link_cloud_flag=0;
 	 	  if(first_connect == 0 ){
 		  	first_connect ++ ;
+			Reconnection_Wifi_Order(); //WT.EDIT 2023.04.11
+		    
             SendWifiData_To_Cmd(0x01) ;
 		  }
 		  if(wifi_t.get_rx_beijing_time_flag==0){

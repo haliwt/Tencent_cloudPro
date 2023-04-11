@@ -27,7 +27,7 @@ void Fan_One_Speed(void)
 	//FAN_CW_SetLow();
 	 FAN_CW_SetLow();
 	 FAN_CCW_SetHigh(); //Run fan
-
+ #if 0
 	FAN_CW_SetLow();
 	FAN_CCW_SetLow(); //brake
 
@@ -48,24 +48,26 @@ void Fan_One_Speed(void)
 
 	 FAN_CW_SetLow();
 	 FAN_CCW_SetHigh(); //Run fan
-   #if 0
-	if(fan_speed < 80){
+#endif 
+   #if 1
+	if(fan_speed < 2000){
 	  FAN_CW_SetLow();
 	   FAN_CCW_SetHigh(); //Run fan
     }
-    else if(fan_speed >79  && fan_speed <100){
+    else if(fan_speed >1999  && fan_speed <10000){
       FAN_CW_SetHigh();;
 	  FAN_CCW_SetLow(); //brake
 
 	}
-    else if(fan_speed > 99 && fan_speed < 179){
+    else if(fan_speed > 9999 ){
 		 FAN_CW_SetLow();
 		 FAN_CCW_SetHigh(); //Run fan
+		 fan_speed =0;
 		
 	}
-	else{
-		fan_speed =0;
-	}
+	
+		
+
 	#endif 
 
 }
@@ -74,11 +76,12 @@ void Fan_Two_Speed(void)
 {
     static uint16_t fan_speed;
 	fan_speed ++ ;
+#if 0
 	//FAN_CW_SetLow();
 	 FAN_CW_SetLow();
 	 FAN_CCW_SetHigh(); //Run fan
 
-	 FAN_CW_SetLow();
+	FAN_CW_SetLow();
 	FAN_CCW_SetLow(); //brake
 
 	FAN_CW_SetLow();
@@ -89,27 +92,23 @@ void Fan_Two_Speed(void)
 
 	 FAN_CW_SetLow();
 	 FAN_CCW_SetHigh(); //Run fan
-	#if 0
+#endif 
+	#if 1
 	
-	if(fan_speed < 90){
+	if(fan_speed < 4000){
 	   FAN_CW_SetLow();
 	   FAN_CCW_SetHigh(); //Run fan
     }
-   else if(fan_speed >89  && fan_speed <100){
+   else if(fan_speed >3999  && fan_speed <10000){
       FAN_CW_SetHigh();
 	  FAN_CCW_SetHigh(); //Run fan
 
 	}
-    else if(fan_speed > 99 && fan_speed < 189 ){
+    else if(fan_speed > 9999){
 		FAN_CW_SetLow();
 		FAN_CCW_SetHigh(); //Run fan
-		
-	}
-	else{
-	   fan_speed =0;
-
-
-	}
+		fan_speed =0;
+    }
    #endif 
 
 }
@@ -126,11 +125,11 @@ void Fan_Slowly_Speed(void)
 	fan_speed ++ ;
 	FAN_CW_SetLow();
 	
-	if(fan_speed < 100){
+	if(fan_speed < 30){
 	   FAN_CCW_SetHigh(); //Run fan
     }
 
-	if(fan_speed > 99  && fan_speed < 103){
+	if(fan_speed > 29  && fan_speed < 101){
   
 	  FAN_CCW_SetLow(); //brake
 	  FAN_CCW_SetHigh(); //Run fan
@@ -138,7 +137,7 @@ void Fan_Slowly_Speed(void)
 
 	}
 
-	if(fan_speed > 102){
+	if(fan_speed > 99){
 		 FAN_CCW_SetHigh(); //Run fan
 		fan_speed =0;
 	 }

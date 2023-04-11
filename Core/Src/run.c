@@ -151,32 +151,6 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
     
     switch(cmd){
 
-    case 0x00: //power off
-        Buzzer_KeySound();
-        run_t.gPower_On=POWER_OFF;
-        run_t.gPower_flag = POWER_OFF;
-        run_t.RunCommand_Label = POWER_OFF;
-         if(esp8266data.esp8266_login_cloud_success==1)  
-         	MqttData_Publish_SetOpen(0x0);
-           
-
-    cmd = 0xff;
-    break;
-         
-    case 0xAA: //power_on 
-       run_t.works_break_power_on = 0;
-	   
-    break;
-
-	case 0x55: //power off
-		PTC_SetLow();
-		PLASMA_SetLow();
-		HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic off	
-        run_t.gFan_continueRun=1; 
-		run_t.works_break_power_on = 1;
-
-	break;
-
     case 0x01: // power on
          Buzzer_KeySound();
          run_t.gPower_flag = POWER_ON;
@@ -192,6 +166,43 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 		 
 	// cmd=0xff;  
      break;
+
+
+	
+
+    case 0x00: //power off
+        Buzzer_KeySound();
+        run_t.gPower_On=POWER_OFF;
+        run_t.gPower_flag = POWER_OFF;
+        run_t.RunCommand_Label = POWER_OFF;
+         if(esp8266data.esp8266_login_cloud_success==1)  
+         	MqttData_Publish_SetOpen(0x0);
+           
+
+    cmd = 0xff;
+    break;
+         
+    case 0xAA: //power_on 
+      if(run_t.gPower_flag == POWER_ON){
+       run_t.works_break_power_on = 0;
+
+      	}
+	   
+    break;
+
+	case 0x55: //power off
+	   if(run_t.gPower_flag == POWER_ON){
+		PTC_SetLow();
+		PLASMA_SetLow();
+		HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic off	
+        run_t.gFan_continueRun=1; 
+		run_t.gFan_counter=0;
+		run_t.works_break_power_on = 1;
+	   	}
+
+	break;
+
+   
 
     
 
@@ -448,7 +459,7 @@ void RunCommand_MainBoard_Fun(void)
 	           }
 	  }
 
-	 if(run_t.gPlasma==0 && run_t.gDry==0 && run_t.gPower_flag ==POWER_ON && run_t.gFan_continueRun ==1){
+	 if(run_t.gPower_flag ==POWER_ON && run_t.gFan_continueRun ==1){
 
               if(run_t.gFan_counter < 60){
           
