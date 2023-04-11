@@ -187,6 +187,15 @@ void RunWifi_Command_Handler(void)
             	Publish_Data_ToTencent_Initial_Data();
 
             }
+
+			if(wifi_t.gTimer_reconnect_wifi > 10){
+				
+			  wifi_t.gTimer_reconnect_wifi = 0;
+
+			  Reconnection_Wifi_Order(); //WT.EDIT 2023.04.11
+
+
+			}
 		
 	   break;
 
@@ -228,7 +237,8 @@ void RunWifi_Command_Handler(void)
 	 
 		  esp8266data.rx_link_cloud_flag =0;
 	   	  wifi_t.get_rx_beijing_time_flag=1;
-	   	  if(wifi_t.gTimer_beijing_time>29){
+	   	  if(beijing_flag ==0 && wifi_t.gTimer_beijing_time>1){
+			 beijing_flag++;
 			 wifi_t.gTimer_beijing_time=0;
              UART2_DATA.UART_Cnt=0;
              Get_BeiJing_Time_Cmd();
@@ -272,7 +282,6 @@ void RunWifi_Command_Handler(void)
 	 	 esp8266data.rx_link_cloud_flag=0;
 	 	  if(first_connect == 0 ){
 		  	first_connect ++ ;
-			Reconnection_Wifi_Order(); //WT.EDIT 2023.04.11
 		    
             SendWifiData_To_Cmd(0x01) ;
 		  }
