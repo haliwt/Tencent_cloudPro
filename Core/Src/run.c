@@ -69,9 +69,6 @@ void Decode_RunCmd(void)
 			  UART_Start_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,1);
 				
 	
-				for(i=0;i<100;i++){
-                    UART2_DATA.UART_Data[i]=0;
-				}
 		   }
 		   else if(cmdType_2==0){
                 
@@ -288,6 +285,14 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 	   case WIFI_CONNECT_FAIL:
 
 	       run_t.dp_link_wifi_fail =1;
+
+
+	   break;
+
+	   case DISPLAY_PANNEL_CONNECT_WIFI_SUCCESS:
+
+	      
+	        run_t.dp_link_wifi_fail =0;
 
 
 	   break;
