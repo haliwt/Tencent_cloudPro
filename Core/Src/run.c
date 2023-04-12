@@ -541,7 +541,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 
       case 1:
         WIFI_IC_ENABLE();
-      	InitWifiModule();
+      	//InitWifiModule();
 		//Wifi_SoftAP_Config_Handler();
 		PowerOn_Self_Auto_Link_Tencent_Cloud();
 		

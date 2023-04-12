@@ -29,7 +29,8 @@ typedef enum _esp8266_para{
 	wifi_set_softap,
 	wifi_set_tcdevreg,
 	wifi_set_tcsap,
-	wifi_login_tencent
+	wifi_login_tencent,
+	wifi_link_smartphone
 
 
 }esp8266_para;
@@ -98,5 +99,7 @@ void Get_Beijing_Time(void);
 void PowerOn_Self_Auto_Link_Tencent_Cloud(void);
 
 void Reconnection_Wifi_Order(void);
+void AutoRepeate_Link_Tencent_Cloud(void);
+void AutoConnect_SmartPhone_TencentCloud(void);
 
 #endif 

@@ -147,7 +147,7 @@ void Wifi_SoftAP_Config_Handler(void)
 	        
 			run_t.wifi_config_net_lable=wifi_set_tcdevreg;
 		
-	  break;
+	
 
 
 	 case wifi_set_tcdevreg://dynamic register
@@ -214,19 +214,7 @@ void SmartPhone_LinkTencent_Cloud(void)
 
 }
 
-void SmartPhone_TryToLink_TencentCloud(void)
-{
-    esp8266data.rx_link_cloud_flag =1; //enable usart2 receive wifi  data
-    UART2_DATA.UART_Cnt=0;
-	wifi_t.soft_ap_config_flag =0;
-    HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
-	Decode_Function();
-	HAL_Delay(1000);
-	Decode_Function();
-    HAL_Delay(1000);
-    Decode_Function();
-	   
-}
+
 
 void wifi_Disconnect_Fun(void)
 {
@@ -263,7 +251,7 @@ void PowerOn_Self_Auto_Link_Tencent_Cloud(void)
   {
 
     case 0:
-           InitWifiModule();
+           InitWifiModule_Hardware();//InitWifiModule();
            Decode_Function();
 		   HAL_Delay(1000);
 		   Decode_Function();
@@ -292,10 +280,105 @@ void PowerOn_Self_Auto_Link_Tencent_Cloud(void)
 
 }
 
+void SmartPhone_TryToLink_TencentCloud(void)
+{
+    esp8266data.rx_link_cloud_flag =1; //enable usart2 receive wifi  data
+    UART2_DATA.UART_Cnt=0;
+	wifi_t.soft_ap_config_flag =0;
+    HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
+	Decode_Function();
+	HAL_Delay(1000);
+	Decode_Function();
+    HAL_Delay(1000);
+    Decode_Function();
+	   
+}
+
+
 void Reconnection_Wifi_Order(void)
 {
 	HAL_UART_Transmit(&huart2, "AT+TCMQTTSTATE?\r\n", strlen("AT+TCMQTTSTATE?\r\n"), 5000);
     HAL_Delay(200);
   
 }
+
+
+void AutoRepeate_Link_Tencent_Cloud(void)
+{
+   /// uint8_t *device_massage;
+	//device_massage = (uint8_t *)malloc(128);
+
+	switch(run_t.auto_link_cloud_flag){
+	 case 0:
+           InitWifiModule_Hardware();//InitWifiModule();
+           Decode_Function();
+		   HAL_Delay(1000);
+		   Decode_Function();
+           run_t.auto_link_cloud_flag =wifi_set_cwmode;
+	
+
+
+	case wifi_set_cwmode:
+    	
+        HAL_UART_Transmit(&huart2, "AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"), 5000);
+        	   HAL_Delay(1000);
+//            HAL_Delay(1000);
+//			 Decode_Function();
+//            HAL_Delay(1000);
+//		run_t.randomName[0]=HAL_GetUIDw0();
+//			Decode_Function();
+//		    HAL_Delay(1000);
+//	        sprintf((char *)device_massage, "AT+TCSAP=\"UYIJIA01-%d\"\r\n",run_t.randomName[0]);
+//            usart2_flag = at_send_data(device_massage, strlen((const char *)device_massage));
+//			 HAL_Delay(1000);
+//			 Decode_Function();
+//             HAL_Delay(1000);
+//			 wifi_t.soft_ap_config_flag =1;
+//			 esp8266data.rx_link_cloud_flag =1; //enable usart2 receive wifi  data
+//			 UART2_DATA.UART_Cnt=0;
+//			 
+//	  HAL_Delay(1000);
+//	 HAL_Delay(1000);
+     esp8266data.rx_link_cloud_flag =1; //enable usart2 receive wifi  data
+    UART2_DATA.UART_Cnt=0;
+	wifi_t.soft_ap_config_flag =0;
+    HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
+	Decode_Function();
+	HAL_Delay(1000);
+	Decode_Function();
+    HAL_Delay(1000);
+    Decode_Function();
+          
+		
+
+	break;
+	   
+   }
+	  
+
+		if(esp8266data.esp8266_login_cloud_success==1 ){
+		  run_t.auto_link_cloud_flag=0xff;
+	      wifi_t.runCommand_order_lable = wifi_publish_update_tencent_cloud_data;
+			   //esp8266data.gTimer_subscription_timing=0;
+	   }
+	   else{
+
+            	run_t.auto_link_cloud_flag=0;
+
+
+	   }
+
+
+	   
+	//free(device_massage);
+	
+
+}
+
+
+
+
+
+
+
 

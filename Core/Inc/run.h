@@ -112,6 +112,8 @@ typedef struct _RUN_T{
 	  uint8_t  set_temperature_decade;
 	  uint8_t  set_temperature_unit;
 	  uint8_t  set_wind_speed_value;
+	  uint8_t auto_link_cloud_flag;
+	  uint8_t reconnect_tencent_cloud_flag;
       
   
 	  uint8_t  wind_speed_decade;
