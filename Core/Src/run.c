@@ -388,26 +388,8 @@ void RunCommand_MainBoard_Fun(void)
 		}
 
 	break;
-
-   case UPDATE_TO_PANEL_DATA: //4
-     if(run_t.gTimer_senddata_panel >30 && run_t.gPower_On==POWER_ON){ //300ms
-	   	    run_t.gTimer_senddata_panel=0;
-	        ActionEvent_Handler();
-	        
-	 }
-	 if(esp8266data.esp8266_login_cloud_success==1){
-	 	   if(run_t.gTimer_send_login_sucess > 11){
-	 	        SendWifiData_To_Cmd(0x01) ;
-	 	   	}
-	   }
-
-	
-    
-    break;
-
-
-
-	case POWER_OFF: //2
+        
+    case POWER_OFF: //2
 		SetPowerOff_ForDoing();
 		if(esp8266data.esp8266_login_cloud_success==1){
 	 	     tencent_cloud_flag = 1;
@@ -430,6 +412,37 @@ void RunCommand_MainBoard_Fun(void)
 		
       
 	break;
+
+   case UPDATE_TO_PANEL_DATA: //4
+     if(run_t.gTimer_senddata_panel >30 && run_t.gPower_On==POWER_ON){ //300ms
+	   	    run_t.gTimer_senddata_panel=0;
+	        ActionEvent_Handler();
+
+	 }
+	 if(esp8266data.esp8266_login_cloud_success==1){
+	 	   if(run_t.gTimer_send_login_sucess > 11){
+	 	        SendWifiData_To_Cmd(0x01) ;
+	 	   	}
+	   }
+
+//	 if(run_t.gTimer_beijing_time > 10){
+//		run_t.gTimer_beijing_time=0;
+//		wifi_t.real_minutes=45;
+//		wifi_t.real_seconds=32;
+
+//       SendData_Real_GMT(wifi_t.real_hours,wifi_t.real_minutes);
+//	   HAL_Delay(5);
+//	   SendData_Real_GMT_Second(wifi_t.real_seconds);
+//	   HAL_Delay(5);
+//	 }
+
+	
+    
+    break;
+
+
+
+	
 
 
     }

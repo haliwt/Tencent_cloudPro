@@ -46,7 +46,7 @@ void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN Prototypes */
 typedef struct usart
 {
-    unsigned char UART_Data[100]; 
+    unsigned char UART_Data[150]; 
     unsigned char UART_Flag;
     unsigned int UART_Cnt;
     unsigned char UART_DataBuf[1];

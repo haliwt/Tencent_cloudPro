@@ -108,6 +108,7 @@ int main(void)
    UART_Start_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,1);
   /* USER CODE END 2 */
 
+
    run_t.RunCommand_Label = POWER_OFF;
    run_t.set_wind_speed_value=100;
   /* Infinite loop */

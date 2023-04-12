@@ -36,6 +36,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	   run_t.gTimer_iwdg++;
 	   run_t.gTimer_usart_error++;
 	   wifi_t.gTimer_reconnect_wifi++;
+	   run_t.gTimer_beijing_time++;
 	  
 	   if(run_t.gFan_continueRun ==1){
            run_t.gFan_counter++;
