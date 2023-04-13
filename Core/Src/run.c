@@ -417,6 +417,7 @@ void RunCommand_MainBoard_Fun(void)
      if(run_t.gTimer_senddata_panel >30 && run_t.gPower_On==POWER_ON){ //300ms
 	   	    run_t.gTimer_senddata_panel=0;
 	        ActionEvent_Handler();
+	      
 
 	 }
 	 if(esp8266data.esp8266_login_cloud_success==1){
@@ -425,17 +426,14 @@ void RunCommand_MainBoard_Fun(void)
 	 	   	}
 	   }
 
-//	 if(run_t.gTimer_beijing_time > 10){
-//		run_t.gTimer_beijing_time=0;
-//		wifi_t.real_minutes=45;
-//		wifi_t.real_seconds=32;
+      if(run_t.gTimer_send_dit > 49){
 
-//       SendData_Real_GMT(wifi_t.real_hours,wifi_t.real_minutes);
-//	   HAL_Delay(5);
-//	   SendData_Real_GMT_Second(wifi_t.real_seconds);
-//	   HAL_Delay(5);
-//	 }
+          run_t.gTimer_send_dit=0;
+		  Update_DHT11_Value();
 
+
+
+	  }
 	
     
     break;

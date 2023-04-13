@@ -114,6 +114,8 @@ typedef struct _RUN_T{
 	  uint8_t  set_wind_speed_value;
 	  uint8_t auto_link_cloud_flag;
 	  uint8_t reconnect_tencent_cloud_flag;
+	  uint8_t gTimer_to_publish_updata;
+	  uint8_t  gTimer_send_dit;
       
   
 	  uint8_t  wind_speed_decade;
