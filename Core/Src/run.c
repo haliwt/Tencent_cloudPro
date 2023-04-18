@@ -184,20 +184,22 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
          
     case 0xAA: //power_on 
       if(run_t.gPower_flag == POWER_ON){
-       run_t.works_break_power_on = 0;
-
+       	run_t.works_break_power_on = 0;
+          FAN_CCW_RUN();
+	      run_t.gFan_continueRun=0; 
       	}
 	   
     break;
 
 	case 0x55: //power off
 	   if(run_t.gPower_flag == POWER_ON){
+	   	run_t.works_break_power_on = 1;
 		PTC_SetLow();
 		PLASMA_SetLow();
-		HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic off	
+		HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic off
         run_t.gFan_continueRun=1; 
 		run_t.gFan_counter=0;
-		run_t.works_break_power_on = 1;
+		
 	   	}
 
 	break;
