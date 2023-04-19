@@ -299,6 +299,7 @@ void AutoRepeate_Link_Tencent_Cloud(void)
 {
     
 	 static uint8_t wifi_en,wifi_det;
+	 if(run_t.auto_link_cloud_flag !=0xff){
      if( wifi_t.gTimer_reconnect_wifi_order  > 15  && wifi_en ==0){
 	   	   wifi_en++;
 		   wifi_det=0;;
@@ -322,6 +323,8 @@ void AutoRepeate_Link_Tencent_Cloud(void)
 	
 	
 	 }
+	 }
+	
           
 	if(esp8266data.esp8266_login_cloud_success==1 ){
 		  run_t.auto_link_cloud_flag=0xff;

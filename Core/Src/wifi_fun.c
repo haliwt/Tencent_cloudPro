@@ -214,37 +214,41 @@ void RunWifi_Command_Handler(void)
      
           }
 		 #if 1
-			if(wifi_t.gTimer_reconnect_wifi > 52 && wifi_t.wifi_reconnect_read_flag != 1){
-				
-			  wifi_t.gTimer_reconnect_wifi = 0;
-
-			  Reconnection_Wifi_Order(); //WT.EDIT 2023.04.11
-
-
-			}
-			else if(wifi_t.gTimer_reconnect_wifi > 34 && wifi_t.wifi_reconnect_read_flag == 1){
-                  wifi_t.gTimer_reconnect_wifi=0;
-			      Reconnection_Wifi_Order(); //WT.EDIT 2023.04.11
-
-
-			}
+//			if(wifi_t.gTimer_reconnect_wifi > 52 && wifi_t.wifi_reconnect_read_flag != 1){
+//				
+//			  wifi_t.gTimer_reconnect_wifi = 0;
+//
+//			  Reconnection_Wifi_Order(); //WT.EDIT 2023.04.11
+//
+//
+//			}
+//			else if(wifi_t.gTimer_reconnect_wifi > 34 && wifi_t.wifi_reconnect_read_flag == 1){
+//                  wifi_t.gTimer_reconnect_wifi=0;
+//			      Reconnection_Wifi_Order(); //WT.EDIT 2023.04.11
+//
+//
+//			}
          
-			if(wifi_t.wifi_reconnect_read_flag == 1){
-                  if(det_no_wifi_net==0){
+			if(wifi_t.wifi_reconnect_read_flag == 1 && det_no_wifi_net==0){
+                 
 				  	det_no_wifi_net++;
+					run_t.auto_link_cloud_flag=0;
 			        SendWifiData_To_Cmd(0x0) ;
 				  run_t.auto_link_cloud_flag=0;
-				  run_t.reconnect_tencent_cloud_flag = 1;
+
 				  esp8266data.esp8266_login_cloud_success=0;
 
-                  }
+              }
 
-             
+			   if(wifi_t.wifi_reconnect_read_flag == 1 && run_t.auto_link_cloud_flag==0 ){
+               
 			       AutoRepeate_Link_Tencent_Cloud();
+				   wifi_t.runCommand_order_lable= wifi_publish_update_tencent_cloud_data;
+			   	}
 				
-			        wifi_t.runCommand_order_lable= wifi_publish_update_tencent_cloud_data;
+			       
 					
-                   }
+                   
 			 
 
 			     if(det_no_wifi_net==1){
@@ -253,14 +257,16 @@ void RunWifi_Command_Handler(void)
                              det_no_wifi_net=0;
 							 run_t.reconnect_tencent_cloud_flag=0;
                             run_t.auto_link_cloud_flag=0xff;
-                            wifi_t.runCommand_order_lable=wifi_has_been_connected;
 							esp8266data.rx_link_cloud_flag =0;
+                           // wifi_t.runCommand_order_lable=wifi_has_been_connected;
                             SendWifiData_To_Cmd(0x01) ;
                             HAL_Delay(10);
-                            Publish_Data_ToTencent_Update_Data();
-                            HAL_Delay(300);
+                          
                             
                             Subscriber_Data_FromCloud_Handler();
+                            HAL_Delay(300);
+
+							Publish_Data_ToTencent_Update_Data();
                             HAL_Delay(300);
                         }
                         else{
@@ -283,10 +289,7 @@ void RunWifi_Command_Handler(void)
 
 	   case wifi_tencent_publish_dht11_data://6
 	   	   wifi_t.get_rx_beijing_time_flag=0;
-//            if(gamt_recode==0){
-//                 gamt_recode ++;
-//                 wifi_t.gTimer_get_beijing_time=0;
-//			}
+
 			esp8266data.gTimer_subscription_timing=0;
 			
             esp8266data.gTimer_publish_dht11=0;
