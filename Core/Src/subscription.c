@@ -83,7 +83,7 @@ void Subscriber_Data_FromCloud_Handler(void)
 ********************************************************************************/
 void Subscribe_Rx_Interrupt_Handler(void)
 {
-    static uint8_t det_wifi_link;
+      static uint8_t det_wifi_link;
     switch(esp8266data.rx_data_state)
       {
       case 0:  //#0
@@ -158,7 +158,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
       break;
 
       case 7:
-       if((UART2_DATA.UART_DataBuf[0] == '"')||UART2_DATA.UART_DataBuf[0]=='S'){  //hex :4B - "K" -fixed
+       if((UART2_DATA.UART_DataBuf[0] == '"')||UART2_DATA.UART_DataBuf[0]=='R' ||UART2_DATA.UART_DataBuf[0]=='C' ){  //hex :4B - "K" -fixed
          esp8266data.rx_data_state=8; //=1
     	}
 		else if(UART2_DATA.UART_DataBuf[0]==':' ){
@@ -173,8 +173,8 @@ void Subscribe_Rx_Interrupt_Handler(void)
            
       break;
 
-        case 8:
-       if((UART2_DATA.UART_DataBuf[0] == ':') ||UART2_DATA.UART_DataBuf[0]=='T') //hex :4B - "K" -fixed
+       case 8:
+       if((UART2_DATA.UART_DataBuf[0] == ':') ||UART2_DATA.UART_DataBuf[0]=='E' ||UART2_DATA.UART_DataBuf[0]=='O' ) //hex :4B - "K" -fixed
          esp8266data.rx_data_state=9; //=1
          else{
            esp8266data.rx_data_state =0;
@@ -187,8 +187,9 @@ void Subscribe_Rx_Interrupt_Handler(void)
 
 
       case 9:
-       if((UART2_DATA.UART_DataBuf[0] == '{') ||UART2_DATA.UART_DataBuf[0]=='A') //hex :4B - "K" -fixed
+       if((UART2_DATA.UART_DataBuf[0] == '{') ||UART2_DATA.UART_DataBuf[0]=='C' ||UART2_DATA.UART_DataBuf[0]=='N'){ //hex :4B - "K" -fixed
          esp8266data.rx_data_state=10; //=1
+       	}
          else{
            esp8266data.rx_data_state =0;
             esp8266data.rx_counter=0;
@@ -230,9 +231,9 @@ void Subscribe_Rx_Interrupt_Handler(void)
 			}
 
 		  }
-		 else if(UART2_DATA.UART_DataBuf[0]=='T'){
+		 else if(UART2_DATA.UART_DataBuf[0]=='O' || UART2_DATA.UART_DataBuf[0]=='N'){
 
-                   esp8266data.rx_data_state=11; //=1
+                  esp8266data.rx_data_state=11; //=1
 
 
 		 }
@@ -248,36 +249,128 @@ void Subscribe_Rx_Interrupt_Handler(void)
 
 
 	  case 11:
-		if(UART2_DATA.UART_DataBuf[0]=='E'){
+		if(UART2_DATA.UART_DataBuf[0]=='N' ||UART2_DATA.UART_DataBuf[0]==':'){
 		
-						 esp8266data.rx_data_state=12; //=1
+			esp8266data.rx_data_state=12; //=1
 		
 		
+		}
+		else{
+		  esp8266data.rx_data_state=0; 
+
 		}
 
       break;
 
       case 12:
-		if(UART2_DATA.UART_DataBuf[0]==':'){
+		if(UART2_DATA.UART_DataBuf[0]=='N' || UART2_DATA.UART_DataBuf[0]=='O'){
 		
-						 esp8266data.rx_data_state=13; //=1
+			esp8266data.rx_data_state=13; //=1
 		
 		
+		}
+		else{
+		  esp8266data.rx_data_state=0; 
+
 		}
 
       break;
 
-	   case 13:
-	
+	  case 13:
+		if(UART2_DATA.UART_DataBuf[0]=='E' ){
 		
-			wifi_t.wifi_reconnect_read_flag = UART2_DATA.UART_DataBuf[0];
+			esp8266data.rx_data_state=14; //=1
+		
+		
+		}
+		else if(UART2_DATA.UART_DataBuf[0]=='K'){
+
+
+            wifi_t.wifi_reconnect_read_flag = 0;
 		    esp8266data.rx_data_state =0;
             esp8266data.rx_counter=0;
 
-		 
-						 
-	
+		}
+		else{
+		  esp8266data.rx_data_state=0; 
+
+		}
+
       break;
+
+	  case 14:
+		if(UART2_DATA.UART_DataBuf[0]=='C'){
+		
+			esp8266data.rx_data_state=15; //=1
+		
+		
+		}
+		else{
+		  esp8266data.rx_data_state=0; 
+
+		}
+
+      break;
+
+	  case 15:
+		if(UART2_DATA.UART_DataBuf[0]=='T'){
+		
+			esp8266data.rx_data_state=16; //=1
+		
+		
+		}
+		else{
+		  esp8266data.rx_data_state=0; 
+
+		}
+
+      break;
+
+	  case 16:
+		if(UART2_DATA.UART_DataBuf[0]=='I'){
+		
+			esp8266data.rx_data_state=17; //=1
+		
+		
+		}
+		else{
+		  esp8266data.rx_data_state=0; 
+
+		}
+
+      break;
+
+	  case 17:
+		if(UART2_DATA.UART_DataBuf[0]=='N'){
+		
+				esp8266data.rx_data_state=18; //=1
+		
+		
+		}
+        else{
+		  esp8266data.rx_data_state=0; 
+
+		}
+
+      break;
+
+	  case 18:
+		if(UART2_DATA.UART_DataBuf[0]=='G'){
+		
+			wifi_t.wifi_reconnect_read_flag = 1;
+		    esp8266data.rx_data_state =0;
+            esp8266data.rx_counter=0;
+		
+		
+		}
+        else{
+		  esp8266data.rx_data_state=0; 
+
+		}
+
+      break;
+
+	
 
 	  
 
@@ -289,6 +382,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
  
 
 }
+ 
 /*******************************************************************************
 **
 *Function Name:void Subscribe_Rx_IntHandler(void)

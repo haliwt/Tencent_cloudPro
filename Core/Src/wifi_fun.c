@@ -214,7 +214,7 @@ void RunWifi_Command_Handler(void)
      
           }
 		 #if 1
-			if(wifi_t.gTimer_reconnect_wifi > 34){
+			if(wifi_t.gTimer_reconnect_wifi > 52 && wifi_t.wifi_reconnect_read_flag != 1){
 				
 			  wifi_t.gTimer_reconnect_wifi = 0;
 
@@ -222,8 +222,14 @@ void RunWifi_Command_Handler(void)
 
 
 			}
+			else if(wifi_t.gTimer_reconnect_wifi > 34 && wifi_t.wifi_reconnect_read_flag == 1){
+                  wifi_t.gTimer_reconnect_wifi=0;
+			      Reconnection_Wifi_Order(); //WT.EDIT 2023.04.11
+
+
+			}
          
-			if(wifi_t.wifi_reconnect_read_flag == 0x30){
+			if(wifi_t.wifi_reconnect_read_flag == 1){
                   if(det_no_wifi_net==0){
 				  	det_no_wifi_net++;
 			        SendWifiData_To_Cmd(0x0) ;
@@ -248,6 +254,7 @@ void RunWifi_Command_Handler(void)
 							 run_t.reconnect_tencent_cloud_flag=0;
                             run_t.auto_link_cloud_flag=0xff;
                             wifi_t.runCommand_order_lable=wifi_has_been_connected;
+							esp8266data.rx_link_cloud_flag =0;
                             SendWifiData_To_Cmd(0x01) ;
                             HAL_Delay(10);
                             Publish_Data_ToTencent_Update_Data();
@@ -338,14 +345,7 @@ void RunWifi_Command_Handler(void)
 	         wifi_t.runCommand_order_lable=wifi_publish_update_tencent_cloud_data;
 		   }
 
-//		   if(run_t.gTimer_to_publish_updata > 4){
 
-//			   run_t.gTimer_to_publish_updata=0;
-
-//		       wifi_t.runCommand_order_lable=wifi_publish_update_tencent_cloud_data;
-
-
-//		   }
 
 		 
 		 
