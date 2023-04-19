@@ -184,22 +184,20 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
          
     case 0xAA: //power_on 
       if(run_t.gPower_flag == POWER_ON){
-       	run_t.works_break_power_on = 0;
-          FAN_CCW_RUN();
-	      run_t.gFan_continueRun=0; 
+       run_t.works_break_power_on = 0;
+
       	}
 	   
     break;
 
 	case 0x55: //power off
 	   if(run_t.gPower_flag == POWER_ON){
-	   	run_t.works_break_power_on = 1;
 		PTC_SetLow();
 		PLASMA_SetLow();
-		HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic off
+		HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic off	
         run_t.gFan_continueRun=1; 
 		run_t.gFan_counter=0;
-		
+		run_t.works_break_power_on = 1;
 	   	}
 
 	break;
@@ -543,13 +541,16 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
         WIFI_IC_ENABLE();
       	//InitWifiModule();
 		//Wifi_SoftAP_Config_Handler();
-		PowerOn_Self_Auto_Link_Tencent_Cloud();
+		//PowerOn_Self_Auto_Link_Tencent_Cloud();
+		  InitWifiModule_Hardware();//InitWifiModule();
 		
         SmartPhone_TryToLink_TencentCloud();
  
 		if(esp8266data.esp8266_login_cloud_success==1){
 			wifi_t.runCommand_order_lable = wifi_publish_update_tencent_cloud_data;
-			//esp8266data.gTimer_subscription_timing=0;
+			esp8266data.gTimer_subscription_timing=0;
+			 SendWifiData_To_Cmd(0x01) ;
+			Subscriber_Data_FromCloud_Handler();
 		}
         else wifi_t.runCommand_order_lable =0xff;
 
@@ -563,7 +564,9 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
    if(esp8266data.esp8266_login_cloud_success==1 &&  self_power_on_flag==1){
         self_power_on_flag++;
 			wifi_t.runCommand_order_lable = wifi_publish_update_tencent_cloud_data;
-			//esp8266data.gTimer_subscription_timing=0;
+		esp8266data.gTimer_subscription_timing=0;
+			 SendWifiData_To_Cmd(0x01) ;
+   			Subscriber_Data_FromCloud_Handler();
 	}
 
 

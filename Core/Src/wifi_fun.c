@@ -162,7 +162,8 @@ void RunWifi_Command_Handler(void)
 
 	   	case wifi_publish_update_tencent_cloud_data://05
            
-	            wifi_t.get_rx_beijing_time_flag=0;
+                if(esp8266data.esp8266_login_cloud_success==1){
+				wifi_t.get_rx_beijing_time_flag=0;
 	            if(esp8266data.gTimer_publish_timing>240 ){
 						esp8266data.gTimer_publish_timing=0;
 			            Publish_Data_ToTencent_Update_Data();
@@ -211,9 +212,9 @@ void RunWifi_Command_Handler(void)
 		   	  wifi_t.runCommand_order_lable= wifi_tencent_publish_dht11_data;
            	}
      
-
-		 #if 0
-			if(wifi_t.gTimer_reconnect_wifi > 183){
+          }
+		 #if 1
+			if(wifi_t.gTimer_reconnect_wifi > 34){
 				
 			  wifi_t.gTimer_reconnect_wifi = 0;
 
@@ -233,9 +234,9 @@ void RunWifi_Command_Handler(void)
                   }
 
              
-			      
-				  AutoRepeate_Link_Tencent_Cloud();
-			
+			       AutoRepeate_Link_Tencent_Cloud();
+				
+			        wifi_t.runCommand_order_lable= wifi_publish_update_tencent_cloud_data;
 					
                    }
 			 
