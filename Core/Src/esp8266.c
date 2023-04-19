@@ -299,45 +299,33 @@ void AutoRepeate_Link_Tencent_Cloud(void)
 {
     
 	 static uint8_t wifi_en,wifi_det;
-	 if(run_t.auto_link_cloud_flag !=0xff){
-     if( wifi_t.gTimer_reconnect_wifi_order  > 15  && wifi_en ==0){
-	   	   wifi_en++;
-		   wifi_det=0;;
-		 wifi_t.gTimer_reconnect_wifi_order=0;
+	 if(esp8266data.esp8266_login_cloud_success==0){
+	     if( wifi_t.gTimer_reconnect_wifi_order  > 15  && wifi_en ==0){
+		   	   wifi_en++;
+			   wifi_det=0;;
+			 wifi_t.gTimer_reconnect_wifi_order=0;
 
-	   InitWifiModule_Hardware();//InitWifiModule();
-  
-     	}
+		   InitWifiModule_Hardware();//InitWifiModule();
+	  
+	     	}
 
-	if(wifi_t.gTimer_reconnect_wifi_order > 5 && wifi_det==0){
-		wifi_det ++;
-		wifi_en=0;
+		if(wifi_t.gTimer_reconnect_wifi_order > 5 && wifi_det==0){
+			wifi_det ++;
+			wifi_en=0;
 
-		wifi_t.gTimer_reconnect_wifi_order=0;
+			wifi_t.gTimer_reconnect_wifi_order=0;
 
-        esp8266data.rx_link_cloud_flag =1; //enable usart2 receive wifi  data
-        UART2_DATA.UART_Cnt=0;
-	    wifi_t.soft_ap_config_flag =0;
-        HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
-	
-	
-	
+	        esp8266data.rx_link_cloud_flag =1; //enable usart2 receive wifi  data
+	        UART2_DATA.UART_Cnt=0;
+		    wifi_t.soft_ap_config_flag =0;
+	        HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
+		
+		
+		
+		 }
 	 }
-	 }
 	
-          
-	if(esp8266data.esp8266_login_cloud_success==1 ){
-		  run_t.auto_link_cloud_flag=0xff;
-	      wifi_t.runCommand_order_lable = wifi_publish_update_tencent_cloud_data;
-			   //esp8266data.gTimer_subscription_timing=0;
-	   }
-	   else{
-
-            	run_t.auto_link_cloud_flag=0;
-
-
-	   }
-
+   
 
 }
 
