@@ -162,6 +162,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 			 MqttData_Publish_SetOpen(0x01);
 	         HAL_Delay(200);
 	         Publish_Data_ToTencent_Initial_Data();
+			 HAL_Delay(200);
 		 }
 		 
 	// cmd=0xff;  
@@ -409,6 +410,8 @@ void RunCommand_MainBoard_Fun(void)
        }
         else
             run_t.RunCommand_Label=0xff;
+		MqttData_Publish_SetOpen(0x0);
+		
 		
       
 	break;
@@ -513,6 +516,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
         Buzzer_KeySound();
 	    run_t.iwdg_feed_success_flag =1;
 		run_t.flash_read_data =Flash_Read_Data();
+		run_t.RunCommand_Label = POWER_OFF;
 		switch(run_t.flash_read_data){
 
 	     case error: //wifi don't link to tencent cloud ,need manual operation
@@ -548,7 +552,9 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 			wifi_t.runCommand_order_lable = wifi_publish_update_tencent_cloud_data;
 			esp8266data.gTimer_subscription_timing=0;
 			 SendWifiData_To_Cmd(0x01) ;
+            HAL_Delay(100);
 			Subscriber_Data_FromCloud_Handler();
+			HAL_Delay(100);
 		}
         else wifi_t.runCommand_order_lable =0xff;
 
@@ -564,7 +570,9 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 			wifi_t.runCommand_order_lable = wifi_publish_update_tencent_cloud_data;
 		esp8266data.gTimer_subscription_timing=0;
 			 SendWifiData_To_Cmd(0x01) ;
+			 HAL_Delay(100);
    			Subscriber_Data_FromCloud_Handler();
+			HAL_Delay(100);
 	}
 
 
