@@ -76,7 +76,8 @@ void SetTemperatureHost(void(*temperatureHandler)(void))
 ***********************************************/
 void RunWifi_Command_Handler(void)
 {
-     static uint8_t first_sub,subscription_flag,beijing_time_flag,beijing_time_send_data;
+     uint32_t temp;
+    static uint8_t first_sub,subscription_flag,beijing_time_flag,beijing_time_send_data;
 	 static uint8_t beijing_flag,gamt_recode,publish_flag,det_no_wifi_net ;
 	 static uint8_t  update_publish_times=0;
 
@@ -208,12 +209,29 @@ void RunWifi_Command_Handler(void)
 			         Subscriber_Data_FromCloud_Handler();
 
 	            }
-//	            if(wifi_t.gTimer_publish_times > 3 && publish_flag < 2 ){
-//	                publish_flag ++ ;
-//	            	wifi_t.gTimer_publish_times=0;
-//	            	Publish_Data_ToTencent_Initial_Data();
-//
-//	            }
+	            if(wifi_t.gTimer_publish_times > 29  ){
+	            	wifi_t.gTimer_publish_times=0;
+                    
+                   __HAL_UART_CLEAR_OREFLAG(&huart2);
+                      __HAL_UART_CLEAR_NEFLAG(&huart2);
+                       __HAL_UART_CLEAR_FEFLAG(&huart2);
+
+                 
+                  
+                  temp=USART2->ISR;
+                  temp = USART2->RDR;
+
+                   UART_Start_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,1);
+		
+		
+          
+		  
+          
+         
+				    Subscriber_Data_FromCloud_Handler();
+	            	//Publish_Data_ToTencent_Initial_Data();
+
+	            }
 
 		    while(beijing_time_flag == 1){
                  beijing_time_flag = 0;

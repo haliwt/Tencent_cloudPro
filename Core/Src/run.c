@@ -99,11 +99,11 @@ void Decode_RunCmd(void)
 
 	  case 'M':
 	  	if(run_t.gPower_flag==POWER_ON){
-              
+           
              run_t.set_temperature_value = cmdType_2;
 			 if(esp8266data.esp8266_login_cloud_success==1)
 			       MqttData_Publis_SetTemp(run_t.set_temperature_value);
-			   
+			  
          }
 	  
 
@@ -111,7 +111,7 @@ void Decode_RunCmd(void)
 
 	  case 'T':
 		  if(run_t.gPower_flag==POWER_ON){
-             #if 1
+             #if 0
              run_t.set_temperature_value = cmdType_2;
 			 if(esp8266data.esp8266_login_cloud_success==1)
 				 MqttData_Publis_SetTime(run_t.set_temperature_value);
@@ -281,7 +281,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
        break;
 
        case FAN_ON:
-          run_t.set_wind_speed_value=100;
+          run_t.set_wind_speed_value=99;
 		  if(esp8266data.esp8266_login_cloud_success==1)
 		  MqttData_Publis_SetFan(100);
 		   Buzzer_KeySound();

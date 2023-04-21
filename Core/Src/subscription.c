@@ -681,14 +681,14 @@ void Tencent_Cloud_Rx_Handler(void)
 	    if(run_t.gPower_flag ==POWER_ON){
 			//Buzzer_KeySound();
             if(UART2_DATA.UART_Data[7]==0x31 && UART2_DATA.UART_Data[8]==0x30 && UART2_DATA.UART_Data[9]==0x30){
-		           run_t.set_wind_speed_value =100;
+		           run_t.set_wind_speed_value =99;
             }
 			else{
            		 wind_decade=UART2_DATA.UART_Data[7]-0x30;
 	       		 wind_unit=UART2_DATA.UART_Data[8]-0x30;
                  run_t.set_wind_speed_value = wind_decade*10 + wind_unit;
 			}
-            if(run_t.set_wind_speed_value > 100) run_t.set_wind_speed_value=100;
+            if(run_t.set_wind_speed_value > 100) run_t.set_wind_speed_value=99;
             if(run_t.set_wind_speed_value < 1) run_t.set_wind_speed_value=0;
 			  MqttData_Publis_SetFan(run_t.set_wind_speed_value);
     		SendWifiData_To_PanelWindSpeed(run_t.set_wind_speed_value);
