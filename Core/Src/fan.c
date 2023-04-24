@@ -3,23 +3,41 @@
 #include "tim.h"
 #include "run.h"
 #include "delay.h"
+#include "tim.h"
 
 
+static void SetLevel_Fan_PWMA(uint8_t levelval);
 
 
 void FAN_CCW_RUN(void)
 {
-   FAN_CW_SetLow();
-   FAN_CCW_SetHigh();
+  // FAN_CW_SetLow();
+   SetLevel_Fan_PWMA(100);
   
 }
 
 void FAN_Stop(void)
 {
-    FAN_CCW_SetLow(); //brake
     FAN_CW_SetLow(); //brake
+    HAL_TIM_PWM_Stop(&htim16,TIM_CHANNEL_1);
 }
 
+void Fan_One_Speed(void)
+{
+	SetLevel_Fan_PWMA(25);
+
+
+}
+
+
+void Fan_Two_Speed(void)
+{
+	SetLevel_Fan_PWMA(50);
+}
+
+
+
+#if 0
 void Fan_Two_Speed(void)
 {
    static uint16_t fan_speed;
@@ -46,7 +64,9 @@ void Fan_Two_Speed(void)
 	}
 
 }
+#endif 
 
+#if 0
 void Fan_One_Speed(void)
 {
     static uint16_t fan_speed;
@@ -75,13 +95,14 @@ void Fan_One_Speed(void)
 
 
 }
-
+#endif 
 void Fan_Full_Speed(void)
 {
      FAN_CCW_RUN();
 
 }
 
+#if 0
 void Fan_Slowly_Speed(void)
 {
     static uint16_t fan_speed;
@@ -106,7 +127,7 @@ void Fan_Slowly_Speed(void)
 	 }
 	
 }
-
+#endif
 
 
 void ShutDown_AllFunction(void)
@@ -173,6 +194,20 @@ void Fan_RunSpeed_Fun(void)
 		 	FAN_CCW_RUN();
 
 
+}
+/********************************************************
+*
+*Function Name:void SetLevel_Fan_PWMA(uint8_t levelval)
+*Function: 
+*
+*
+********************************************************/
+static void SetLevel_Fan_PWMA(uint8_t levelval)
+{
+     run_t.gFan_pwm_duty_level = levelval;
+     FAN_CW_SetLow();
+	 MX_TIM16_Init();
+	 HAL_TIM_PWM_Start(&htim16,TIM_CHANNEL_1);
 }
 
 

@@ -70,7 +70,7 @@ typedef struct _RUN_T{
 	uint8_t gDht11_humidity ;
 	uint8_t gDht11_temperature;
 
-    uint8_t gFan_continueRun;
+    
 
 	uint8_t RunCommand_Label;
 	uint8_t dp_link_wifi_fail;
@@ -95,17 +95,22 @@ typedef struct _RUN_T{
 	uint8_t flash_write_data_flag;
     uint8_t flash_read_data;
 	uint8_t works_break_power_on;
-	
+
+	//fan:
+	uint8_t gFan_pwm_duty_level;
+	uint8_t gFan_continueRun;
+	uint8_t gFan_counter;
+	uint8_t  gFan;
       
 
       uint8_t  gAi;
       uint8_t  gPlasma;
       uint8_t  gDry;
-	  uint8_t  gFan;
+
 	  uint8_t  gUlransonic;
 	  uint8_t  gModel;
-      uint8_t Single_cmd ;
-	  uint8_t gFan_counter;
+      uint8_t  Single_cmd ;
+	
 	  uint8_t noBuzzer_sound_dry_flag;
 	  
 	  uint8_t  set_temperature_value;
