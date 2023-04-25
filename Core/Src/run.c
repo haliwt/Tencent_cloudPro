@@ -412,8 +412,14 @@ void RunCommand_MainBoard_Fun(void)
        }
         else
             run_t.RunCommand_Label=0xff;
-		MqttData_Publish_SetOpen(0x0);
-        HAL_Delay(100);
+
+		
+		//MqttData_Publish_SetOpen(0x0);
+       // HAL_Delay(100);
+
+		MqttData_Publish_PowerOff_Ref(); 
+		HAL_Delay(200);
+		
         Subscriber_Data_FromCloud_Handler();
 		HAL_Delay(100);
 		

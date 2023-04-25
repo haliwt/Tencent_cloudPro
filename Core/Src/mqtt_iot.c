@@ -19,6 +19,7 @@
 /* MAX size of client ID */
 
 
+static void Mqtt_power_off_Value(void);
 
 static void property_report_SetOpen(uint8_t open);
 static void Mqtt_Value_update_data(void);
@@ -34,6 +35,8 @@ static void property_report_SetTemp(uint8_t temp);
 static void property_report_SetFan(uint8_t fan);
 static void property_report_SetTime(uint8_t time);
 static void property_report_SetState(uint8_t dat);
+static void property_report_power_off_state(void);
+
 
 
 typedef struct {
@@ -88,6 +91,23 @@ static void Mqtt_Value_update_data(void)
 
 }
 
+static void Mqtt_power_off_Value(void)
+{
+    //run_t.set_wind_speed_value=90;
+   // run_t.set_temperature_value=20;
+   	sg_info.open=0;
+    sg_info.state=0;
+    sg_info.ptc=0; 
+    sg_info.anion=0;  //灭菌
+	sg_info.sonic =0;  //驱虫
+    sg_info.find=run_t.set_wind_speed_value;
+	if(run_t.set_temperature_value <20)run_t.set_temperature_value = 20;
+	else if(run_t.set_temperature_value > 40 )run_t.set_temperature_value = 40;
+	sg_info.set_temperature =  run_t.set_temperature_value ;
+	
+}
+
+
 /********************************************************************************
 	*
 	*Function Name:static void property_report_Temp_Humidity(void)
@@ -131,6 +151,7 @@ static void property_report_state(void)
    
 }
 
+
 void property_report_update_data(void)
 {
 	char  message[256]    = {0};
@@ -145,6 +166,23 @@ void property_report_update_data(void)
 
 
 }
+
+static void property_report_power_off_state(void)
+{
+
+	char       message[256]    = {0};
+    int        message_len     = 0;
+
+   Mqtt_power_off_Value();
+   message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up01\\\"\\,\\\"params\\\":{\\\"open\\\":%d\\,\\\"Anion\\\":%d\\,\\\"ptc\\\":%d\\,\\\"sonic\\\":%d\\,\\\"state\\\":%d\\,\\\"find\\\":%d\\,\\\"temperature\\\":%d}}\"\r\n",
+                             sg_info.open,sg_info.anion,sg_info.ptc,sg_info.sonic,sg_info.state,sg_info.find,sg_info.set_temperature);
+                               
+ 
+  at_send_data((uint8_t *)message, message_len);
+
+
+}
+
 
 /********************************************************************************
 	*
@@ -368,6 +406,13 @@ void MqttData_Publish_SetState(uint8_t sdat) //Ai model
 }
 
 
+void MqttData_Publish_PowerOff_Ref(void) //
+{
+   property_topic_publish();
+
+   property_report_power_off_state();
+
+}
 
 /********************************************************************************
 	*

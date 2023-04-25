@@ -53,4 +53,7 @@ void MqttData_Publish_SetUltrasonic(uint8_t datsonic); //超声波;
 
 void MqttData_Publish_SetState(uint8_t sdat); //Ai model
 
+void MqttData_Publish_PowerOff_Ref(void) ; //power off 
+
+
 #endif /* QCLOUD_IOT_EXPORT_MQTT_H_ */
