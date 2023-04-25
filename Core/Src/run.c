@@ -11,6 +11,7 @@
 #include "publish.h"
 #include "flash.h"
 #include "usart.h"
+#include "subscription.h"
 
 
 RUN_T run_t; 
@@ -545,7 +546,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
         WIFI_IC_ENABLE();
     
 		  InitWifiModule_Hardware();//InitWifiModule();
-		
+		  HAL_Delay(1000);
         SmartPhone_TryToLink_TencentCloud();
  
 		if(esp8266data.esp8266_login_cloud_success==1){

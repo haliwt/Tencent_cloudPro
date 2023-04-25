@@ -209,7 +209,7 @@ void RunWifi_Command_Handler(void)
 			         Subscriber_Data_FromCloud_Handler();
 
 	            }
-	            if(wifi_t.gTimer_publish_times > 29  ){
+	            if(wifi_t.gTimer_publish_times > 360  ){
 	            	wifi_t.gTimer_publish_times=0;
                     
                    __HAL_UART_CLEAR_OREFLAG(&huart2);
@@ -275,7 +275,7 @@ void RunWifi_Command_Handler(void)
 			
             esp8266data.gTimer_publish_dht11=0;
 			Update_Dht11_Totencent_Value();
-			if(wifi_t.gTimer_get_beijing_time > 5){
+			if(wifi_t.gTimer_get_beijing_time > 430){
 			   wifi_t.gTimer_get_beijing_time=0;
 			   gamt_recode=0;
 			   wifi_t.get_rx_beijing_time_flag=1;
@@ -329,7 +329,7 @@ void RunWifi_Command_Handler(void)
 	         wifi_t.runCommand_order_lable=wifi_publish_update_tencent_cloud_data;
 		   }
 
-
+	      
 
 		 
 		 

@@ -566,9 +566,9 @@ void Tencent_Cloud_Rx_Handler(void)
          MqttData_Publish_SetPtc(0x01);
 	     run_t.gDry=1;
 		 SendWifiCmd_To_Order(WIFI_PTC_ON);
-        
+          run_t.response_wifi_signal_label=0xff;
 	  	}
-	 run_t.response_wifi_signal_label = 0xff;
+	
 	   break;
 
 	  case PTC_OFF_ITEM:
@@ -712,16 +712,12 @@ void Tencent_Cloud_Rx_Handler(void)
          
 		run_t.response_wifi_signal_label=0xf0;
 
-		for(i=0;i<50;i++){
-		UART2_DATA.UART_Data[i]=0;
+		for(i=0;i<20;i++){
+		   UART2_DATA.UART_Data[i]=0;
 
-
-		}
-		 temp =USART2->ISR;
-	     temp = USART2->RDR;
+        }
 		
-
-   }
+		}
 	
    
 }
