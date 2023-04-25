@@ -595,7 +595,7 @@ void Tencent_Cloud_Rx_Handler(void)
 	   run_t.response_wifi_signal_label = 0xff;
 	  	break;
 		
-	  case ANION_ON_ITEM:
+	  case ANION_ON_ITEM: //plasma 
 	  	if(run_t.gPower_flag ==POWER_ON){
 		//	 Buzzer_KeySound();
             MqttData_Publish_SetPlasma(1);
@@ -607,10 +607,9 @@ void Tencent_Cloud_Rx_Handler(void)
 	   run_t.response_wifi_signal_label=0xff;
 	    break;
 
-	  case SONIC_OFF_ITEM:
+	  case SONIC_OFF_ITEM://ultransonic off
         if(run_t.gPower_flag ==POWER_ON){
 
-		 //   Buzzer_KeySound();
             MqttData_Publish_SetUltrasonic(0);
             run_t.gUlransonic=0;
 			SendWifiCmd_To_Order(WIFI_SONIC_OFF);
@@ -620,9 +619,9 @@ void Tencent_Cloud_Rx_Handler(void)
 	   run_t.response_wifi_signal_label=0xff;
 	  	break;
 
-	  case SONIC_ON_ITEM:
+	  case SONIC_ON_ITEM://ultransonic off
 	    if(run_t.gPower_flag ==POWER_ON){
-		//	Buzzer_KeySound();
+		
              MqttData_Publish_SetUltrasonic(1);
             run_t.gUlransonic=1;
 			SendWifiCmd_To_Order(WIFI_SONIC_ON);

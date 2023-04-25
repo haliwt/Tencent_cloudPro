@@ -356,7 +356,7 @@ void SystemReset(void)
 void RunCommand_MainBoard_Fun(void)
 {
 
-   static uint8_t power_just_on;
+   static uint8_t power_just_on,send_link_times;
     
     if(run_t.buzzer_sound_flag == 1){
 	 	run_t.buzzer_sound_flag = 0;
@@ -423,11 +423,11 @@ void RunCommand_MainBoard_Fun(void)
 	      
 
 	 }
-	 if(esp8266data.esp8266_login_cloud_success==1){
-	 	   if(run_t.gTimer_send_login_sucess > 11){
-	 	        SendWifiData_To_Cmd(0x01) ;
-	 	   	}
-	   }
+//	 if(esp8266data.esp8266_login_cloud_success==1){
+//	 	   if(run_t.gTimer_send_login_sucess > 11){
+//	 	        SendWifiData_To_Cmd(0x01) ;
+//	 	   	}
+//	   }
 
       if(run_t.gTimer_send_dit > 49){
 
@@ -490,8 +490,8 @@ void RunCommand_MainBoard_Fun(void)
 
 	 }
 
-	 if(esp8266data.esp8266_login_cloud_success==1 && run_t.dp_link_wifi_fail ==1){
-	 	     run_t.dp_link_wifi_fail=0;
+	 if(esp8266data.esp8266_login_cloud_success==1 && send_link_times ==0){
+	 	   send_link_times++;
 	 	    SendWifiData_To_Cmd(0x01) ;
 	 }
 	 
