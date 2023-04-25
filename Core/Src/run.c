@@ -51,13 +51,13 @@ void Decode_RunCmd(void)
 	      if(run_t.gPower_flag==POWER_ON){
 	      if(cmdType_2==1){
 
-		      WIFI_IC_ENABLE();
+		     // WIFI_IC_ENABLE();
 			  tencent_cloud_flag=0;
 			  // wifi_link_tencent_cloud:
 			  Buzzer_KeySound();	
 		     // InitWifiModule_Hardware();
                esp8266data.esp8266_login_cloud_success=0;
-               run_t.wifi_config_net_lable=wifi_set_restor;
+              run_t.wifi_config_net_lable=wifi_set_restor;
               wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;//2 
                 temp =USART2->ISR;
 	     		temp = USART2->RDR;
@@ -393,6 +393,7 @@ void RunCommand_MainBoard_Fun(void)
         
     case POWER_OFF: //2
 		SetPowerOff_ForDoing();
+		 run_t.send_link_cloud_times=0;
 		if(esp8266data.esp8266_login_cloud_success==1){
 	 	     tencent_cloud_flag = 1;
 		}
@@ -412,6 +413,9 @@ void RunCommand_MainBoard_Fun(void)
         else
             run_t.RunCommand_Label=0xff;
 		MqttData_Publish_SetOpen(0x0);
+        HAL_Delay(100);
+        Subscriber_Data_FromCloud_Handler();
+		HAL_Delay(100);
 		
 		
       
@@ -491,9 +495,11 @@ void RunCommand_MainBoard_Fun(void)
 
 	 }
 
-	 if(esp8266data.esp8266_login_cloud_success==1 && send_link_times ==0){
-	 	   send_link_times++;
+	 if(esp8266data.esp8266_login_cloud_success==1 && run_t.send_link_cloud_times <1 && run_t.gPower_On ==POWER_ON){
+	 	   run_t.send_link_cloud_times ++;
 	 	    SendWifiData_To_Cmd(0x01) ;
+	        HAL_Delay(50);
+	 
 	 }
 	 
 		
@@ -509,72 +515,75 @@ void RunCommand_MainBoard_Fun(void)
 **********************************************************************/
 void MainBoard_Self_Inspection_PowerOn_Fun(void)
 {
-    static uint8_t self_power_on_flag=0;
+    static uint8_t self_power_on_flag=0,send_power_off_flag=0;
     
 
 	if(self_power_on_flag==0){
         self_power_on_flag ++ ;
         Buzzer_KeySound();
-	    run_t.iwdg_feed_success_flag =1;
-		run_t.flash_read_data =Flash_Read_Data();
-		run_t.RunCommand_Label = POWER_OFF;
-		switch(run_t.flash_read_data){
-
-	     case error: //wifi don't link to tencent cloud ,need manual operation
-		      wifi_t.runCommand_order_lable = 0xff;
-		      run_t.flash_write_data_flag = 0;
-		 break;
-
-		 case success: //wifi has been linked to tencent cloud,need auto link to tencent cloud
-		 	//wifi_t.runCommand_order_lable = wifi_link_tencent_cloud;
-			run_t.flash_write_data_flag = 1;
-		  
-         break;
-
-
-
-		}
-	
-
-	switch(run_t.flash_write_data_flag){
-
-      case 0:
-
-      break;
-
-      case 1:
-        WIFI_IC_ENABLE();
+//	    run_t.iwdg_feed_success_flag =1;
+//		run_t.flash_read_data =Flash_Read_Data();
+//		run_t.RunCommand_Label = POWER_OFF;
+//		switch(run_t.flash_read_data){
+//
+//	     case error: //wifi don't link to tencent cloud ,need manual operation
+//		      wifi_t.runCommand_order_lable = 0xff;
+//		      run_t.flash_write_data_flag = 0;
+//		 break;
+//
+//		 case success: //wifi has been linked to tencent cloud,need auto link to tencent cloud
+//		 	//wifi_t.runCommand_order_lable = wifi_link_tencent_cloud;
+//			run_t.flash_write_data_flag = 1;
+//		  
+//         break;
+//
+//
+//
+//		}
+//	
+//
+//	switch(run_t.flash_write_data_flag){
+//
+//      case 0:
+//
+//      break;
+//
+//      case 1:
+       // WIFI_IC_ENABLE();
     
-		  InitWifiModule_Hardware();//InitWifiModule();
-		  HAL_Delay(1000);
+		InitWifiModule_Hardware();//InitWifiModule();
+		HAL_Delay(1000);
         SmartPhone_TryToLink_TencentCloud();
  
 		if(esp8266data.esp8266_login_cloud_success==1){
 			wifi_t.runCommand_order_lable = wifi_publish_update_tencent_cloud_data;
 			esp8266data.gTimer_subscription_timing=0;
-			 SendWifiData_To_Cmd(0x01) ;
-            HAL_Delay(100);
-			Subscriber_Data_FromCloud_Handler();
-			HAL_Delay(100);
+			SendWifiData_To_Cmd(0x01) ;
+            HAL_Delay(50);
+			
 		}
-        else wifi_t.runCommand_order_lable =0xff;
-
-
-      break;
-
-
-	}
-   }
+   
+    }
     
-   if(esp8266data.esp8266_login_cloud_success==1 &&  self_power_on_flag==1){
-        self_power_on_flag++;
-			wifi_t.runCommand_order_lable = wifi_publish_update_tencent_cloud_data;
-		esp8266data.gTimer_subscription_timing=0;
-			 SendWifiData_To_Cmd(0x01) ;
-			 HAL_Delay(100);
-   			Subscriber_Data_FromCloud_Handler();
-			HAL_Delay(100);
+    
+    
+    
+   if(esp8266data.esp8266_login_cloud_success==1 ){
+       
+           if(send_power_off_flag==0){
+            send_power_off_flag++;
+		    run_t.RunCommand_Label=POWER_OFF;
+			//wifi_t.runCommand_order_lable = wifi_publish_update_tencent_cloud_data;
+			esp8266data.gTimer_subscription_timing=0;
+			SendWifiData_To_Cmd(0x01) ;
+			 HAL_Delay(50);
+               
+           }
+   			
 	}
+   
+   
+   
 
 
 

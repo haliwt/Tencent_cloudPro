@@ -110,6 +110,7 @@ typedef struct _RUN_T{
 	  uint8_t  gUlransonic;
 	  uint8_t  gModel;
       uint8_t  Single_cmd ;
+	  uint8_t send_link_cloud_times;
 	
 	  uint8_t noBuzzer_sound_dry_flag;
 	  

@@ -82,7 +82,17 @@ void InitWifiModule_Hardware(void)
 		
 }
 
+void ReConnect_Wifi_Net_ATReset_Hardware(void)
+{
+	    WIFI_IC_DISABLE();
+		HAL_Delay(1000);
+		WIFI_IC_ENABLE();
+		at_send_data("AT+RESTORE\r\n", strlen("AT+RESTORE\r\n"));
+		HAL_Delay(1000);
 
+
+
+}
 
 
 
@@ -107,7 +117,7 @@ void Wifi_SoftAP_Config_Handler(void)
 
     case wifi_set_restor:
            //InitWifiModule();
-           InitWifiModule_Hardware();
+           ReConnect_Wifi_Net_ATReset_Hardware();//InitWifiModule_Hardware();
 		   HAL_Delay(1000);
            run_t.wifi_config_net_lable =wifi_set_cwmode;
 	break;

@@ -101,5 +101,7 @@ void PowerOn_Self_Auto_Link_Tencent_Cloud(void);
 void Reconnection_Wifi_Order(void);
 void AutoRepeate_Link_Tencent_Cloud(void);
 void AutoConnect_SmartPhone_TencentCloud(void);
+void ReConnect_Wifi_Net_ATReset_Hardware(void);
+
 
 #endif 
