@@ -47,6 +47,9 @@ typedef enum{
 	 FAN_ON =0x10,
 	 FAN_OFF = 0x11,
 
+	 MODE_AI = 0x30,
+	 MODE_TIMER = 0x31,
+
 	 WIFI_CONNECT_FAIL = 0x55,
      DISPLAY_PANNEL_CONNECT_WIFI_SUCCESS= 0xAA,
 

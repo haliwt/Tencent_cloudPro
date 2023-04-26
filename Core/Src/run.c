@@ -78,10 +78,12 @@ void Decode_RunCmd(void)
 		   else if(cmdType_2==0x14){
                 run_t.gModel =2; //turn off
                 Buzzer_KeySound();
+		        MqttData_Publish_SetState(0x0); //Ai model
             }
             else if(cmdType_2==0x04){
                 run_t.gModel =1;  //turn on
                 Buzzer_KeySound();
+			    MqttData_Publish_SetState(0x1); //Ai model
             }
            
            
@@ -294,6 +296,14 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 		       MqttData_Publis_SetFan(50);
 		    Buzzer_KeySound();
        break;
+
+	   case MODE_AI :
+
+	   break;
+	   
+	   case  MODE_TIMER:
+
+	   break;
 
 	   case WIFI_CONNECT_FAIL:
 

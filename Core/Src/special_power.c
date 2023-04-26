@@ -23,7 +23,7 @@ void SetPowerOn_ForDoing(void)
 	run_t.gDry = 1;
 	run_t.gPlasma =1;       //"杀菌"
 	run_t.gUlransonic = 1; // "驱虫"
-	run_t.gModel =1;
+	run_t.gModel =1;  //AI
     run_t.gFan_counter=0;
 	
     FAN_CCW_RUN();
@@ -45,7 +45,7 @@ void SetPowerOff_ForDoing(void)
     run_t.gDry = 0;
 	run_t.gPlasma =0;       //"杀菌"
 	run_t.gUlransonic = 0; // "驱虫"
-	run_t.gModel =0;
+	//run_t.gModel =1;
 	
     
 	PLASMA_SetLow(); //
