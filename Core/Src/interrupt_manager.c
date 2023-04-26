@@ -29,8 +29,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	   esp8266data.gTimer_publish_timing++;
 	   esp8266data.gTimer_subscription_timing++;
 
+	    wifi_t.gTimer_get_beijing_time++;
+
 	   wifi_t.gTimer_beijing_time++;
-	   wifi_t.gTimer_publish_times;
+	   wifi_t.gTimer_publish_times++;
 	   run_t.gTimer_send_cloud_state++;
 	   run_t.gTimer_send_login_sucess++;
 	   run_t.gTimer_check_iwdg_flag++;
@@ -46,10 +48,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
            run_t.gFan_counter++;
 		 
 	   }
-	   if(tm1>59){
-          tm1=0;
-           wifi_t.gTimer_get_beijing_time++;
-	   }
+	 
+          
+	   
       
 
 	 }

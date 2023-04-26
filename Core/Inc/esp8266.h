@@ -46,7 +46,7 @@ typedef struct ESP8266_DATA
 	uint8_t esp8266_link_cloud_flag;
 	uint8_t soft_ap_config_success;
 	uint8_t esp8266_login_cloud_success;
-    uint8_t publish_flag;
+
 	uint8_t subscribe_cloud_success;
 	
 	
