@@ -86,8 +86,8 @@ void ReConnect_Wifi_Net_ATReset_Hardware(void)
 {
 	    WIFI_IC_DISABLE();
 		HAL_Delay(1000);
-		HAL_Delay(1000);
-		HAL_Delay(1000);
+		//HAL_Delay(1000);
+		//HAL_Delay(1000);
 		WIFI_IC_ENABLE();
 		//at_send_data("AT+RESTORE\r\n", strlen("AT+RESTORE\r\n"));
 		at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
