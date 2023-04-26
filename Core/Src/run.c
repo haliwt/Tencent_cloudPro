@@ -284,14 +284,14 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
        break;
 
        case FAN_ON:
-          run_t.set_wind_speed_value=99;
+         // run_t.set_wind_speed_value=99;
 		  if(esp8266data.esp8266_login_cloud_success==1)
 		  MqttData_Publis_SetFan(100);
 		   Buzzer_KeySound();
        break;
 
        case FAN_OFF:
-           run_t.set_wind_speed_value = 50;
+         //  run_t.set_wind_speed_value = 50;
 		   if(esp8266data.esp8266_login_cloud_success==1)
 		       MqttData_Publis_SetFan(50);
 		    Buzzer_KeySound();

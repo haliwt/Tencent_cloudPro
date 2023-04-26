@@ -182,10 +182,10 @@ void Dry_Function(uint8_t sel)
 
 void Fan_RunSpeed_Fun(void)
 {
-         if(run_t.set_wind_speed_value < 33 || run_t.set_wind_speed_value ==33){
+         if(run_t.set_wind_speed_value < 34 ){
               Fan_One_Speed();
 		 }
-		 else if(run_t.set_wind_speed_value > 33  && (run_t.set_wind_speed_value < 66 ||  run_t.set_wind_speed_value==66 )){
+		 else if(run_t.set_wind_speed_value > 33  && run_t.set_wind_speed_value < 67 ){
 
              Fan_Two_Speed();
 
