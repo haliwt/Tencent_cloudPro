@@ -38,7 +38,7 @@
 
 
 
-void FAN_CCW_RUN(void);
+
 void FAN_Stop(void);
 void SterIlization(uint8_t sel);
 
@@ -51,7 +51,7 @@ void Dry_Function(uint8_t sel);
 void Fan_Slowly_Speed(void);
 void Fan_One_Speed(void);
 
-void Fan_Full_Speed(void);
+
 void Fan_Two_Speed(void);
 
 void Fan_RunSpeed_Fun(void);

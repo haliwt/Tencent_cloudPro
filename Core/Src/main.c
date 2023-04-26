@@ -111,7 +111,7 @@ int main(void)
 
 
    run_t.RunCommand_Label = POWER_OFF;
-   run_t.set_wind_speed_value=100;
+   //run_t.set_wind_speed_value=100;
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)

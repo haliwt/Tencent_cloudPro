@@ -7,6 +7,7 @@
 
 
 static void SetLevel_Fan_PWMA(uint8_t levelval);
+static void Fan_Full_Speed(void);
 
 
 void FAN_CCW_RUN(void)
@@ -96,9 +97,9 @@ void Fan_One_Speed(void)
 
 }
 #endif 
-void Fan_Full_Speed(void)
+static void Fan_Full_Speed(void)
 {
-     FAN_CCW_RUN();
+    SetLevel_Fan_PWMA(100);
 
 }
 
@@ -145,7 +146,7 @@ void ShutDown_AllFunction(void)
 void SterIlization(uint8_t sel)
 {
     if(sel==0){//open 
-		 FAN_CCW_RUN();
+		
 		 PLASMA_SetHigh();
 		 HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);//ultrasnoic ON 
 
@@ -155,7 +156,7 @@ void SterIlization(uint8_t sel)
 			
 		PLASMA_SetLow();
 		HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic off
-		//FAN_Stop();
+	
 
 	}
 
@@ -168,7 +169,7 @@ void Dry_Function(uint8_t sel)
    if(sel ==0){
 
   
-		FAN_CCW_RUN();
+		//FAN_CCW_RUN();
 		PTC_SetHigh();
 
    }
@@ -190,8 +191,8 @@ void Fan_RunSpeed_Fun(void)
              Fan_Two_Speed();
 
 		 }
-		 else
-		 	FAN_CCW_RUN();
+		 else if(run_t.set_wind_speed_value > 66)
+		 	Fan_Full_Speed();
 
 
 }

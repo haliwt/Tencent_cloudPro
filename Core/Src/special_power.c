@@ -13,7 +13,7 @@ void (*Single_Usart_ReceiveData)(uint8_t cmd);
 void SetPowerOn_ForDoing(void)
 {
     
-     run_t.gPower_flag = POWER_ON;
+    run_t.gPower_flag = POWER_ON;
     run_t.gFan_continueRun =0;
     run_t.gPower_On=POWER_ON;
 	run_t.gmt_time_flag=0;
@@ -26,7 +26,7 @@ void SetPowerOn_ForDoing(void)
 	run_t.gModel =1;  //AI
     run_t.gFan_counter=0;
 	
-    FAN_CCW_RUN();
+    Fan_RunSpeed_Fun();//FAN_CCW_RUN();
     PLASMA_SetHigh(); //
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);//ultrasnoic ON 
     PTC_SetHigh();
@@ -65,19 +65,8 @@ void Single_Usart_RxData(void(*rxHandler)(uint8_t dat))
 void ActionEvent_Handler(void)
 {
      
-//      if(run_t.set_wind_speed_value < 33){
-//              Fan_One_Speed();
-//		 }
-//		 else if(run_t.set_wind_speed_value > 32 && run_t.set_wind_speed_value < 67 ){
-//
-//             Fan_Two_Speed();
-//
-//		 }
-//		 else
-//		 	FAN_CCW_RUN();
-//	
-	   
-   if(run_t.works_break_power_on==0) { 
+
+if(run_t.works_break_power_on==0) { 
 
     Fan_RunSpeed_Fun();
 	if(run_t.gDry == 1){

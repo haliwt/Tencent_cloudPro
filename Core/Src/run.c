@@ -283,27 +283,18 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 	    Buzzer_KeySound();
        break;
 
-       case FAN_ON:
-         // run_t.set_wind_speed_value=99;
-		  if(esp8266data.esp8266_login_cloud_success==1)
-		  MqttData_Publis_SetFan(100);
-		   Buzzer_KeySound();
-       break;
-
-       case FAN_OFF:
-         //  run_t.set_wind_speed_value = 50;
-		   if(esp8266data.esp8266_login_cloud_success==1)
-		       MqttData_Publis_SetFan(50);
-		    Buzzer_KeySound();
-       break;
-
-	   case MODE_AI :
-
-	   break;
-	   
-	   case  MODE_TIMER:
-
-	   break;
+//       case FAN_ON:
+//       
+//		  if(esp8266data.esp8266_login_cloud_success==1)
+//		  	MqttData_Publis_SetFan(run_t.set_wind_speed_value);
+//		   Buzzer_KeySound();
+//       break;
+//
+//       case FAN_OFF:
+//		   if(esp8266data.esp8266_login_cloud_success==1)
+//		       MqttData_Publis_SetFan(run_t.set_wind_speed_value);
+//		    Buzzer_KeySound();
+//       break;
 
 	   case WIFI_CONNECT_FAIL:
 
@@ -476,7 +467,7 @@ void RunCommand_MainBoard_Fun(void)
           
                 if(run_t.gFan_counter < 60){
           
-                       FAN_CCW_RUN();
+                      Fan_RunSpeed_Fun(); //FAN_CCW_RUN();
                   }       
 
 	           if(run_t.gFan_counter > 59){
@@ -492,7 +483,7 @@ void RunCommand_MainBoard_Fun(void)
 
               if(run_t.gFan_counter < 60){
           
-                       FAN_CCW_RUN();
+                      Fan_RunSpeed_Fun();// FAN_CCW_RUN();
                   }       
 
 	           if(run_t.gFan_counter > 59){
