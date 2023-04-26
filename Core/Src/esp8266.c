@@ -86,8 +86,11 @@ void ReConnect_Wifi_Net_ATReset_Hardware(void)
 {
 	    WIFI_IC_DISABLE();
 		HAL_Delay(1000);
+		HAL_Delay(1000);
+		HAL_Delay(1000);
 		WIFI_IC_ENABLE();
-		at_send_data("AT+RESTORE\r\n", strlen("AT+RESTORE\r\n"));
+		//at_send_data("AT+RESTORE\r\n", strlen("AT+RESTORE\r\n"));
+		at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
 		HAL_Delay(1000);
 
 
@@ -310,14 +313,18 @@ void AutoRepeate_Link_Tencent_Cloud(void)
 	 if(esp8266data.esp8266_login_cloud_success==0){
 	     if( wifi_t.gTimer_reconnect_wifi_order  > 15  && wifi_en ==0){
 		   	   wifi_en++;
-			   wifi_det=0;;
+			 
 			 wifi_t.gTimer_reconnect_wifi_order=0;
 
-		   InitWifiModule_Hardware();//InitWifiModule();
+		  // InitWifiModule_Hardware();//InitWifiModule();
+		   ReConnect_Wifi_Net_ATReset_Hardware();
+		   HAL_Delay(1000);
+		   HAL_Delay(1000);
+		    wifi_det=1;
 	  
-	     	}
+	     }
 
-		if(wifi_t.gTimer_reconnect_wifi_order > 5 && wifi_det==0){
+		if(wifi_t.gTimer_reconnect_wifi_order > 5 && wifi_det==1){
 			wifi_det ++;
 			wifi_en=0;
 
@@ -327,7 +334,9 @@ void AutoRepeate_Link_Tencent_Cloud(void)
 	        UART2_DATA.UART_Cnt=0;
 		    wifi_t.soft_ap_config_flag =0;
 	        HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
-		
+		    HAL_Delay(1000);
+			HAL_Delay(1000);
+			 HAL_Delay(1000);
 		
 		
 		 }
