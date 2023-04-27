@@ -399,7 +399,7 @@ static void AutoReconnect_Wifi_Neware_Function(void)
 								esp8266data.rx_link_cloud_flag =0;
 							   // wifi_t.runCommand_order_lable=wifi_has_been_connected;
 								SendWifiData_To_Cmd(0x01) ;
-								HAL_Delay(10);
+								HAL_Delay(30);
 							  
 								
 								Subscriber_Data_FromCloud_Handler();
