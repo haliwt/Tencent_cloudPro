@@ -553,9 +553,16 @@ void Tencent_Cloud_Rx_Handler(void)
    switch(run_t.response_wifi_signal_label){
 
       case OPEN_OFF_ITEM:
+
+            MqttData_Publish_SetOpen(0);  
+			HAL_Delay(200);
 	
-       // MqttData_Publish_SetOpen(0); //WT.EDIT add
-       // HAL_Delay(200);
+         Update_DHT11_Value();
+		 HAL_Delay(200);
+        run_t.gUlransonic =0;
+			 run_t.gPlasma =0;
+		     run_t.gDry =0;
+		MqttData_Publish_Update_Data();
         run_t.wifi_gPower_On= 0;
 	    run_t.gPower_On = POWER_OFF;
         run_t.gPower_flag =POWER_OFF;
@@ -567,9 +574,16 @@ void Tencent_Cloud_Rx_Handler(void)
 	  break;
 
 	  case OPEN_ON_ITEM:
-	  //	Buzzer_KeySound();
-        MqttData_Publish_SetOpen(1);  //WT.EDIT new add item
-        	HAL_Delay(200);
+
+	      MqttData_Publish_SetOpen(1);  
+		HAL_Delay(200);
+	     Update_DHT11_Value();
+		 HAL_Delay(200);
+        run_t.gUlransonic =1;
+			 run_t.gPlasma =1;
+		     run_t.gDry =1;
+		MqttData_Publish_Update_Data();
+		 HAL_Delay(200);
 	   run_t.wifi_gPower_On= POWER_ON;
        run_t.gPower_On = POWER_ON;
 	   run_t.gPower_flag =POWER_ON;
@@ -791,7 +805,7 @@ void Tencent_Cloud_Rx_Handler(void)
 
 	  case APP_TIMER_POWER_ON_REF_TWO :
 
-	       send_data_end_flag = 1;
+	     
 
 	        if(UART2_DATA.UART_Data[18]-0x30==1){ //Anion
 		     run_t.gPlasma =1;
@@ -804,7 +818,7 @@ void Tencent_Cloud_Rx_Handler(void)
 			   	HAL_Delay(20);
 			}
            
-           
+           send_data_end_flag = 1;
    	      run_t.response_wifi_signal_label = 0xff;
 
 	  break;
@@ -832,6 +846,9 @@ void Tencent_Cloud_Rx_Handler(void)
 				
 				
 		      }
+
+			MqttData_Publish_Update_Data();//MqttData_Publish_SetOpen(1);  
+		    HAL_Delay(200);
 	}
 
    if(run_t.response_wifi_signal_label==0xff){

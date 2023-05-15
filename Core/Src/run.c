@@ -155,6 +155,8 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
     switch(cmd){
 
     case 0x01: // power on
+
+	     
          Buzzer_KeySound();
          run_t.gPower_flag = POWER_ON;
 		 run_t.gPower_On = POWER_ON;
@@ -162,7 +164,13 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 		 Update_DHT11_Value();
 		 HAL_Delay(200);
 		 if(esp8266data.esp8266_login_cloud_success==1){
-			 MqttData_Publish_SetOpen(0x01);
+		 	 run_t.gUlransonic =1;
+			 run_t.gPlasma =1;
+		     run_t.gDry =1;
+
+			 MqttData_Publish_SetOpen(1);  
+			HAL_Delay(200);
+			 MqttData_Publish_Update_Data();//MqttData_Publish_SetOpen(1);  //MqttData_Publish_SetOpen(0x01);
 	         HAL_Delay(200);
 	         Publish_Data_ToTencent_Initial_Data();
 			 HAL_Delay(200);
@@ -179,9 +187,16 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
         run_t.gPower_On=POWER_OFF;
         run_t.gPower_flag = POWER_OFF;
         run_t.RunCommand_Label = POWER_OFF;
-         if(esp8266data.esp8266_login_cloud_success==1)  
-         	MqttData_Publish_SetOpen(0x0);
-           
+		Update_DHT11_Value();
+		 HAL_Delay(200);
+         if(esp8266data.esp8266_login_cloud_success==1){ 
+         	 run_t.gUlransonic =0;
+			 run_t.gPlasma =0;
+		     run_t.gDry =0;
+			MqttData_Publish_SetOpen(0);  
+			HAL_Delay(200);
+			 MqttData_Publish_Update_Data();
+         }
 
     cmd = 0xff;
     break;
