@@ -19,17 +19,23 @@ void SetPowerOn_ForDoing(void)
 	run_t.gmt_time_flag=0;
 	run_t.wifi_gPower_On = 1;
 
-    run_t.gFan = 1;
-	run_t.gDry = 1;
-	run_t.gPlasma =1;       //"杀菌"
-	run_t.gUlransonic = 1; // "驱虫"
-	run_t.gModel =1;  //AI
-    run_t.gFan_counter=0;
+
 	
-    Fan_RunSpeed_Fun();//FAN_CCW_RUN();
-    PLASMA_SetHigh(); //
-    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);//ultrasnoic ON 
-    PTC_SetHigh();
+    if(run_t.app_timer_power_on_flag==0){
+	    run_t.gFan = 1;
+		run_t.gDry = 1;
+		run_t.gPlasma =1;       //"杀菌"
+		run_t.gUlransonic = 1; // "驱虫"
+	    run_t.gFan_counter=0;
+
+			
+	    Fan_RunSpeed_Fun();//FAN_CCW_RUN();
+	    PLASMA_SetHigh(); //
+	    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);//ultrasnoic ON 
+	    PTC_SetHigh();
+    }
+	run_t.gModel =1;  //AI
+
 	
  }
 
@@ -40,6 +46,7 @@ void SetPowerOff_ForDoing(void)
 	run_t.gFan_continueRun =1; //the fan still run 60s
 	run_t.gPower_On = POWER_OFF;
 	run_t.wifi_gPower_On = 0;
+	run_t.app_timer_power_on_flag=0;
  
     run_t.gFan = 0;
     run_t.gDry = 0;

@@ -41,6 +41,7 @@ typedef struct _WIFI_FUN{
 	uint8_t real_minutes;
 	uint8_t real_seconds;
 	uint8_t restart_link_tencent_cloud ;
+	uint8_t received_data_from_tencent_cloud ;
 
     uint8_t gTimer_1s;
 

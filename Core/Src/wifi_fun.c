@@ -76,10 +76,10 @@ void SetTemperatureHost(void(*temperatureHandler)(void))
 ***********************************************/
 void RunWifi_Command_Handler(void)
 {
-     uint32_t temp;
+    uint32_t temp;
     static uint8_t first_sub,subscription_flag,beijing_time_flag;
-	 static uint8_t det_no_wifi_net, beijing_flag;;
-	 static uint8_t  update_publish_times=0,get_bj_times=0;
+	static uint8_t det_no_wifi_net, beijing_flag,power_on_send_bejing_times;
+	static uint8_t  update_publish_times=0,get_bj_times=0;
 
      switch(wifi_t.runCommand_order_lable){
 
@@ -226,7 +226,7 @@ void RunWifi_Command_Handler(void)
 
 		    while(beijing_time_flag == 1){
                  beijing_time_flag = 0;
-			    
+			     wifi_t.get_rx_beijing_time_flag=0; //enable beijing times
                  
 				  if(get_bj_times < 3){
 				  	 get_bj_times++;
@@ -274,16 +274,32 @@ void RunWifi_Command_Handler(void)
 			
             esp8266data.gTimer_publish_dht11=0;
 			Update_Dht11_Totencent_Value();
-			if(wifi_t.gTimer_get_beijing_time > 370){ //
+			
+			if(wifi_t.gTimer_get_beijing_time > 370 && power_on_send_bejing_times<3){ //
 			   wifi_t.gTimer_get_beijing_time=0;
-			   get_bj_times=0;
-			   wifi_t.get_rx_beijing_time_flag=1;
-			  UART2_DATA.UART_Cnt=0;
-			  
-			   wifi_t.gTimer_beijing_time=0;
-	           wifi_t.runCommand_order_lable= wifi_get_beijing_time; 
+			   	power_on_send_bejing_times++;
+                get_bj_times=0;
+				  UART2_DATA.UART_Cnt=0;
+				  
+				   wifi_t.gTimer_beijing_time=0;
+				 
+		           wifi_t.runCommand_order_lable= wifi_get_beijing_time; 
+			   	
 
 			    
+			}
+			else if(wifi_t.gTimer_get_beijing_time > 1800 && (power_on_send_bejing_times==3 || power_on_send_bejing_times >3)){
+				   wifi_t.gTimer_get_beijing_time=0;
+                    get_bj_times=0;
+				   wifi_t.get_rx_beijing_time_flag=1;
+				  UART2_DATA.UART_Cnt=0;
+				  
+				   wifi_t.gTimer_beijing_time=0;
+				 
+		           wifi_t.runCommand_order_lable= wifi_get_beijing_time;       
+
+
+
 			}
 			else{
 
@@ -295,12 +311,16 @@ void RunWifi_Command_Handler(void)
 	   break;
 
 	   case wifi_get_beijing_time://7
+
+	     if(run_t.gPower_On ==POWER_ON){ //WT.EDIT.20223.05.13 add new item
 	 
 		 esp8266data.rx_link_cloud_flag =0;
-	   	  wifi_t.get_rx_beijing_time_flag=1; //enable beijing times
+	   	 
+	 
 	   	  if(beijing_flag ==0 ){   //&& wifi_t.gTimer_beijing_time>1){
 			 beijing_flag++;
 			 wifi_t.gTimer_beijing_time=0;
+		     wifi_t.get_rx_beijing_time_flag=1; //enable beijing times
              UART2_DATA.UART_Cnt=0;
              Get_BeiJing_Time_Cmd();
              
@@ -324,20 +344,21 @@ void RunWifi_Command_Handler(void)
 		  	wifi_t.real_hours = (UART2_DATA.UART_Data[134]-0x30)*10 + UART2_DATA.UART_Data[135]-0x30;
 			wifi_t.real_minutes =(UART2_DATA.UART_Data[137]-0x30)*10 + UART2_DATA.UART_Data[138]-0x30;
 		     wifi_t.real_seconds = (UART2_DATA.UART_Data[140]-0x30)*10 + UART2_DATA.UART_Data[141]-0x30;
-		   
+		     wifi_t.get_rx_beijing_time_flag=0; //enable beijing times
 			
 	         wifi_t.runCommand_order_lable=wifi_publish_update_tencent_cloud_data;
 		   }
+	     }
+		 else{
 
-	      
+		     wifi_t.runCommand_order_lable=wifi_publish_update_tencent_cloud_data;
 
-		 
-		 
-	   break;
+
+		 }
+	    break;
 
 	   
-
-	   default:
+	  default:
 
 	   break;
 	 

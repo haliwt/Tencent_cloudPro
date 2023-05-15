@@ -9,6 +9,9 @@
 #include "usart.h"
 #include "buzzer.h"
 #include "mqtt_iot.h"
+
+
+
  
 //处理腾讯云下发的数据
 /*******************************************************************************
@@ -200,17 +203,20 @@ void Subscribe_Rx_Interrupt_Handler(void)
      case 10:
         
          if(esp8266data.rx_data_success==0){
-         UART2_DATA.UART_Data[esp8266data.rx_counter] = UART2_DATA.UART_DataBuf[0];
+         	UART2_DATA.UART_Data[esp8266data.rx_counter] = UART2_DATA.UART_DataBuf[0];
             esp8266data.rx_counter++ ;
+		    
             
-         if(UART2_DATA.UART_DataBuf[0]==0x7D) //'}') // end
+         if(UART2_DATA.UART_DataBuf[0]=='}') //0x7D='}' // end
          {
             esp8266data.rx_data_success=1;
             esp8266data.rx_data_state=0;
+			wifi_t.received_data_from_tencent_cloud = esp8266data.rx_counter;
             esp8266data.rx_counter=0;
             
           
          }
+		 #if 0
 		 else if(UART2_DATA.UART_Data[8]==0x7D){
 		             esp8266data.rx_data_success=1;
 					 esp8266data.rx_data_state=0;
@@ -218,8 +224,9 @@ void Subscribe_Rx_Interrupt_Handler(void)
 
 
 		 }
-		 else if(esp8266data.rx_counter >9){ 
-		 	if(UART2_DATA.UART_Data[esp8266data.rx_counter ] != 0x72){
+		
+		 else if(esp8266data.rx_counter >9){ //??? "nowtemperature" and "temperature"
+		 	if(UART2_DATA.UART_Data[esp8266data.rx_counter ] != 0x72){ //0x72 ='r'
 
 			   esp8266data.rx_data_state=10; 
 
@@ -231,7 +238,8 @@ void Subscribe_Rx_Interrupt_Handler(void)
 			}
 
 		  }
-		 else if(UART2_DATA.UART_DataBuf[0]=='O' || UART2_DATA.UART_DataBuf[0]=='N'){
+		 #endif 
+		 else if(UART2_DATA.UART_DataBuf[0]=='O' || UART2_DATA.UART_DataBuf[0]=='N'){ //auto reconect be detected 
 
                   esp8266data.rx_data_state=11; //=1
 
@@ -394,7 +402,6 @@ void Subscribe_Rx_Interrupt_Handler(void)
 void Wifi_Rx_InputInfo_Handler(void)
 {
     
-    
           strcpy((char *)esp8266data.data, (const char *)UART2_DATA.UART_Data);
           esp8266data.data_size = UART2_DATA.UART_Cnt;
 
@@ -433,11 +440,65 @@ void Wifi_Rx_InputInfo_Handler(void)
 void Tencent_Cloud_Rx_Handler(void)
 {
     uint8_t i;
-    static uint8_t wind_hundred, wind_decade,wind_unit,temp_decade,temp_unit;
+    static uint8_t wind_hundred, wind_decade,wind_unit,temp_decade,temp_unit,send_data_end_flag;
 	static uint8_t buzzer_temperature_flag,buzzer_temp_on,wifi_set_temp_value;
 	uint32_t temp;
     if( esp8266data.rx_data_success==1){
-         esp8266data.rx_data_success=0;
+            esp8266data.rx_data_success=0;
+
+	
+//	if(strstr((char *)UART2_DATA.UART_Data,"Anion\":0,\"open\":1,\"ptc\":0,\"sonic\":0")){
+//                  
+//           run_t.response_wifi_signal_label = APP_TIMER_POWER_ON_REF;
+//
+//    }
+//    else if(strstr((char *)UART2_DATA.UART_Data,"Anion\":1,\"open\":1,\"ptc\":1,\"sonic\":1")){
+//                  
+//           run_t.response_wifi_signal_label = APP_TIMER_POWER_ON_REF;
+//
+//    }
+//	else if(strstr((char *)UART2_DATA.UART_Data,"Anion\":1,\"open\":1,\"ptc\":0,\"sonic\":1")){
+//                  
+//           run_t.response_wifi_signal_label = APP_TIMER_POWER_ON_REF;
+//
+//    }
+//	else if(strstr((char *)UART2_DATA.UART_Data,"Anion\":1,\"open\":1,\"ptc\":0,\"sonic\":0")){ //4
+//                  
+//        run_t.response_wifi_signal_label = APP_TIMER_POWER_ON_REF;
+//
+//    }
+//	else if(strstr((char *)UART2_DATA.UART_Data,"Anion\":1,\"open\":1,\"ptc\":1,\"sonic\":0")){ 
+//                  
+//           run_t.response_wifi_signal_label = APP_TIMER_POWER_ON_REF;
+//
+//    }
+//
+//	 if(strstr((char *)UART2_DATA.UART_Data,"Anion\":0,\"open\":1,\"ptc\":0,\"sonic\":1")){
+//                  
+//           run_t.response_wifi_signal_label = APP_TIMER_POWER_ON_REF;
+//
+//    }
+//
+//	if(strstr((char *)UART2_DATA.UART_Data,"Anion\":0,\"open\":1,\"ptc\":1,\"sonic\":0")){
+//                  
+//           run_t.response_wifi_signal_label = APP_TIMER_POWER_ON_REF;
+//
+//    }
+//
+//		if(strstr((char *)UART2_DATA.UART_Data,"Anion\":0,\"open\":1,\"ptc\":1,\"sonic\":1")){ //8
+//                  
+//          run_t.response_wifi_signal_label = APP_TIMER_POWER_ON_REF;
+//
+//    }
+
+    
+	if(wifi_t.received_data_from_tencent_cloud==0x25){
+	
+		run_t.response_wifi_signal_label = APP_TIMER_POWER_ON_REF;
+	
+	
+	}
+	else{
     
     if(strstr((char *)UART2_DATA.UART_Data,"nowtemperature\":")){ //WT.EDIT 2023.update
               return ;
@@ -531,6 +592,8 @@ void Tencent_Cloud_Rx_Handler(void)
 			run_t.response_wifi_signal_label= FAN_ITEM;
 		}
 	}
+   }
+
    }
    switch(run_t.response_wifi_signal_label){
 
@@ -690,15 +753,11 @@ void Tencent_Cloud_Rx_Handler(void)
 
 	  case FAN_ITEM:
 	    if(run_t.gPower_flag ==POWER_ON){
-			//Buzzer_KeySound();
-//            if(UART2_DATA.UART_Data[7]==0x31 && UART2_DATA.UART_Data[8]==0x30 && UART2_DATA.UART_Data[9]==0x30){
-//		           run_t.set_wind_speed_value =99;
-//            }
-//			else{
+
            		 wind_decade=UART2_DATA.UART_Data[7]-0x30;
 	       		 wind_unit=UART2_DATA.UART_Data[8]-0x30;
                  run_t.set_wind_speed_value = wind_decade*10 + wind_unit;
-			//}
+			
            // if(run_t.set_wind_speed_value > 100) run_t.set_wind_speed_value=99;
           //  if(run_t.set_wind_speed_value < 1) run_t.set_wind_speed_value=0;
 			MqttData_Publis_SetFan(run_t.set_wind_speed_value);
@@ -713,16 +772,120 @@ void Tencent_Cloud_Rx_Handler(void)
 	    run_t.response_wifi_signal_label = 0xff;
 	  	break;
 
+	  case APP_TIMER_POWER_ON_REF :
+	  	
+	    if(UART2_DATA.UART_Data[27]-0x30==1){
+
+	  
+               MqttData_Publish_SetOpen(1);  //WT.EDIT new add item
+		       HAL_Delay(200);
+			   run_t.wifi_gPower_On= POWER_ON;
+		       run_t.gPower_On = POWER_ON;
+			   run_t.gPower_flag =POWER_ON;
+			   run_t.RunCommand_Label=POWER_ON;
+			   run_t.app_timer_power_on_flag = 1;
+			   SendWifiCmd_To_Order(WIFI_POWER_ON);
+			   HAL_Delay(200);
+
+			
+			   
+			   buzzer_temp_on=0;
+          
+	 	 }
+
+		 if(UART2_DATA.UART_Data[18]-0x30==1){ //Anion
+		     run_t.gPlasma =1;
+		   	 SendWifiCmd_To_Order(WIFI_KILL_ON);
+		   	 HAL_Delay(20);
+		}
+		else  if(UART2_DATA.UART_Data[18]-0x30==0){
+		   	 run_t.gPlasma =0;
+		   	SendWifiCmd_To_Order(WIFI_KILL_OFF);
+		   	HAL_Delay(20);
+		}
+		  
+        
+	       if(UART2_DATA.UART_Data[8]-0x30==1){
+		  		run_t.gUlransonic=1;
+		        SendWifiCmd_To_Order(WIFI_SONIC_ON);
+		   		HAL_Delay(20);
+	       }
+		   else if(UART2_DATA.UART_Data[8]-0x30==0){
+		   	    run_t.gUlransonic=0;
+		   	    SendWifiCmd_To_Order(WIFI_SONIC_OFF);
+		   		HAL_Delay(20);
+		   	}
+
+	
+
+		   if(UART2_DATA.UART_Data[35]-0x30==1){
+		        run_t.gDry=1;
+	            SendWifiCmd_To_Order(WIFI_PTC_ON);
+		   		HAL_Delay(20);
+		   	}
+		   else if(UART2_DATA.UART_Data[35]-0x30==0){
+		   	    run_t.gDry=0;
+		   	    SendWifiCmd_To_Order(WIFI_PTC_OFF);
+		   		HAL_Delay(20);
+
+		   	}
+		   
+        run_t.response_wifi_signal_label = APP_TIMER_POWER_ON_REF_TWO;
+
+	  break;
+
+	  case APP_TIMER_POWER_ON_REF_TWO :
+
+	       send_data_end_flag = 1;
+
+	        if(UART2_DATA.UART_Data[8]-0x30==1){
+		  		run_t.gUlransonic=1;
+		        SendWifiCmd_To_Order(WIFI_SONIC_ON);
+		   		HAL_Delay(20);
+	       }
+		   else if(UART2_DATA.UART_Data[8]-0x30==0){
+		   	    run_t.gUlransonic=0;
+		   	    SendWifiCmd_To_Order(WIFI_SONIC_OFF);
+		   		HAL_Delay(20);
+		   	}
+
+
+           
+           
+   	      run_t.response_wifi_signal_label = 0xff;
+
+	  break;
+
 	  default :
 	  break;
 
 
    }
 
-   if(run_t.response_wifi_signal_label==0xff){
+   if(send_data_end_flag==1){
+			send_data_end_flag=0;
 
+		 if(UART2_DATA.UART_Data[18]-0x30==1){ //Anion
+		       run_t.gPlasma =1;
+		   	   SendWifiCmd_To_Order(WIFI_KILL_ON);
+		   	    HAL_Delay(20);
+				
+				
+               }
+		       else  if(UART2_DATA.UART_Data[18]-0x30==0){
+		   	   run_t.gPlasma =0;
+		   	    SendWifiCmd_To_Order(WIFI_KILL_OFF);
+		   		HAL_Delay(20);
+				
+				
+		      }
+	}
+
+   if(run_t.response_wifi_signal_label==0xff){
+         send_data_end_flag = 0;
         if(buzzer_temp_on ==0)
    	       Buzzer_KeySound();
+		
          
 		run_t.response_wifi_signal_label=0xf0;
 
@@ -844,4 +1007,5 @@ void Wifi_Get_Beijing_Time_Handler(void)
 
 
 }
+
 
