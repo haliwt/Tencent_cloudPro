@@ -810,22 +810,7 @@ void Tencent_Cloud_Rx_Handler(void)
 
 	  case APP_TIMER_POWER_ON_REF_TWO :
 
-	     
-
-	        if(UART2_DATA.UART_Data[18]-0x30==1){ //Anion
-		     run_t.gPlasma =1;
-		   	 SendWifiCmd_To_Order(WIFI_KILL_ON);
-		   	 HAL_Delay(20);
-			}
-			else  if(UART2_DATA.UART_Data[18]-0x30==0){
-			   	 run_t.gPlasma =0;
-			   	SendWifiCmd_To_Order(WIFI_KILL_OFF);
-			   	HAL_Delay(20);
-			}
-           
-
-
-            MqttData_Publish_SetOpen(1);  
+	    MqttData_Publish_SetOpen(1);  
 		    HAL_Delay(200);
 		     run_t.set_wind_speed_value =100;
 			 run_t.wifi_gPower_On=1;
