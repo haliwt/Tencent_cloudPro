@@ -25,7 +25,7 @@ void FAN_Stop(void)
 
 void Fan_One_Speed(void)
 {
-	SetLevel_Fan_PWMA(25);
+	SetLevel_Fan_PWMA(10);
 
 
 }
@@ -33,7 +33,7 @@ void Fan_One_Speed(void)
 
 void Fan_Two_Speed(void)
 {
-	SetLevel_Fan_PWMA(50);
+	SetLevel_Fan_PWMA(13);
 }
 
 
@@ -99,7 +99,7 @@ void Fan_One_Speed(void)
 #endif 
 static void Fan_Full_Speed(void)
 {
-    SetLevel_Fan_PWMA(100);
+    SetLevel_Fan_PWMA(25);
 
 }
 

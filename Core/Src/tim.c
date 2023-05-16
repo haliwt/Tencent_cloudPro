@@ -168,7 +168,7 @@ void MX_TIM16_Init(void)
   htim16.Instance = TIM16;
   htim16.Init.Prescaler = 23;
   htim16.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim16.Init.Period = 99;// F= 1/(99+1)MHZ = 10KHz ,T= 1/F= 1/10= 0.1ms
+  htim16.Init.Period = 24;// F= 1/(24+1)MHZ = 25KHz ,T= 1/F= 1/10= 0.1ms
   htim16.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim16.Init.RepetitionCounter = 0;
   htim16.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
