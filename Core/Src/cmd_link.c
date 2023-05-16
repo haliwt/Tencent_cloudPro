@@ -13,12 +13,10 @@
 uint8_t  inputBuf[4];
 uint8_t  inputCmd[2];
 uint8_t  wifiInputBuf[1];
-uint8_t test_counter;
+//uint8_t test_counter;
 //uint8_t test_counter_usat1;
 
 uint8_t rx_wifi_data[7];
-
-uint8_t rx_test_array[50];
 
 //uint8_t wifi_rx_temp_data[25];
 
@@ -49,15 +47,13 @@ void (*EUSART_RxDefaultInterruptHandler)(void);
 *******************************************************************************/
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-    static uint8_t state=0,i;
-#if 0
+    static uint8_t state=0;
+   
     //wifi usart2
     if(huart->Instance==USART2)
     {
            
-            test_counter++;
-//           rx_test_array[i]=UART2_DATA.UART_DataBuf[0];
-//		   i++;
+     
 	
 	      if(esp8266data.rx_link_cloud_flag ==1){
 
@@ -85,12 +81,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 				  else
 				    Subscribe_Rx_Interrupt_Handler();
 	        }
-	
-   
+	   
       HAL_UART_Receive_IT(&huart2,UART2_DATA.UART_DataBuf,1);
 	}
 
-	#endif 
+	
 	if(huart->Instance==USART1)//if(huart==&huart1) // Motor Board receive data (filter)
 	{
         //test_counter_usat1++;
@@ -217,44 +212,6 @@ void USART1_Cmd_Error_Handler(UART_HandleTypeDef *huart)
    	}
   }
 }
-
-
-void USART2_Cmd_Error_Handler(UART_HandleTypeDef *huart)
-{
-   uint32_t temp;
-   if(huart==&huart2){
-
-
-         if(run_t.gTimer_usart2_error > 38){
-		 	run_t.gTimer_usart2_error=0;
-         __HAL_UART_GET_FLAG(&huart2,UART_FLAG_ORE);//UART_FLAG_NE
-         __HAL_UART_GET_FLAG(&huart2,UART_FLAG_NE); //USART_ISR_FE
-         __HAL_UART_GET_FLAG(&huart2,USART_ISR_FE);
-		 
-		
-         if(UART_FLAG_ORE==1 || UART_FLAG_NE==1 ||UART_FLAG_FE==1){
-
-		 
-           __HAL_UART_CLEAR_OREFLAG(&huart2);
-              __HAL_UART_CLEAR_NEFLAG(&huart2);
-               __HAL_UART_CLEAR_FEFLAG(&huart2);
-
-          
-          
-          temp=USART2->ISR;
-          temp = USART2->RDR;
-		 
-
-		 HAL_UART_Receive_IT(&huart2,UART2_DATA.UART_DataBuf,1);
-		
-		
-          
-         	}
-          
-         }
-	}
-}
-
 /********************************************************************************
 	**
 	*Function Name:sendData_Real_TimeHum(uint8_t hum,uint8_t temp)

@@ -193,7 +193,7 @@ void RunWifi_Command_Handler(void)
            
                if(esp8266data.esp8266_login_cloud_success==1){
 				wifi_t.get_rx_beijing_time_flag=0;
-	            if(esp8266data.gTimer_publish_timing>305 &&  wifi_t.get_rx_beijing_time_flag==0){
+	            if(esp8266data.gTimer_publish_timing>123 ){
 					 esp8266data.gTimer_publish_timing=0;
 			         Publish_Data_ToTencent_Update_Data();
 
@@ -202,27 +202,27 @@ void RunWifi_Command_Handler(void)
 
 		 
 	         
-	            if(esp8266data.gTimer_subscription_timing>305 && subscription_flag < 3 &&  wifi_t.get_rx_beijing_time_flag==0){
+	            if(esp8266data.gTimer_subscription_timing>132 && subscription_flag < 5){
 					 subscription_flag ++;
 					 wifi_t.gTimer_publish_times =0;
 					 esp8266data.gTimer_subscription_timing=0;
 			         Subscriber_Data_FromCloud_Handler();
 
 	            }
-//	            if(wifi_t.gTimer_publish_times > 723 ){
-//	            	wifi_t.gTimer_publish_times=0;
-//                    
-//                   __HAL_UART_CLEAR_OREFLAG(&huart2);
-//                      __HAL_UART_CLEAR_NEFLAG(&huart2);
-//                       __HAL_UART_CLEAR_FEFLAG(&huart2);
-//
-//                 
-//                  temp=USART2->ISR;
-//                  temp = USART2->RDR;
-//
-//                   UART_Start_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,1);
-//
-//	            }
+	            if(wifi_t.gTimer_publish_times > 723 ){
+	            	wifi_t.gTimer_publish_times=0;
+                    
+                   __HAL_UART_CLEAR_OREFLAG(&huart2);
+                      __HAL_UART_CLEAR_NEFLAG(&huart2);
+                       __HAL_UART_CLEAR_FEFLAG(&huart2);
+
+                 
+                  temp=USART2->ISR;
+                  temp = USART2->RDR;
+
+                   UART_Start_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,1);
+
+	            }
 
 		    while(beijing_time_flag == 1){
                  beijing_time_flag = 0;
@@ -251,11 +251,11 @@ void RunWifi_Command_Handler(void)
 				 }
 
 
-			 if(esp8266data.gTimer_publish_dht11 >60){
-			   	  esp8266data.gTimer_publish_dht11=0;
+		 if(esp8266data.gTimer_publish_dht11 >60){
+		   	  esp8266data.gTimer_publish_dht11=0;
 
-			   	  wifi_t.runCommand_order_lable= wifi_tencent_publish_dht11_data;
-	           	}
+		   	  wifi_t.runCommand_order_lable= wifi_tencent_publish_dht11_data;
+           	}
      
           }
 
@@ -371,9 +371,9 @@ void RunWifi_Command_Handler(void)
 		    
             SendWifiData_To_Cmd(0x01) ;
 		  }
-		 // if(wifi_t.get_rx_beijing_time_flag==0){
-	       //   Tencent_Cloud_Rx_Handler();
-		//  }
+		  if(wifi_t.get_rx_beijing_time_flag==0){
+	          Tencent_Cloud_Rx_Handler();
+		  }
 		  if(run_t.flash_write_data_flag == 0){
 			run_t.flash_write_data_flag=2;
                Flash_Erase_Data();

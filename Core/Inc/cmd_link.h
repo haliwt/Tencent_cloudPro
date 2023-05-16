@@ -39,6 +39,5 @@ void SendData_Real_GMT_Minute(uint8_t hdata);
 
 
 void USART1_Cmd_Error_Handler(UART_HandleTypeDef *huart);
-void USART2_Cmd_Error_Handler(UART_HandleTypeDef *huart);
 
 #endif 
