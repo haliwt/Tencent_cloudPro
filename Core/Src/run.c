@@ -167,6 +167,9 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 		 	 run_t.gUlransonic =1;
 			 run_t.gPlasma =1;
 		     run_t.gDry =1;
+			 run_t.set_wind_speed_value=100;
+             run_t.wifi_gPower_On=1;
+	
 
 			 MqttData_Publish_SetOpen(1);  
 			HAL_Delay(200);
@@ -193,6 +196,8 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
          	 run_t.gUlransonic =0;
 			 run_t.gPlasma =0;
 		     run_t.gDry =0;
+			  run_t.set_wind_speed_value=10;
+             run_t.wifi_gPower_On=0;
 			MqttData_Publish_SetOpen(0);  
 			HAL_Delay(200);
 			 MqttData_Publish_Update_Data();
