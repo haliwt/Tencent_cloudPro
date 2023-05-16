@@ -161,13 +161,14 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
          run_t.gPower_flag = POWER_ON;
 		 run_t.gPower_On = POWER_ON;
          run_t.RunCommand_Label= POWER_ON;
+		 run_t.set_wind_speed_value=60;
 		 Update_DHT11_Value();
 		 HAL_Delay(200);
 		 if(esp8266data.esp8266_login_cloud_success==1){
 		 	 run_t.gUlransonic =1;
 			 run_t.gPlasma =1;
 		     run_t.gDry =1;
-			 run_t.set_wind_speed_value=100;
+			 run_t.set_wind_speed_value=64;
              run_t.wifi_gPower_On=1;
 	
 
@@ -190,6 +191,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
         run_t.gPower_On=POWER_OFF;
         run_t.gPower_flag = POWER_OFF;
         run_t.RunCommand_Label = POWER_OFF;
+		 run_t.set_wind_speed_value=10;
 		Update_DHT11_Value();
 		 HAL_Delay(200);
          if(esp8266data.esp8266_login_cloud_success==1){ 
@@ -423,6 +425,7 @@ void RunCommand_MainBoard_Fun(void)
          	run_t.gFan_continueRun =0;
 		else{
 		 run_t.gFan_continueRun =1;
+		 
 
 		}
          run_t.gFan_counter=0;
@@ -488,14 +491,16 @@ void RunCommand_MainBoard_Fun(void)
           
                 if(run_t.gFan_counter < 60){
           
-                      Fan_RunSpeed_Fun(); //FAN_CCW_RUN();
+                    Fan_One_Speed();
+                  
                   }       
 
 	           if(run_t.gFan_counter > 59){
 		           
 				   run_t.gFan_counter=0;
-				
+				   
 				   run_t.gFan_continueRun++;
+			      
 				   FAN_Stop();
 	           }
 	  }
