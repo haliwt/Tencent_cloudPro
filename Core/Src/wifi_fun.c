@@ -202,7 +202,7 @@ void RunWifi_Command_Handler(void)
 
 		 
 	         
-	            if(esp8266data.gTimer_subscription_timing>132 && subscription_flag < 5){
+	            if(esp8266data.gTimer_subscription_timing>132 && subscription_flag < 3){
 					 subscription_flag ++;
 					 wifi_t.gTimer_publish_times =0;
 					 esp8266data.gTimer_subscription_timing=0;
@@ -228,7 +228,7 @@ void RunWifi_Command_Handler(void)
                  beijing_time_flag = 0;
 			     wifi_t.get_rx_beijing_time_flag=0; //enable beijing times
                  
-				  if(get_bj_times < 3){
+				  if(get_bj_times < 2){
 				  	 get_bj_times++;
 				     wifi_t.runCommand_order_lable= wifi_get_beijing_time;
 	                 wifi_t.gTimer_get_beijing_time=0;

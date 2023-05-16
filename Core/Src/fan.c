@@ -19,16 +19,15 @@ void FAN_CCW_RUN(void)
 
 void FAN_Stop(void)
 {
-    FAN_CW_SetLow(); //brake
-    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6,GPIO_PIN_RESET);
-    //HAL_TIM_PWM_Stop(&htim16,TIM_CHANNEL_1);
+   FAN_CW_SetLow(); //brake
+   HAL_TIM_PWM_Stop(&htim16,TIM_CHANNEL_1);
 }
 
 void Fan_One_Speed(void)
 {
-	//SetLevel_Fan_PWMA(25);
-	FAN_CW_SetLow(); //brake
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6,GPIO_PIN_SET);
+	SetLevel_Fan_PWMA(16);
+	//FAN_CW_SetLow(); //brake
+	//HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6,GPIO_PIN_SET);
 
 
 }
@@ -36,11 +35,18 @@ void Fan_One_Speed(void)
 
 void Fan_Two_Speed(void)
 {
-	//SetLevel_Fan_PWMA(25);
-	FAN_CW_SetLow(); //brake
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6,GPIO_PIN_SET);
+	SetLevel_Fan_PWMA(20);
+	//FAN_CW_SetLow(); //brake
+	//HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6,GPIO_PIN_SET);
 }
 
+ void Fan_Full_Speed(void)
+{
+    SetLevel_Fan_PWMA(25);
+   // FAN_CW_SetLow(); //brake
+	///HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6,GPIO_PIN_SET);
+
+}
 
 
 #if 0
@@ -102,13 +108,6 @@ void Fan_One_Speed(void)
 
 }
 #endif 
- void Fan_Full_Speed(void)
-{
-    //SetLevel_Fan_PWMA(25);
-    FAN_CW_SetLow(); //brake
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6,GPIO_PIN_SET);
-
-}
 
 #if 0
 void Fan_Slowly_Speed(void)
