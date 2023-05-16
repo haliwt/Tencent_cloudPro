@@ -167,8 +167,10 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 		 	 run_t.gUlransonic =1;
 			 run_t.gPlasma =1;
 		     run_t.gDry =1;
-
-			 MqttData_Publish_SetOpen(1);  
+			 run_t.wifi_gPower_On=1;
+			 run_t.set_wind_speed_value=100;
+             
+			MqttData_Publish_SetOpen(1);  
 			HAL_Delay(200);
 			 MqttData_Publish_Update_Data();//MqttData_Publish_SetOpen(1);  //MqttData_Publish_SetOpen(0x01);
 	         HAL_Delay(200);
@@ -193,6 +195,8 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
          	 run_t.gUlransonic =0;
 			 run_t.gPlasma =0;
 		     run_t.gDry =0;
+			  run_t.wifi_gPower_On=0;
+			  run_t.set_wind_speed_value=10;
 			MqttData_Publish_SetOpen(0);  
 			HAL_Delay(200);
 			 MqttData_Publish_Update_Data();
@@ -445,7 +449,7 @@ void RunCommand_MainBoard_Fun(void)
 	break;
 
    case UPDATE_TO_PANEL_DATA: //4
-     if(run_t.gTimer_senddata_panel >30 && run_t.gPower_On==POWER_ON){ //300ms
+     if(run_t.gTimer_senddata_panel >40 && run_t.gPower_On==POWER_ON){ //300ms
 	   	    run_t.gTimer_senddata_panel=0;
 	        ActionEvent_Handler();
 	      

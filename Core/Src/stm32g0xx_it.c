@@ -22,6 +22,10 @@
 #include "stm32g0xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "run.h"
+#include "usart.h"
+#include "esp8266.h"
+#include "wifi_fun.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -31,6 +35,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+unsigned char rx_value;
 
 /* USER CODE END PD */
 
@@ -180,6 +185,40 @@ void USART2_IRQHandler(void)
   /* USER CODE END USART2_IRQn 0 */
   HAL_UART_IRQHandler(&huart2);
   /* USER CODE BEGIN USART2_IRQn 1 */
+  if(USART2->ISR & UART_FLAG_RXNE){
+    // rx_value = USART2->RDR;
+	UART2_DATA.UART_DataBuf[0]=USART2->RDR;
+
+  	  if(esp8266data.rx_link_cloud_flag ==1){
+
+			UART2_DATA.UART_Data[UART2_DATA.UART_Cnt] = UART2_DATA.UART_DataBuf[0];
+			UART2_DATA.UART_Cnt++;
+
+			if(*UART2_DATA.UART_DataBuf==0X0A) // 0x0A = "\n"
+			{
+			UART2_DATA.UART_Flag = 1;
+			Wifi_Rx_InputInfo_Handler();
+			UART2_DATA.UART_Cnt=0;
+			}
+
+	      } 
+		  else{
+		         
+                 // wifi_rx_temp_data[test_counter];
+                 // test_counter++;
+               
+				  if(wifi_t.get_rx_beijing_time_flag==1){
+				  	UART2_DATA.UART_Data[UART2_DATA.UART_Cnt] = UART2_DATA.UART_DataBuf[0];
+					UART2_DATA.UART_Cnt++;
+				    
+				  }
+				  else
+				    Subscribe_Rx_Interrupt_Handler();
+	        }
+	
+
+
+  	}
 
   /* USER CODE END USART2_IRQn 1 */
 }

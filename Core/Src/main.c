@@ -106,7 +106,8 @@ int main(void)
    HAL_TIM_Base_Start_IT(&htim3);//HAL_TIM_Base_Start(&htim3);
    UART_Start_Receive_IT(&huart1,inputBuf,1);
    //DMA usart2
-   UART_Start_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,1);
+  // UART_Start_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,1);
+   __HAL_UART_ENABLE_IT(&huart2,UART_IT_RXNE);
   /* USER CODE END 2 */
 
 
@@ -123,8 +124,11 @@ int main(void)
 	Decode_Function();
     RunCommand_MainBoard_Fun();
     RunWifi_Command_Handler();
+    if(wifi_t.get_rx_beijing_time_flag==0){
+	      Tencent_Cloud_Rx_Handler();
+	  }
 	USART1_Cmd_Error_Handler(&huart1);
-	
+	//USART2_Cmd_Error_Handler(&huart2);
 	
 	
    }

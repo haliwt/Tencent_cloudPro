@@ -90,6 +90,7 @@ typedef struct _RUN_T{
     //app timer
 	//uint8_t app_timer_power_on_ref;
 	uint8_t app_timer_power_on_flag ;
+	uint8_t gTimer_usart2_error;
     
     uint8_t decodeFlag;
 	uint8_t sendtimes;

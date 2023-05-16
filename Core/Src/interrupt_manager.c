@@ -43,6 +43,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	   run_t.gTimer_to_publish_updata++;
 	   run_t.gTimer_send_dit++;
 	   wifi_t.gTimer_reconnect_wifi_order++;
+	   run_t.gTimer_usart2_error++;
 	  
 	   if(run_t.gFan_continueRun ==1){
            run_t.gFan_counter++;
