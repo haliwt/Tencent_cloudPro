@@ -751,22 +751,16 @@ void Tencent_Cloud_Rx_Handler(void)
 	    if(UART2_DATA.UART_Data[27]-0x30==1){
 
 	           SendWifiCmd_To_Order(WIFI_POWER_ON);
-			   HAL_Delay(200);
+			   HAL_Delay(500);
 			   run_t.wifi_gPower_On= POWER_ON;
 		       run_t.gPower_On = POWER_ON;
 			   run_t.gPower_flag =POWER_ON;
 			   run_t.RunCommand_Label=POWER_ON;
 			   run_t.app_timer_power_on_flag = 1;
-			   
-
-			
-			   
-			 
-          
-	 	 }
+		}
 
          SendWifiCmd_To_Order(WIFI_POWER_ON);
-	     HAL_Delay(200);
+	     HAL_Delay(300);
 		 if(UART2_DATA.UART_Data[18]-0x30==1){ //Anion
 		     run_t.gPlasma =1;
 		   	 SendWifiCmd_To_Order(WIFI_KILL_ON);
