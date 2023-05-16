@@ -822,7 +822,7 @@ void Tencent_Cloud_Rx_Handler(void)
 
 
    if(run_t.response_wifi_signal_label==0xff){
-         send_data_end_flag = 0;
+        
         if(buzzer_temp_on ==0)
    	       Buzzer_KeySound();
 		
