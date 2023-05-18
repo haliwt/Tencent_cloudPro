@@ -439,8 +439,8 @@ void RunCommand_MainBoard_Fun(void)
             run_t.RunCommand_Label=0xff;
 
 		
-		//MqttData_Publish_SetOpen(0x0);
-       // HAL_Delay(100);
+		MqttData_Publish_SetOpen(0x0);
+        HAL_Delay(200);
 
 		MqttData_Publish_PowerOff_Ref(); 
 		HAL_Delay(200);
@@ -547,6 +547,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 
 	if(self_power_on_flag==0){
         self_power_on_flag ++ ;
+		run_t.power_on_send_bejing_times=0;
         Buzzer_KeySound();
 
     
@@ -563,8 +564,6 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 		}
    
     }
-    
-    
     
     
    if(esp8266data.esp8266_login_cloud_success==1 && run_t.gPower_On  !=POWER_ON ){

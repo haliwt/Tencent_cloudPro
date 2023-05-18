@@ -442,6 +442,7 @@ void Tencent_Cloud_Rx_Handler(void)
     uint8_t i;
     static uint8_t wind_hundred, wind_decade,wind_unit,temp_decade,temp_unit;
 	static uint8_t buzzer_temperature_flag,buzzer_temp_on,wifi_set_temp_value;
+	static uint8_t app_auto_power_ref =0;
 	uint32_t temp;
     if( esp8266data.rx_data_success==1){
             esp8266data.rx_data_success=0;
@@ -763,41 +764,41 @@ void Tencent_Cloud_Rx_Handler(void)
 	     HAL_Delay(300);
 		 if(UART2_DATA.UART_Data[18]-0x30==1){ //Anion
 		     run_t.gPlasma =1;
-		   	 SendWifiCmd_To_Order(WIFI_KILL_ON);
-		   	 HAL_Delay(20);
+		   	// SendWifiCmd_To_Order(WIFI_KILL_ON);
+		   //	 HAL_Delay(20);
 		}
 		else  if(UART2_DATA.UART_Data[18]-0x30==0){
 		   	 run_t.gPlasma =0;
-		   	SendWifiCmd_To_Order(WIFI_KILL_OFF);
-		   	HAL_Delay(20);
+		   //	SendWifiCmd_To_Order(WIFI_KILL_OFF);
+		  // 	HAL_Delay(20);
 		}
 		  
         
 	       if(UART2_DATA.UART_Data[8]-0x30==1){
 		  		run_t.gUlransonic=1;
-		        SendWifiCmd_To_Order(WIFI_SONIC_ON);
-		   		HAL_Delay(20);
+		       // SendWifiCmd_To_Order(WIFI_SONIC_ON);
+		   		//HAL_Delay(20);
 	       }
 		   else if(UART2_DATA.UART_Data[8]-0x30==0){
 		   	    run_t.gUlransonic=0;
-		   	    SendWifiCmd_To_Order(WIFI_SONIC_OFF);
-		   		HAL_Delay(20);
+		   	   // SendWifiCmd_To_Order(WIFI_SONIC_OFF);
+		   		//HAL_Delay(20);
 		   	}
 
 	
 
 		   if(UART2_DATA.UART_Data[35]-0x30==1){
 		        run_t.gDry=1;
-	            SendWifiCmd_To_Order(WIFI_PTC_ON);
-		   		HAL_Delay(20);
+	           // SendWifiCmd_To_Order(WIFI_PTC_ON);
+		   		//HAL_Delay(20);
 		   	}
 		   else if(UART2_DATA.UART_Data[35]-0x30==0){
 		   	    run_t.gDry=0;
-		   	    SendWifiCmd_To_Order(WIFI_PTC_OFF);
-		   		HAL_Delay(20);
+		   	   // SendWifiCmd_To_Order(WIFI_PTC_OFF);
+		   		//HAL_Delay(20);
 
 		   	}
-		   
+		
         run_t.response_wifi_signal_label = APP_TIMER_POWER_ON_REF_TWO;
 
 	  break;
@@ -810,7 +811,10 @@ void Tencent_Cloud_Rx_Handler(void)
 			 run_t.wifi_gPower_On=1;
 		     MqttData_Publish_Update_Data();
 		     HAL_Delay(200);
+
+		 app_auto_power_ref = 1;
    	     run_t.response_wifi_signal_label = 0xff;
+		
 
 	  break;
 
@@ -835,9 +839,49 @@ void Tencent_Cloud_Rx_Handler(void)
         }
 		
 	}
-	
-   
-}
+
+   if(app_auto_power_ref == 1){
+     app_auto_power_ref =0;
+
+	if( run_t.gPlasma==1){ //Anion
+
+		SendWifiCmd_To_Order(WIFI_KILL_ON);
+		HAL_Delay(20);
+	}
+	else{
+		run_t.gPlasma =0;
+		SendWifiCmd_To_Order(WIFI_KILL_OFF);
+		HAL_Delay(20);
+	}
+
+
+	if(run_t.gUlransonic==1){
+
+			SendWifiCmd_To_Order(WIFI_SONIC_ON);
+			HAL_Delay(20);
+	}
+	else {
+			run_t.gUlransonic=0;
+			SendWifiCmd_To_Order(WIFI_SONIC_OFF);
+			HAL_Delay(20);
+	}
+
+
+
+	if(run_t.gDry==1){
+
+		SendWifiCmd_To_Order(WIFI_PTC_ON);
+		HAL_Delay(20);
+	}
+	else{
+			run_t.gDry=0;
+			SendWifiCmd_To_Order(WIFI_PTC_OFF);
+			HAL_Delay(20);
+
+	}
+	}
+
+  }
 void Wifi_Rx_Beijing_Time_Handler(void)
 {
 
