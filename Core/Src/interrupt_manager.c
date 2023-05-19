@@ -32,11 +32,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	    wifi_t.gTimer_get_beijing_time++;
 
 	   wifi_t.gTimer_beijing_time++;
-	   wifi_t.gTimer_publish_times++;
+	   wifi_t.gTimer_usart2_error_times++;
 	   run_t.gTimer_send_cloud_state++;
 	   run_t.gTimer_send_login_sucess++;
-	   run_t.gTimer_check_iwdg_flag++;
-	   run_t.gTimer_iwdg++;
+	   wifi_t.gTimer_get_beij_times++;
+	
 	   run_t.gTimer_usart_error++;
 	   wifi_t.gTimer_reconnect_wifi++;
 

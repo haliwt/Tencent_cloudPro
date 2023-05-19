@@ -78,12 +78,14 @@ void Decode_RunCmd(void)
 		   else if(cmdType_2==0x14){
                 run_t.gModel =2; //turn off
                 Buzzer_KeySound();
-		        MqttData_Publish_SetState(0x0); //Ai model
+		        MqttData_Publish_SetState(0x0); //Ai model->timer_time
+		        HAL_Delay(200);
             }
             else if(cmdType_2==0x04){
                 run_t.gModel =1;  //turn on
                 Buzzer_KeySound();
-			    MqttData_Publish_SetState(0x1); //Ai model
+			    MqttData_Publish_SetState(0x1); //Ai model->beijing_time
+			    HAL_Delay(200);
             }
            
            
@@ -203,6 +205,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 			MqttData_Publish_SetOpen(0);  
 			HAL_Delay(200);
 			 MqttData_Publish_Update_Data();
+			 HAL_Delay(200);
          }
 
     cmd = 0xff;
@@ -259,11 +262,13 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
        case DRY_ON:
          run_t.gDry = 1;
 	      run_t.gFan_continueRun =0;
-		if(esp8266data.esp8266_login_cloud_success==1)
-		 MqttData_Publish_SetPtc(0x01);
-		 if(run_t.noBuzzer_sound_dry_flag !=1){
+	   if(run_t.noBuzzer_sound_dry_flag !=1){
 		     Buzzer_KeySound();
 		 }
+		if(esp8266data.esp8266_login_cloud_success==1)
+		 MqttData_Publish_SetPtc(0x01);
+		 HAL_Delay(200);
+		 
        break;
 
 	   case DRY_OFF_NO_BUZZER :
@@ -272,6 +277,8 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 
 	  case DRY_OFF:
  			run_t.gDry = 0;
+			if( no_buzzer_sound_dry_off !=1)
+			    Buzzer_KeySound();
 			 if(run_t.gPlasma ==0){ //plasma turn off flag
 			  run_t.gFan_counter =0;
 			   run_t.gFan_continueRun =1;
@@ -279,44 +286,42 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 		     }
 			if(esp8266data.esp8266_login_cloud_success==1)
 			MqttData_Publish_SetPtc(0x0);
-			if( no_buzzer_sound_dry_off !=1)
-			    Buzzer_KeySound();
+			HAL_Delay(200);
+			
        break;
 
        case PLASMA_ON:
        		run_t.gPlasma=1;
        		run_t.gUlransonic =1;
+	    Buzzer_KeySound();
 	   if(esp8266data.esp8266_login_cloud_success==1){
 	        MqttData_Publish_SetPlasma(1) ;//杀菌
 	        HAL_Delay(200);
 	        MqttData_Publish_SetUltrasonic(1); //超声波
+	        HAL_Delay(200);
 	   	}
-	    Buzzer_KeySound();
+	   
        break;
 
        case PLASMA_OFF:
            run_t.gPlasma=0;
            run_t.gUlransonic =0;
+	    Buzzer_KeySound();
 	   if(esp8266data.esp8266_login_cloud_success==1){
 	       MqttData_Publish_SetPlasma(0) ;//杀菌
 	        HAL_Delay(200);
 	        MqttData_Publish_SetUltrasonic(0); //超声波
+	        HAL_Delay(200);
 	   	}
-	    Buzzer_KeySound();
+	   
        break;
 
-//       case FAN_ON:
-//       
-//		  if(esp8266data.esp8266_login_cloud_success==1)
-//		  	MqttData_Publis_SetFan(run_t.set_wind_speed_value);
-//		   Buzzer_KeySound();
-//       break;
-//
-//       case FAN_OFF:
-//		   if(esp8266data.esp8266_login_cloud_success==1)
-//		       MqttData_Publis_SetFan(run_t.set_wind_speed_value);
-//		    Buzzer_KeySound();
-//       break;
+	   case MODE_AI_NO_BUZZER :
+	   	  run_t.gModel =1;  //AI_Works_Model 
+		  MqttData_Publish_SetState(0x1); //Ai model->beijing_time
+		  HAL_Delay(200);
+
+	   break;
 
 	   case WIFI_CONNECT_FAIL:
 
@@ -333,11 +338,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 
 	   break;
 
-	    case IWDG_RECEIVE_DATA:
 
-	     run_t.process_run_guarantee_flag=1;
-
-	   break;
 
 
       default :
@@ -471,12 +472,7 @@ void RunCommand_MainBoard_Fun(void)
     
     break;
 
-
-
-	
-
-
-    }
+   }
 	
     if((run_t.gTimer_1s>30 && run_t.gPower_flag == POWER_ON)||power_just_on < 10){
     	power_just_on ++ ;

@@ -47,13 +47,14 @@ typedef enum{
 	 FAN_ON =0x10,
 	 FAN_OFF = 0x11,
 
-	 MODE_AI = 0x30,
-	 MODE_TIMER = 0x31,
+	 MODE_AI = 0x04,
+	 MODE_TIMER = 0x14,
+	 MODE_AI_NO_BUZZER= 0x44,
 
 	 WIFI_CONNECT_FAIL = 0x55,
      DISPLAY_PANNEL_CONNECT_WIFI_SUCCESS= 0xAA,
 
-	 IWDG_RECEIVE_DATA=0xB0
+
 
 
 
@@ -81,9 +82,10 @@ typedef struct _RUN_T{
 	uint8_t buzzer_sound_flag ;
     //iwdg ref
 	uint8_t process_run_guarantee_flag;
-    uint8_t  iwdg_feed_success_flag;
-	uint8_t gTimer_check_iwdg_flag;
-	uint8_t gTimer_iwdg;
+	
+ 
+
+
 	uint8_t iwdg_the_first_falg;
     uint8_t gPower_repeat_times_flag;
 	uint8_t gTimer_usart_error;

@@ -166,6 +166,7 @@ void RunWifi_Command_Handler(void)
 			if(esp8266data.gTimer_subscription_timing>59){
                  esp8266data.gTimer_subscription_timing=0;
 	            Subscriber_Data_FromCloud_Handler();
+			    HAL_Delay(200);
 			
 				wifi_t.runCommand_order_lable= wifi_publish_update_tencent_cloud_data;
 
@@ -193,33 +194,34 @@ void RunWifi_Command_Handler(void)
 	            if(esp8266data.gTimer_publish_timing>123 ){
 					 esp8266data.gTimer_publish_timing=0;
 			         Publish_Data_ToTencent_Update_Data();
+				    HAL_Delay(200);
 
 			       
 	           }
 
-		 
-	         
-	            if(esp8266data.gTimer_subscription_timing>132 && subscription_flag < 3){
+			  if(esp8266data.gTimer_subscription_timing>132 && subscription_flag < 3){
 					 subscription_flag ++;
-					 wifi_t.gTimer_publish_times =0;
+					 wifi_t.gTimer_usart2_error_times =0;
 					 esp8266data.gTimer_subscription_timing=0;
 			         Subscriber_Data_FromCloud_Handler();
+					 HAL_Delay(200);
 
 	            }
-	            if(wifi_t.gTimer_publish_times > 723 ){
-	            	wifi_t.gTimer_publish_times=0;
-                    
-                   __HAL_UART_CLEAR_OREFLAG(&huart2);
-                      __HAL_UART_CLEAR_NEFLAG(&huart2);
-                       __HAL_UART_CLEAR_FEFLAG(&huart2);
-
-                 
-                  temp=USART2->ISR;
-                  temp = USART2->RDR;
-
-                   UART_Start_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,1);
-
-	            }
+//	            if(wifi_t.gTimer_usart2_error_times > 72 ){
+//	            	wifi_t.gTimer_usart2_error_times=0;
+//                      __HAL_UART_GET_FLAG(&huart2,UART_FLAG_ORE);//UART_FLAG_NE
+//                     
+//                    
+//                    if(UART_FLAG_ORE==1){
+//                       __HAL_UART_CLEAR_OREFLAG(&huart2);
+//                         
+//                      
+//                      temp=USART2->ISR;
+//                      temp = USART2->RDR;
+//
+//                       UART_Start_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,1);
+//                    }
+//	            }
 
 		    while(beijing_time_flag == 1){
                  beijing_time_flag = 0;
@@ -244,8 +246,9 @@ void RunWifi_Command_Handler(void)
                     
                     esp8266data.rx_link_cloud_flag =1; 
 	   	            wifi_t.get_rx_beijing_time_flag=0;//disenable get beijing timing
-				  
-				 }
+				  }
+
+         
 
 
 		 if(esp8266data.gTimer_publish_dht11 >60){
@@ -271,8 +274,9 @@ void RunWifi_Command_Handler(void)
 			
             esp8266data.gTimer_publish_dht11=0;
 			Update_Dht11_Totencent_Value();
+			HAL_Delay(200);
 			
-			if(wifi_t.gTimer_get_beijing_time > 370 && run_t.power_on_send_bejing_times<4){ //
+			if(wifi_t.gTimer_get_beijing_time > 370 && run_t.power_on_send_bejing_times<3){ //
 			   wifi_t.gTimer_get_beijing_time=0;
 			   run_t.power_on_send_bejing_times++;
                 get_bj_times=0;
@@ -285,7 +289,7 @@ void RunWifi_Command_Handler(void)
 
 			    
 			}
-			else if(wifi_t.gTimer_get_beijing_time > 1800 && (power_on_send_bejing_times==3 || power_on_send_bejing_times >3)){
+			else if(wifi_t.gTimer_get_beijing_time > 900 && (run_t.power_on_send_bejing_times >2 )){
 				   wifi_t.gTimer_get_beijing_time=0;
                     get_bj_times=0;
 				  // wifi_t.get_rx_beijing_time_flag=1;
@@ -318,8 +322,10 @@ void RunWifi_Command_Handler(void)
 			 beijing_flag++;
 			 wifi_t.gTimer_beijing_time=0;
 		     wifi_t.get_rx_beijing_time_flag=1; //enable beijing times
+		     wifi_t.gTimer_get_beij_times=0;
              UART2_DATA.UART_Cnt=0;
              Get_BeiJing_Time_Cmd();
+			 HAL_Delay(200);
              
 	   	  }
 	   	  if(wifi_t.gTimer_beijing_time>2){
@@ -380,6 +386,12 @@ void RunWifi_Command_Handler(void)
 		
 
      }
+
+	 if(wifi_t.gTimer_get_beij_times > 10  && wifi_t.get_rx_beijing_time_flag==1 ){
+		wifi_t.gTimer_get_beij_times=0;
+        wifi_t.get_rx_beijing_time_flag=0;
+
+	 }
 	
   }
  

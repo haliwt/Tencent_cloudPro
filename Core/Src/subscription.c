@@ -9,6 +9,7 @@
 #include "usart.h"
 #include "buzzer.h"
 #include "mqtt_iot.h"
+#include "dht11.h"
 
 
 
