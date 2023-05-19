@@ -108,6 +108,7 @@ void Decode_RunCmd(void)
              run_t.set_temperature_value = cmdType_2;
 			 if(esp8266data.esp8266_login_cloud_success==1)
 			       MqttData_Publis_SetTemp(run_t.set_temperature_value);
+			 	   HAL_Delay(200);
 			  
          }
 	  
