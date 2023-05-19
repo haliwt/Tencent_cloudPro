@@ -159,7 +159,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 
     case 0x01: // power on
 
-	     
+	    if(run_t.app_timer_power_on_flag ==0){
          Buzzer_KeySound();
          run_t.gPower_flag = POWER_ON;
 		 run_t.gPower_On = POWER_ON;
@@ -182,8 +182,9 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 	         Publish_Data_ToTencent_Initial_Data();
 			 HAL_Delay(200);
 		 }
+     }
 		 
-	// cmd=0xff;  
+	cmd=0xff;  
      break;
 
 

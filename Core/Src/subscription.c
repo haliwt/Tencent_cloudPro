@@ -588,25 +588,28 @@ void Tencent_Cloud_Rx_Handler(void)
 	  break;
 
 	  case OPEN_ON_ITEM:
+      
+//	      MqttData_Publish_SetOpen(1);  
+//		HAL_Delay(200);
+//	     Update_DHT11_Value();
+//		 HAL_Delay(200);
+//        run_t.gUlransonic =1;
+//			 run_t.gPlasma =1;
+//		     run_t.gDry =1;
+//			  run_t.set_wind_speed_value =100;
+//			 run_t.wifi_gPower_On=1;
+//		MqttData_Publish_Update_Data();
+//		 HAL_Delay(200);
+	   if(run_t.app_timer_power_on_flag == 0){
 
-	      MqttData_Publish_SetOpen(1);  
-		HAL_Delay(200);
-	     Update_DHT11_Value();
-		 HAL_Delay(200);
-        run_t.gUlransonic =1;
-			 run_t.gPlasma =1;
-		     run_t.gDry =1;
-			  run_t.set_wind_speed_value =100;
-			 run_t.wifi_gPower_On=1;
-		MqttData_Publish_Update_Data();
-		 HAL_Delay(200);
-	   run_t.wifi_gPower_On= POWER_ON;
-       run_t.gPower_On = POWER_ON;
-	   run_t.gPower_flag =POWER_ON;
-	   run_t.RunCommand_Label=POWER_ON;
-	   SendWifiCmd_To_Order(WIFI_POWER_ON);
-	   HAL_Delay(10);
-	   buzzer_temp_on=0;
+		   run_t.wifi_gPower_On= POWER_ON;
+	       run_t.gPower_On = POWER_ON;
+		   run_t.gPower_flag =POWER_ON;
+		   run_t.RunCommand_Label=POWER_ON;
+		   SendWifiCmd_To_Order(WIFI_POWER_ON);
+		   HAL_Delay(10);
+		   buzzer_temp_on=0;
+	   	}
 	  run_t.response_wifi_signal_label = 0xff;
 
 	  break;
@@ -638,7 +641,7 @@ void Tencent_Cloud_Rx_Handler(void)
 	     run_t.response_wifi_signal_label = 0xff;
 	  	break;
 
-	  case ANION_OFF_ITEM: //"杀菌"
+	  case ANION_OFF_ITEM: //"杀菌" //5
 	  	if(run_t.gPower_flag ==POWER_ON){
 			// Buzzer_KeySound();
             MqttData_Publish_SetPlasma(0);
@@ -649,7 +652,7 @@ void Tencent_Cloud_Rx_Handler(void)
 	  	}
 		buzzer_temp_on=0;
 	   run_t.response_wifi_signal_label = 0xff;
-	  	break;
+	   break;
 		
 	  case ANION_ON_ITEM: //plasma 
 	  	if(run_t.gPower_flag ==POWER_ON){
@@ -759,26 +762,23 @@ void Tencent_Cloud_Rx_Handler(void)
 
 	  case APP_TIMER_POWER_ON_REF :
 	  	
-	    Parse_Json_Statement();
+	   if(strstr((char *)TCMQTTRCVPUB,"open\":1")){
+	   
+	   
+		 
+		    run_t.app_timer_power_on_flag = 1;
+
 		
-        run_t.response_wifi_signal_label = APP_TIMER_POWER_ON_REF_TWO;
+			run_t.RunCommand_Label = POWER_ON;
+			
+		
+	    }
+	    app_auto_power_ref=1;
+	   run_t.response_wifi_signal_label = 0xff;
 
 	  break;
 
-	  case APP_TIMER_POWER_ON_REF_TWO :
-
-	    MqttData_Publish_SetOpen(1);  
-		    HAL_Delay(200);
-		     run_t.set_wind_speed_value =100;
-			 run_t.wifi_gPower_On=1;
-		     MqttData_Publish_Update_Data();
-		     HAL_Delay(200);
-
-		 app_auto_power_ref = 1;
-   	    run_t.response_wifi_signal_label = 0xff;
-		
-
-	  break;
+	 
 
 	  default :
 	  break;
@@ -795,53 +795,25 @@ void Tencent_Cloud_Rx_Handler(void)
          
 		run_t.response_wifi_signal_label=0xf0;
 
+		if(app_auto_power_ref==1){
+			app_auto_power_ref=0;
+
+		    for(i=0;i<37;i++){
+				   UART2_DATA.UART_Data[i]=0;
+		
+				}
+
+		}
+        else{
 		for(i=0;i<20;i++){
 		   UART2_DATA.UART_Data[i]=0;
 
         }
+        }
 		
 	}
 
-   if(app_auto_power_ref == 1){
-     app_auto_power_ref =0;
-
-	if( run_t.gPlasma==1){ //Anion
-
-		SendWifiCmd_To_Order(WIFI_KILL_ON);
-		HAL_Delay(20);
-	}
-	else{
-		run_t.gPlasma =0;
-		SendWifiCmd_To_Order(WIFI_KILL_OFF);
-		HAL_Delay(20);
-	}
-
-
-	if(run_t.gUlransonic==1){
-
-			SendWifiCmd_To_Order(WIFI_SONIC_ON);
-			HAL_Delay(20);
-	}
-	else {
-			run_t.gUlransonic=0;
-			SendWifiCmd_To_Order(WIFI_SONIC_OFF);
-			HAL_Delay(20);
-	}
-
-
-
-	if(run_t.gDry==1){
-
-		SendWifiCmd_To_Order(WIFI_PTC_ON);
-		HAL_Delay(20);
-	}
-	else{
-			run_t.gDry=0;
-			SendWifiCmd_To_Order(WIFI_PTC_OFF);
-			HAL_Delay(20);
-
-	}
-	}
+  
 
   }
 void Wifi_Rx_Beijing_Time_Handler(void)
@@ -957,45 +929,22 @@ void Wifi_Get_Beijing_Time_Handler(void)
 void Parse_Json_Statement(void)
 {
 
-     if(strstr((char *)TCMQTTRCVPUB,"open\":0")){
-			run_t.response_wifi_signal_label = OPEN_OFF_ITEM;
-	        
-		 
-	}
-	else if(strstr((char *)TCMQTTRCVPUB,"open\":1")){
-	   
-	   run_t.response_wifi_signal_label = OPEN_ON_ITEM;
-	   run_t.gPower_flag =POWER_ON;
-	    run_t.app_timer_power_on_flag = 1;
-	   SendWifiCmd_To_Order(WIFI_POWER_ON);
-	   HAL_Delay(100);
-	    run_t.gPower_On = POWER_ON;
-		run_t.gPower_flag =POWER_ON;
-		run_t.RunCommand_Label=POWER_ON;
-	}
-
-
-
-	  if(strstr((char *)TCMQTTRCVPUB,"ptc\":0")){
+ 
+     if(strstr((char *)TCMQTTRCVPUB,"ptc\":0")){
 				
-					run_t.gDry=0;
+			run_t.gDry=0;
 				  
-				 
-				 
-				
 		}
 		else if(strstr((char *)TCMQTTRCVPUB,"ptc\":1")){
 				
 				    run_t.gDry=1;
 				  
 					
-				
-	
 		}
 		
 		if(strstr((char *)TCMQTTRCVPUB,"Anion\":0")){
 			
-				   run_t.gPlasma=0;run_t.response_wifi_signal_label = ANION_OFF_ITEM;
+				   run_t.gPlasma=0;
 				
 				
 			 
@@ -1013,18 +962,12 @@ void Parse_Json_Statement(void)
 			     run_t.gUlransonic=0;
 				
 			
-					
-				
-			
 		}
 		else if(strstr((char *)TCMQTTRCVPUB,"sonic\":1")){
 			
 				run_t.gUlransonic=1;
 				
-		   
-			   
-				
-		}
+		   }
 
 
 
