@@ -75,5 +75,8 @@ void Subscriber_Data_FromCloud_Handler(void);
 void Subscribe_Rx_Interrupt_Handler(void);
 void Tencent_Cloud_Rx_Handler(void);
 void Wifi_Rx_Beijing_Time_Handler(void);
+
+void Parse_Json_Statement(void);
+
 #endif 
 

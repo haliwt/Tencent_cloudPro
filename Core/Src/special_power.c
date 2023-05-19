@@ -7,6 +7,7 @@
 #include "wifi_fun.h"
 #include "esp8266.h"
 #include "buzzer.h"
+#include "subscription.h"
 
 void (*Single_Usart_ReceiveData)(uint8_t cmd);
 
@@ -34,6 +35,13 @@ void SetPowerOn_ForDoing(void)
 	    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);//ultrasnoic ON 
 	    PTC_SetHigh();
     }
+	else{
+
+	       Parse_Json_Statement();
+
+
+	}
+	
 	run_t.gModel =1;  //AI
 
 	
