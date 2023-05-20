@@ -742,12 +742,15 @@ void Tencent_Cloud_Rx_Handler(void)
 	  case FAN_ITEM:
 	    if(run_t.gPower_flag ==POWER_ON){
 
-           		 wind_decade=UART2_DATA.UART_Data[7]-0x30;
-	       		 wind_unit=UART2_DATA.UART_Data[8]-0x30;
-                 run_t.set_wind_speed_value = wind_decade*10 + wind_unit;
+           		 wind_hundred =UART2_DATA.UART_Data[7]-0x30;
+	       		 wind_decade=UART2_DATA.UART_Data[8]-0x30;
+                 wind_unit = UART2_DATA.UART_Data[9]-0x30;
+            
+                if(wind_hundred ==1 && wind_decade==0 && wind_unit==0)run_t.set_wind_speed_value=100;
+                else
+                     run_t.set_wind_speed_value = wind_hundred*10 + wind_decade;
 			
-           // if(run_t.set_wind_speed_value > 100) run_t.set_wind_speed_value=99;
-          //  if(run_t.set_wind_speed_value < 1) run_t.set_wind_speed_value=0;
+         
 			MqttData_Publis_SetFan(run_t.set_wind_speed_value);
 			HAL_Delay(200);
     		SendWifiData_To_PanelWindSpeed(run_t.set_wind_speed_value);
