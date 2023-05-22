@@ -22,7 +22,7 @@ void SetPowerOn_ForDoing(void)
     run_t.gPower_On=POWER_ON;
 	run_t.gmt_time_flag=0;
 	run_t.wifi_gPower_On = 1;
-
+    run_t.app_timer_power_off_flag=0;
 
 	switch(run_t.app_timer_power_on_flag){
 		case 0:
@@ -51,7 +51,7 @@ void SetPowerOn_ForDoing(void)
 	break;
 
 	case 1: //app timer timing power of 
-	       if(run_t.gModel==0)run_t.gModel =1;
+	       run_t.gModel =1;
 		   SendWifiCmd_To_Order(WIFI_POWER_ON);
 		   HAL_Delay(100);
 
@@ -127,7 +127,8 @@ void SetPowerOff_ForDoing(void)
     run_t.gDry = 0;
 	run_t.gPlasma =0;       //"杀菌"
 	run_t.gUlransonic = 0; // "驱虫"
-
+	run_t.gModel =1;
+    run_t.app_timer_power_on_flag =0;
 	
     
 	PLASMA_SetLow(); //

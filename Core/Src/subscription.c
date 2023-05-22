@@ -566,6 +566,7 @@ void Tencent_Cloud_Rx_Handler(void)
 
       case OPEN_OFF_ITEM:
 
+         if(run_t.app_timer_power_off_flag == 0){
          MqttData_Publish_SetOpen(0);  
 	     HAL_Delay(100);
 	
@@ -587,6 +588,7 @@ void Tencent_Cloud_Rx_Handler(void)
 		HAL_Delay(10);
 		buzzer_temp_on=0;
         run_t.response_wifi_signal_label = 0xff;
+        }
 	  break;
 
 	  case OPEN_ON_ITEM:
@@ -775,6 +777,13 @@ void Tencent_Cloud_Rx_Handler(void)
             run_t.RunCommand_Label = POWER_ON;
 			
 		}
+        else if(strstr((char *)TCMQTTRCVPUB,"open\":0")){
+	   
+	        run_t.app_timer_power_off_flag = 1;
+            run_t.RunCommand_Label = POWER_OFF;
+			
+		}
+	   
 	    app_auto_power_ref=1;
 	   wifi_t.received_data_from_tencent_cloud=0;
 	

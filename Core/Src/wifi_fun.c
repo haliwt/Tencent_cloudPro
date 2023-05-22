@@ -207,21 +207,7 @@ void RunWifi_Command_Handler(void)
 					 HAL_Delay(200);
 
 	            }
-//	            if(wifi_t.gTimer_usart2_error_times > 72 ){
-//	            	wifi_t.gTimer_usart2_error_times=0;
-//                      __HAL_UART_GET_FLAG(&huart2,UART_FLAG_ORE);//UART_FLAG_NE
-//                     
-//                    
-//                    if(UART_FLAG_ORE==1){
-//                       __HAL_UART_CLEAR_OREFLAG(&huart2);
-//                         
-//                      
-//                      temp=USART2->ISR;
-//                      temp = USART2->RDR;
-//
-//                       UART_Start_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,1);
-//                    }
-//	            }
+
 
 		    while(beijing_time_flag == 1){
                  beijing_time_flag = 0;
@@ -313,7 +299,7 @@ void RunWifi_Command_Handler(void)
 
 	   case wifi_get_beijing_time://7
 
-	     if(run_t.gPower_On ==POWER_ON){ //WT.EDIT.20223.05.13 add new item
+	    if(run_t.gPower_On==POWER_ON){
 	 
 		 esp8266data.rx_link_cloud_flag =0;
 	   	 
@@ -350,14 +336,15 @@ void RunWifi_Command_Handler(void)
 		     wifi_t.get_rx_beijing_time_flag=0; //enable beijing times
 			
 	         wifi_t.runCommand_order_lable=wifi_publish_update_tencent_cloud_data;
-		   }
-	     }
+		  }
+         }
 		 else{
 
 		     wifi_t.runCommand_order_lable=wifi_publish_update_tencent_cloud_data;
 
 
-		 }
+		 
+         }
 	    break;
 
 	   
@@ -408,7 +395,7 @@ static void AutoReconnect_Wifi_Neware_Function(void)
 						det_no_wifi_net++;
 						run_t.auto_link_cloud_flag=0;
 						SendWifiData_To_Cmd(0x0) ;
-					  run_t.auto_link_cloud_flag=0;
+				
 	
 					  esp8266data.esp8266_login_cloud_success=0;
 	
@@ -427,7 +414,7 @@ static void AutoReconnect_Wifi_Neware_Function(void)
 								 run_t.reconnect_tencent_cloud_flag=0;
 								run_t.auto_link_cloud_flag=0xff;
 								esp8266data.rx_link_cloud_flag =0;
-							   // wifi_t.runCommand_order_lable=wifi_has_been_connected;
+			
 								SendWifiData_To_Cmd(0x01) ;
 								HAL_Delay(30);
 							  

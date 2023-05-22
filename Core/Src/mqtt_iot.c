@@ -95,7 +95,7 @@ static void Mqtt_power_off_Value(void)
 {
   
    	sg_info.open=0;
-    sg_info.state=0;
+    sg_info.state=1;
     sg_info.ptc=0; 
     sg_info.anion=0;  //灭菌
 	sg_info.sonic =0;  //驱虫
