@@ -428,16 +428,6 @@ void RunCommand_MainBoard_Fun(void)
 			 esp8266data.rx_link_cloud_flag =0;
 		}
 		
-		
-        
-	   run_t.gPower_flag =POWER_OFF;
-	   if(run_t.iwdg_the_first_falg==1){
-		    run_t.RunCommand_Label =POWER_REF;
-       }
-        else
-            run_t.RunCommand_Label=0xff;
-
-		
 		MqttData_Publish_SetOpen(0x0);
         HAL_Delay(200);
 
@@ -534,16 +524,6 @@ void RunCommand_MainBoard_Fun(void)
 
 
    }
-	
-   
-	
-
-
-
-
-
-	 
-		
 	
 }
 /**********************************************************************
