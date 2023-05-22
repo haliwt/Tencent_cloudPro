@@ -452,7 +452,7 @@ void Tencent_Cloud_Rx_Handler(void)
 
 	
      if(wifi_t.received_data_from_tencent_cloud ==0x25){
-	
+	    
 		run_t.response_wifi_signal_label = APP_TIMER_POWER_ON_REF;
 		strcpy((char*)TCMQTTRCVPUB,(char *)UART2_DATA.UART_Data);
 	
@@ -771,16 +771,13 @@ void Tencent_Cloud_Rx_Handler(void)
 	  	
 	   if(strstr((char *)TCMQTTRCVPUB,"open\":1")){
 	   
-	   
-		 
-		    run_t.app_timer_power_on_flag = 1;
-
-		
-			run_t.RunCommand_Label = POWER_ON;
+	        run_t.app_timer_power_on_flag = 1;
+            run_t.RunCommand_Label = POWER_ON;
 			
-		
-	    }
+		}
 	    app_auto_power_ref=1;
+	   wifi_t.received_data_from_tencent_cloud=0;
+	
 	   run_t.response_wifi_signal_label = 0xff;
 
 	  break;
