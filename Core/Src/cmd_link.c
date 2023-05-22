@@ -70,9 +70,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	      } 
 		  else{
 
-				if(wifi_t.get_rx_beijing_time_flag==1){
-				UART2_DATA.UART_Data[UART2_DATA.UART_Cnt] = UART2_DATA.UART_DataBuf[0];
-				UART2_DATA.UART_Cnt++;
+		        
+
+		        if(wifi_t.get_rx_beijing_time_flag==1){
+					UART2_DATA.UART_Data[UART2_DATA.UART_Cnt] = UART2_DATA.UART_DataBuf[0];
+					UART2_DATA.UART_Cnt++;
 
 				}
 				else

@@ -29,7 +29,10 @@ typedef enum{
    POWER_CONNECTOR_WIFI,
    UPDATE_TO_PANEL_DATA,
    WIFI_RESTART_INIT,
-   POWER_REF
+   POWER_REF,
+   FAN_CONTINUCE_RUN_ONE_MINUTE,
+   POWER_ON_FAN_CONTINUCE_RUN_ONE_MINUTE,
+   POWER_NULL
 
  }run_state_t;
 
@@ -67,7 +70,7 @@ typedef struct _RUN_T{
 	uint8_t gPower_On;
 	uint8_t wifi_gPower_On;
 	uint8_t gPower_flag;
-	uint8_t gTheFirst_powerOn ;
+
 	uint8_t gDht11_flag;
 	uint8_t gTemperature;
 

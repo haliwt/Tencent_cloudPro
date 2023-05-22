@@ -32,7 +32,7 @@ void SetPowerOn_ForDoing(void)
 		run_t.gPlasma =1;       //"杀菌"
 		run_t.gUlransonic = 1; // "驱虫"
 	    run_t.gFan_counter=0;
-       if(wifi_t.tencent_cloud_command_power_on == 0){
+    
 		   MqttData_Publish_SetOpen(1);  
 			HAL_Delay(200);
 		     Update_DHT11_Value();
@@ -41,7 +41,7 @@ void SetPowerOn_ForDoing(void)
 			run_t.wifi_gPower_On=1;
 			MqttData_Publish_Update_Data();
 			 HAL_Delay(200);
-       	}
+       	
 			
 	    Fan_RunSpeed_Fun();//FAN_CCW_RUN();
 	    PLASMA_SetHigh(); //

@@ -387,7 +387,7 @@ void SystemReset(void)
 void RunCommand_MainBoard_Fun(void)
 {
 
-   static uint8_t power_just_on,send_link_times;
+   static uint8_t power_just_on,send_link_times,the_first_power_off;
     
     if(run_t.buzzer_sound_flag == 1){
 	 	run_t.buzzer_sound_flag = 0;
@@ -402,7 +402,6 @@ void RunCommand_MainBoard_Fun(void)
 	    run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
 		power_just_on=0;
         run_t.gTimer_1s=0;
-		run_t.gTheFirst_powerOn=1;
         run_t.gPower_repeat_times_flag =1;
 		Update_DHT11_Value();
 		HAL_Delay(10);
@@ -428,14 +427,7 @@ void RunCommand_MainBoard_Fun(void)
 	 	     tencent_cloud_flag = 1;
 			 esp8266data.rx_link_cloud_flag =0;
 		}
-		if(run_t.gTheFirst_powerOn ==0)
-         	run_t.gFan_continueRun =0;
-		else{
-		 run_t.gFan_continueRun =1;
-		 
-
-		}
-         run_t.gFan_counter=0;
+		
 		
         
 	   run_t.gPower_flag =POWER_OFF;
@@ -454,8 +446,20 @@ void RunCommand_MainBoard_Fun(void)
 		
         Subscriber_Data_FromCloud_Handler();
 		HAL_Delay(100);
+
+		if(the_first_power_off ==0){
+
+		    the_first_power_off++;
+			run_t.RunCommand_Label = POWER_NULL;
+		}
+		else{
+		  run_t.gFan_counter=0;
+		  run_t.RunCommand_Label = FAN_CONTINUCE_RUN_ONE_MINUTE;
+		  
+		 }
+         
 		
-		
+       
       
 	break;
 
@@ -474,40 +478,39 @@ void RunCommand_MainBoard_Fun(void)
 
 
 	  }
+	 
+	 if((run_t.gTimer_1s>32 && run_t.gPower_flag == POWER_ON)||power_just_on < 10){
+		   power_just_on ++ ;
+		   run_t.gTimer_1s=0;
+		   Update_DHT11_Value();
 	
-    run_t.app_timer_power_on_flag=0;
-	wifi_t.tencent_cloud_command_power_on=0;
+	}
+	
+    //run_t.app_timer_power_on_flag=0;
+	//wifi_t.tencent_cloud_command_power_on=0;
     break;
 
-   }
-	
-    if((run_t.gTimer_1s>30 && run_t.gPower_flag == POWER_ON)||power_just_on < 10){
-    	power_just_on ++ ;
-		run_t.gTimer_1s=0;
-		Update_DHT11_Value();
+	case FAN_CONTINUCE_RUN_ONE_MINUTE:
 
-     }
-
-	
-
-	if(run_t.gFan_continueRun ==1 && run_t.gPower_flag == POWER_OFF){
-          
-                if(run_t.gFan_counter < 60){
+          if(run_t.gFan_counter < 60){
           
                     Fan_One_Speed();
                   
-                  }       
-
-	           if(run_t.gFan_counter > 59){
+            }       
+           else{
 		           
 				   run_t.gFan_counter=0;
-				   
-				   run_t.gFan_continueRun++;
+				   run_t.RunCommand_Label = POWER_NULL;
 			      
 				   FAN_Stop();
-	           }
-	  }
+	         }
+	  
 
+	break;
+
+	case POWER_ON_FAN_CONTINUCE_RUN_ONE_MINUTE:
+
+	    
 	 if(run_t.gPower_flag ==POWER_ON && run_t.gFan_continueRun ==1){
 
               if(run_t.gFan_counter < 60){
@@ -525,12 +528,20 @@ void RunCommand_MainBoard_Fun(void)
 
 	 }
 
-	 if(esp8266data.esp8266_login_cloud_success==1 && run_t.send_link_cloud_times ==0 && run_t.gPower_On ==POWER_ON){
-	 	   run_t.send_link_cloud_times ++;
-	 	    SendWifiData_To_Cmd(0x01) ;
-	        HAL_Delay(50);
-	 
-	 }
+
+	break;
+
+
+
+   }
+	
+   
+	
+
+
+
+
+
 	 
 		
 	
