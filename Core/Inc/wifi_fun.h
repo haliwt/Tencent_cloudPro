@@ -36,6 +36,7 @@ typedef struct _WIFI_FUN{
 	uint16_t gTimer_usart2_error_times;
 	uint8_t wifi_reconnect_read_flag;
 	uint8_t gTimer_get_beij_times;
+	uint8_t tencent_cloud_command_power_on;
 
 
     uint8_t real_hours;

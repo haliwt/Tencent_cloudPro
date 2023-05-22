@@ -469,7 +469,7 @@ void Tencent_Cloud_Rx_Handler(void)
      }
 
    if(strstr((char *)UART2_DATA.UART_Data,"open\":0")){
-			   run_t.response_wifi_signal_label = OPEN_OFF_ITEM;
+		  run_t.response_wifi_signal_label = OPEN_OFF_ITEM;
 		 
 	}
 	else if(strstr((char *)UART2_DATA.UART_Data,"open\":1")){
@@ -479,6 +479,7 @@ void Tencent_Cloud_Rx_Handler(void)
 	
 	if(strstr((char *)UART2_DATA.UART_Data,"ptc\":0")){
             if(run_t.gPower_flag ==POWER_ON){
+				  run_t.gDry=0;
 	           run_t.response_wifi_signal_label = PTC_OFF_ITEM;
 	         
              }
@@ -486,7 +487,7 @@ void Tencent_Cloud_Rx_Handler(void)
     }
     else if(strstr((char *)UART2_DATA.UART_Data,"ptc\":1")){
             if(run_t.gPower_flag ==POWER_ON){
-	           // run_t.gDry=1;
+	          run_t.gDry=1;
 			  run_t.response_wifi_signal_label = PTC_ON_ITEM;
 				
             }
@@ -530,15 +531,15 @@ void Tencent_Cloud_Rx_Handler(void)
 	
     if(strstr((char *)UART2_DATA.UART_Data,"state\":1")){
            if(run_t.gPower_flag ==POWER_ON){
-            //run_t.gModel=1;
-			run_t.response_wifi_signal_label = STATE_ON_ITEM;
+            run_t.gModel=1;
+			run_t.response_wifi_signal_label = STATE_AI_MODEL_ITEM;
         	}
 		  
     }
     else if(strstr((char *)UART2_DATA.UART_Data,"state\":2")){
             if(run_t.gPower_flag ==POWER_ON){
-           // run_t.gModel=2;
-			run_t.response_wifi_signal_label = STATE_OFF_ITEM;
+            run_t.gModel=2;
+			run_t.response_wifi_signal_label = STATE_TIMER_MODEL_ITEM;
             }
 			
     }
@@ -566,16 +567,17 @@ void Tencent_Cloud_Rx_Handler(void)
       case OPEN_OFF_ITEM:
 
          MqttData_Publish_SetOpen(0);  
-	     HAL_Delay(200);
+	     HAL_Delay(100);
 	
-        // Update_DHT11_Value();
-		// HAL_Delay(200);
+         Update_DHT11_Value();
+		 HAL_Delay(100);
         run_t.gUlransonic =0;
 			 run_t.gPlasma =0;
 		     run_t.gDry =0;
 			 run_t.set_wind_speed_value =10;
 			 run_t.wifi_gPower_On=0;
 		MqttData_Publish_Update_Data();
+		HAL_Delay(200);
         run_t.wifi_gPower_On= 0;
 	    run_t.gPower_On = POWER_OFF;
         run_t.gPower_flag =POWER_OFF;
@@ -589,19 +591,21 @@ void Tencent_Cloud_Rx_Handler(void)
 
 	  case OPEN_ON_ITEM:
       
-//	      MqttData_Publish_SetOpen(1);  
-//		HAL_Delay(200);
-//	     Update_DHT11_Value();
-//		 HAL_Delay(200);
-//        run_t.gUlransonic =1;
-//			 run_t.gPlasma =1;
-//		     run_t.gDry =1;
-//			  run_t.set_wind_speed_value =100;
-//			 run_t.wifi_gPower_On=1;
-//		MqttData_Publish_Update_Data();
-//		 HAL_Delay(200);
-	   if(run_t.app_timer_power_on_flag == 0){
 
+	   if(run_t.app_timer_power_on_flag == 0){
+	   	 MqttData_Publish_SetOpen(1);  
+		HAL_Delay(100);
+	     Update_DHT11_Value();
+		 HAL_Delay(50);
+        run_t.gUlransonic =1;
+			 run_t.gPlasma =1;
+		     run_t.gDry =1;
+			  run_t.set_wind_speed_value =100;
+			 run_t.wifi_gPower_On=1;
+		MqttData_Publish_Update_Data();
+		 HAL_Delay(200);
+		 
+         wifi_t.tencent_cloud_command_power_on=1;
 		   run_t.wifi_gPower_On= POWER_ON;
 	       run_t.gPower_On = POWER_ON;
 		   run_t.gPower_flag =POWER_ON;
@@ -693,12 +697,12 @@ void Tencent_Cloud_Rx_Handler(void)
 	   run_t.response_wifi_signal_label=0xff;
 	  	break;
 
-	  case STATE_OFF_ITEM:
+	  case STATE_TIMER_MODEL_ITEM:
 	  if(run_t.gPower_flag ==POWER_ON){
-	  
+	         run_t.gModel=2;
             MqttData_Publish_SetState(2);
 			HAL_Delay(200);
-            run_t.gModel=2;
+            
 			SendWifiCmd_To_Order(WIFI_MODE_2);
 		   HAL_Delay(10);
         }
@@ -706,13 +710,13 @@ void Tencent_Cloud_Rx_Handler(void)
 	   run_t.response_wifi_signal_label = 0xff;
 	  break;
 		
-	  case STATE_ON_ITEM:
+	  case STATE_AI_MODEL_ITEM:
 	  	 if(run_t.gPower_flag ==POWER_ON){
 		
-		 
+		    run_t.gModel=1;
             MqttData_Publish_SetState(1);
 			HAL_Delay(200);
-            run_t.gModel=1;
+           
 			SendWifiCmd_To_Order(WIFI_MODE_1);
 		   HAL_Delay(10);
         }

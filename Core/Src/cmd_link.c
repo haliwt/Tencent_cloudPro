@@ -62,25 +62,22 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 			if(*UART2_DATA.UART_DataBuf==0X0A) // 0x0A = "\n"
 			{
-			UART2_DATA.UART_Flag = 1;
-			Wifi_Rx_InputInfo_Handler();
-			UART2_DATA.UART_Cnt=0;
+				UART2_DATA.UART_Flag = 1;
+				Wifi_Rx_InputInfo_Handler();
+				UART2_DATA.UART_Cnt=0;
 			}
 
 	      } 
 		  else{
-		         
-                 // wifi_rx_temp_data[test_counter];
-                 // test_counter++;
-               
-				  if(wifi_t.get_rx_beijing_time_flag==1){
-				  	UART2_DATA.UART_Data[UART2_DATA.UART_Cnt] = UART2_DATA.UART_DataBuf[0];
-					UART2_DATA.UART_Cnt++;
-				    
-				  }
-				  else
-				    Subscribe_Rx_Interrupt_Handler();
-	        }
+
+				if(wifi_t.get_rx_beijing_time_flag==1){
+				UART2_DATA.UART_Data[UART2_DATA.UART_Cnt] = UART2_DATA.UART_DataBuf[0];
+				UART2_DATA.UART_Cnt++;
+
+				}
+				else
+				Subscribe_Rx_Interrupt_Handler();
+	      }
 	   
       HAL_UART_Receive_IT(&huart2,UART2_DATA.UART_DataBuf,1);
 	}
@@ -161,7 +158,7 @@ void USART1_Cmd_Error_Handler(UART_HandleTypeDef *huart)
          __HAL_UART_GET_FLAG(&huart1,USART_ISR_FE);
 		 
 		
-         if(UART_FLAG_ORE==1 || UART_FLAG_NE==1 || USART_ISR_FE==1){
+         if(UART_FLAG_ORE==1 ){
            __HAL_UART_CLEAR_OREFLAG(&huart1);
               __HAL_UART_CLEAR_NEFLAG(&huart1);
                __HAL_UART_CLEAR_FEFLAG(&huart1);
@@ -172,6 +169,41 @@ void USART1_Cmd_Error_Handler(UART_HandleTypeDef *huart)
           temp = USART1->RDR;
 
 		  UART_Start_Receive_IT(&huart1,inputBuf,1);
+		
+		
+         	}
+		  
+          
+         }
+  	  
+   	}
+}
+
+void USART2_Cmd_Error_Handler(UART_HandleTypeDef *huart)
+{
+       uint32_t temp;
+
+	if(huart==&huart2){
+
+
+      if(run_t.gTimer_usart2_error >56){
+	  	run_t.gTimer_usart2_error=0;
+	      __HAL_UART_GET_FLAG(&huart2,UART_FLAG_ORE);//UART_FLAG_NE
+         __HAL_UART_GET_FLAG(&huart2,UART_FLAG_NE); //USART_ISR_FE
+         __HAL_UART_GET_FLAG(&huart2,USART_ISR_FE);
+		 
+		
+         if(UART_FLAG_ORE==1 ){
+           __HAL_UART_CLEAR_OREFLAG(&huart2);
+              __HAL_UART_CLEAR_NEFLAG(&huart2);
+               __HAL_UART_CLEAR_FEFLAG(&huart2);
+
+          
+          
+          temp=USART2->ISR;
+          temp = USART2->RDR;
+
+		   UART_Start_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,1);
 		
 		
          	}

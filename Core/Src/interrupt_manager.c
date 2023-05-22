@@ -39,6 +39,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	
 	   run_t.gTimer_usart_error++;
 	   wifi_t.gTimer_reconnect_wifi++;
+	   run_t.gTimer_usart2_error++;
 
 	   run_t.gTimer_to_publish_updata++;
 	   run_t.gTimer_send_dit++;

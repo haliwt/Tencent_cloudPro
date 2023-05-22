@@ -76,13 +76,13 @@ void Decode_RunCmd(void)
                 Buzzer_KeySound();
 		   }
 		   else if(cmdType_2==0x14){
-                run_t.gModel =2; //turn off
+                run_t.gModel =2; //Timer timing of model
                 Buzzer_KeySound();
 		        MqttData_Publish_SetState(0x0); //Ai model->timer_time
 		        HAL_Delay(200);
             }
             else if(cmdType_2==0x04){
-                run_t.gModel =1;  //turn on
+                run_t.gModel =1;  // AI model 
                 Buzzer_KeySound();
 			    MqttData_Publish_SetState(0x1); //Ai model->beijing_time
 			    HAL_Delay(200);
@@ -471,7 +471,8 @@ void RunCommand_MainBoard_Fun(void)
 
 	  }
 	
-    
+    run_t.app_timer_power_on_flag=0;
+	wifi_t.tencent_cloud_command_power_on=0;
     break;
 
    }

@@ -79,6 +79,7 @@ static void Mqtt_Value_update_data(void)
 {
     
     sg_info.open = run_t.wifi_gPower_On;
+	if(run_t.gModel==0)run_t.gModel =1;
 	sg_info.state = run_t.gModel;
 	sg_info.ptc  = run_t.gDry;
 	sg_info.anion = run_t.gPlasma;
