@@ -29,7 +29,6 @@ typedef enum{
    POWER_CONNECTOR_WIFI,
    UPDATE_TO_PANEL_DATA,
    WIFI_RESTART_INIT,
-   POWER_REF,
    FAN_CONTINUCE_RUN_ONE_MINUTE,
    POWER_ON_FAN_CONTINUCE_RUN_ONE_MINUTE,
    POWER_NULL
@@ -142,12 +141,13 @@ typedef struct _RUN_T{
       uint8_t wifi_config_net_lable;
 	  uint8_t gTimer_send_login_sucess;
 	  uint8_t gTimer_beijing_time;
-	  uint8_t gTimer_usart2_error;
-
+	  
 	
 	uint8_t gTimer_1s;
 	uint8_t gTimer_send_cloud_state;
 	uint8_t gTimer_senddata_panel;
+	
+	uint16_t gTimer_usart2_error;
 	uint32_t randomName[1];
 	
 

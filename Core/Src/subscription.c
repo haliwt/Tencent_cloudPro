@@ -552,21 +552,24 @@ void Tencent_Cloud_Rx_Handler(void)
       case OPEN_OFF_ITEM:
 
          if(run_t.app_timer_power_off_flag == 0){
-         MqttData_Publish_SetOpen(0);  
-	     HAL_Delay(100);
-	
-         Update_DHT11_Value();
-		 HAL_Delay(100);
-        run_t.gUlransonic =0;
-			 run_t.gPlasma =0;
-		     run_t.gDry =0;
-			 run_t.set_wind_speed_value =10;
-			 run_t.wifi_gPower_On=0;
-		MqttData_Publish_Update_Data();
-		HAL_Delay(200);
-        run_t.wifi_gPower_On= 0;
-	    run_t.gPower_On = POWER_OFF;
-        run_t.gPower_flag =POWER_OFF;
+
+//	
+//         Update_DHT11_Value();
+//		 HAL_Delay(100);
+//        run_t.gUlransonic =0;
+//			 run_t.gPlasma =0;
+//		     run_t.gDry =0;
+//			 run_t.set_wind_speed_value =10;
+//			 run_t.wifi_gPower_On=0;
+//		MqttData_Publish_Update_Data();
+//		HAL_Delay(200);
+//        run_t.wifi_gPower_On= 0;
+//	    run_t.gPower_On = POWER_OFF;
+//        run_t.gPower_flag =POWER_OFF;
+
+	 //   MqttData_Publish_SetOpen(0);  
+	  //  HAL_Delay(200);
+
 		run_t.RunCommand_Label=POWER_OFF;
 
 		SendWifiCmd_To_Order(WIFI_POWER_OFF);
@@ -580,22 +583,22 @@ void Tencent_Cloud_Rx_Handler(void)
       
 
 	   if(run_t.app_timer_power_on_flag == 0){
-	   	 MqttData_Publish_SetOpen(1);  
-		HAL_Delay(100);
-	     Update_DHT11_Value();
-		 HAL_Delay(50);
-        run_t.gUlransonic =1;
-			 run_t.gPlasma =1;
-		     run_t.gDry =1;
-			  run_t.set_wind_speed_value =100;
-			 run_t.wifi_gPower_On=1;
-		MqttData_Publish_Update_Data();
-		 HAL_Delay(200);
-		 
- 
-		   run_t.wifi_gPower_On= POWER_ON;
-	       run_t.gPower_On = POWER_ON;
-		   run_t.gPower_flag =POWER_ON;
+//	   	 MqttData_Publish_SetOpen(1);  
+//		HAL_Delay(100);
+//	     Update_DHT11_Value();
+//		 HAL_Delay(50);
+//        run_t.gUlransonic =1;
+//			 run_t.gPlasma =1;
+//		     run_t.gDry =1;
+//			  run_t.set_wind_speed_value =100;
+//			 run_t.wifi_gPower_On=1;
+//		MqttData_Publish_Update_Data();
+//		 HAL_Delay(200);
+//		 
+// 
+//		   run_t.wifi_gPower_On= POWER_ON;
+//	       run_t.gPower_On = POWER_ON;
+//		   run_t.gPower_flag =POWER_ON;
 		   run_t.RunCommand_Label=POWER_ON;
 		   SendWifiCmd_To_Order(WIFI_POWER_ON);
 		   HAL_Delay(10);

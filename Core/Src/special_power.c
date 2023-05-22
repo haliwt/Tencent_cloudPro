@@ -122,14 +122,16 @@ void SetPowerOff_ForDoing(void)
 	run_t.gPower_On = POWER_OFF;
 	run_t.wifi_gPower_On = 0;
 	run_t.app_timer_power_on_flag=0;
+
+	 run_t.set_wind_speed_value =10;
  
     run_t.gFan = 0;
     run_t.gDry = 0;
 	run_t.gPlasma =0;       //"杀菌"
 	run_t.gUlransonic = 0; // "驱虫"
 	run_t.gModel =1;
-    run_t.app_timer_power_on_flag =0;
-	
+	run_t.app_timer_power_on_flag =0;
+
     
 	PLASMA_SetLow(); //
 	HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic Off 

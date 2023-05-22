@@ -210,7 +210,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
              run_t.wifi_gPower_On=0;
 			MqttData_Publish_SetOpen(0);  
 			HAL_Delay(200);
-			 MqttData_Publish_Update_Data();
+			MqttData_Publish_PowerOff_Ref(); 
 			 HAL_Delay(200);
          }
        }
@@ -428,14 +428,14 @@ void RunCommand_MainBoard_Fun(void)
 			 esp8266data.rx_link_cloud_flag =0;
 		}
 		
-		MqttData_Publish_SetOpen(0x0);
+		MqttData_Publish_SetOpen(0);
         HAL_Delay(200);
 
 		MqttData_Publish_PowerOff_Ref(); 
-		HAL_Delay(200);
+		HAL_Delay(300);
 		
         Subscriber_Data_FromCloud_Handler();
-		HAL_Delay(100);
+		HAL_Delay(200);
 
 		if(the_first_power_off ==0){
 
@@ -476,8 +476,6 @@ void RunCommand_MainBoard_Fun(void)
 	
 	}
 	
-    //run_t.app_timer_power_on_flag=0;
-	//wifi_t.tencent_cloud_command_power_on=0;
     break;
 
 	case FAN_CONTINUCE_RUN_ONE_MINUTE:
