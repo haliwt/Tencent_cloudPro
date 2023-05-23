@@ -552,8 +552,8 @@ void Tencent_Cloud_Rx_Handler(void)
       case OPEN_OFF_ITEM:
 
        
-		 	MqttData_Publish_SetPtc(0);
-		    HAL_Delay(300);
+		 	MqttData_Publish_SetOpen(0);  
+			HAL_Delay(200);
 	         run_t.RunCommand_Label=POWER_OFF;
 
 			SendWifiCmd_To_Order(WIFI_POWER_OFF);
@@ -568,8 +568,8 @@ void Tencent_Cloud_Rx_Handler(void)
 	  case OPEN_ON_ITEM:
       
 
-		  MqttData_Publish_SetPtc(1);
-		  HAL_Delay(300);
+		     MqttData_Publish_SetOpen(1);  
+			HAL_Delay(200);
 
 		   run_t.RunCommand_Label=POWER_ON;
 		   SendWifiCmd_To_Order(WIFI_POWER_ON);
@@ -735,8 +735,8 @@ void Tencent_Cloud_Rx_Handler(void)
 		   if(strstr((char *)TCMQTTRCVPUB,"open\":1")){
 		   
 			  run_t.app_timer_power_on_flag = 1;
-			  MqttData_Publish_SetPtc(1);
-			  HAL_Delay(300);
+			   MqttData_Publish_SetOpen(1);  
+			   HAL_Delay(200);
 
 			   run_t.RunCommand_Label=POWER_ON;
 			   SendWifiCmd_To_Order(WIFI_POWER_ON);
@@ -751,8 +751,8 @@ void Tencent_Cloud_Rx_Handler(void)
 		   
 		        run_t.app_timer_power_off_flag = 1;
 
-		    MqttData_Publish_SetPtc(0);
-		    HAL_Delay(300);
+		      MqttData_Publish_SetOpen(0);  
+			  HAL_Delay(200);
 	         run_t.RunCommand_Label=POWER_OFF;
 
 			SendWifiCmd_To_Order(WIFI_POWER_OFF);
