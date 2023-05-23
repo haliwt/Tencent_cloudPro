@@ -124,9 +124,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	    wifi_t.gTimer_get_beijing_time++;
 
 	   wifi_t.gTimer_beijing_time++;
-	   wifi_t.gTimer_usart2_error_times++;
-	   run_t.gTimer_send_cloud_state++;
-	   run_t.gTimer_send_login_sucess++;
+	
+	  
+	 
 	   wifi_t.gTimer_get_beij_times++;
 	
 	   run_t.gTimer_usart_error++;
@@ -136,6 +136,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	   run_t.gTimer_to_publish_updata++;
 	   run_t.gTimer_send_dit++;
 	   wifi_t.gTimer_reconnect_wifi_order++;
+	   wifi_t.gTimer_power_off++;
 	  
 	   if(run_t.gFan_continueRun ==1){
            run_t.gFan_counter++;

@@ -427,7 +427,9 @@ void RunCommand_MainBoard_Fun(void)
 	 	     tencent_cloud_flag = 1;
 			 esp8266data.linking_tencent_cloud_doing =0;
 		}
-		
+		Update_DHT11_Value();
+		HAL_Delay(10);
+
 		MqttData_Publish_SetOpen(0);
         HAL_Delay(200);
 

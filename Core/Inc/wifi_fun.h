@@ -33,7 +33,7 @@ typedef struct _WIFI_FUN{
     uint8_t soft_ap_config_flag;
     uint8_t get_rx_beijing_time_flag;
 	uint8_t rx_beijing_decode_flag;
-	uint16_t gTimer_usart2_error_times;
+	
 	uint8_t wifi_reconnect_read_flag;
 	uint8_t gTimer_get_beij_times;
 	uint8_t tencent_cloud_command_power_on;
@@ -50,6 +50,7 @@ typedef struct _WIFI_FUN{
     uint8_t gTimer_reconnect_wifi_order;
 	uint8_t gTimer_beijing_time;
 	uint8_t gTimer_reconnect_wifi;
+	uint8_t gTimer_power_off;
     uint16_t gTimer_get_beijing_time;
 	
 		

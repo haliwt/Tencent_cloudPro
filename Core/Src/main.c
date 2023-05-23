@@ -125,8 +125,12 @@ int main(void)
 	Decode_Function();
     RunCommand_MainBoard_Fun();
     RunWifi_Command_Handler();
+	if(wifi_t.get_rx_beijing_time_flag==0 ){
+	     Tencent_Cloud_Rx_Handler();
+	}
+	
 	USART1_Cmd_Error_Handler(&huart1);
-	USART2_Cmd_Error_Handler(&huart2);
+	//USART2_Cmd_Error_Handler(&huart2);
 	
 	
 	

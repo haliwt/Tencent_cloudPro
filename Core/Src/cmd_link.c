@@ -101,7 +101,7 @@ void USART2_Cmd_Error_Handler(UART_HandleTypeDef *huart)
 	if(huart==&huart2){
 
 
-      if(run_t.gTimer_usart2_error >310){
+      if(run_t.gTimer_usart2_error >330){
 	  	run_t.gTimer_usart2_error=0;
 	      __HAL_UART_GET_FLAG(&huart2,UART_FLAG_ORE);//UART_FLAG_NE
          __HAL_UART_GET_FLAG(&huart2,UART_FLAG_NE); //USART_ISR_FE
