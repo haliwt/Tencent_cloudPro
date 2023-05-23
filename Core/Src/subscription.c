@@ -212,7 +212,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
 	
 		    
             
-         if(UART2_DATA.UART_DataBuf[0]=='}') //0x7D='}' // end
+         if(UART2_DATA.UART_DataBuf[0]=='}' || UART2_DATA.UART_DataBuf[0]==0x0A) //0x7D='}' // end
          {
             esp8266data.rx_data_success=1;
             esp8266data.rx_data_state=0;
@@ -426,9 +426,7 @@ void Wifi_Rx_InputInfo_Handler(void)
 ********************************************************************************/
 void Tencent_Cloud_Rx_Handler(void)
 {
-    uint8_t i;
-    static uint8_t wind_hundred, wind_decade,wind_unit,temp_decade,temp_unit;
-	static uint8_t buzzer_temperature_flag,buzzer_temp_on,wifi_set_temp_value;
+    
 
     if( esp8266data.rx_data_success==1){
             esp8266data.rx_data_success=0;
@@ -545,15 +543,26 @@ void Tencent_Cloud_Rx_Handler(void)
 		}
 	}
    }
+    }
 
-   }
+ }
+
+
+void Json_Parse_Command_Fun(void)
+{
+
+  uint8_t i;
+    static uint8_t wind_hundred, wind_decade,wind_unit,temp_decade,temp_unit;
+	static uint8_t buzzer_temperature_flag,buzzer_temp_on,wifi_set_temp_value;
+
+
    switch(run_t.response_wifi_signal_label){
 
       case OPEN_OFF_ITEM:
 
        
 		 	MqttData_Publish_SetOpen(0);  
-			HAL_Delay(200);
+			HAL_Delay(300);
 	         run_t.RunCommand_Label=POWER_OFF;
 
 			SendWifiCmd_To_Order(WIFI_POWER_OFF);
@@ -569,7 +578,7 @@ void Tencent_Cloud_Rx_Handler(void)
       
 
 		     MqttData_Publish_SetOpen(1);  
-			HAL_Delay(200);
+			HAL_Delay(300);
 
 		   run_t.RunCommand_Label=POWER_ON;
 		   SendWifiCmd_To_Order(WIFI_POWER_ON);
@@ -584,7 +593,7 @@ void Tencent_Cloud_Rx_Handler(void)
 	  if(run_t.gPower_flag ==POWER_ON){
 	 
          MqttData_Publish_SetPtc(0x01);
-	  	 HAL_Delay(200);
+	  	 HAL_Delay(300);
 	     run_t.gDry=1;
 		 SendWifiCmd_To_Order(WIFI_PTC_ON);
 		 HAL_Delay(10);
@@ -598,7 +607,7 @@ void Tencent_Cloud_Rx_Handler(void)
 	  	if(run_t.gPower_flag ==POWER_ON){
 		//Buzzer_KeySound();
          MqttData_Publish_SetPtc(0);
-		 HAL_Delay(200);
+		 HAL_Delay(300);
 	     run_t.gDry=0;
 		 SendWifiCmd_To_Order(WIFI_PTC_OFF);
          HAL_Delay(10);
@@ -611,7 +620,7 @@ void Tencent_Cloud_Rx_Handler(void)
 	  	if(run_t.gPower_flag ==POWER_ON){
 			// Buzzer_KeySound();
             MqttData_Publish_SetPlasma(0);
-			HAL_Delay(200);
+			HAL_Delay(300);
             run_t.gPlasma=0;
 			SendWifiCmd_To_Order(WIFI_KILL_OFF);
 	  	   HAL_Delay(10);
@@ -623,7 +632,7 @@ void Tencent_Cloud_Rx_Handler(void)
 	  case ANION_ON_ITEM: //plasma 
 	  	if(run_t.gPower_flag ==POWER_ON){
             MqttData_Publish_SetPlasma(1);
-			HAL_Delay(200);
+			HAL_Delay(300);
             run_t.gPlasma=1;
 			SendWifiCmd_To_Order(WIFI_KILL_ON);
 	  	   HAL_Delay(10);
@@ -636,7 +645,7 @@ void Tencent_Cloud_Rx_Handler(void)
         if(run_t.gPower_flag ==POWER_ON){
 
             MqttData_Publish_SetUltrasonic(0);
-				HAL_Delay(200);
+				HAL_Delay(300);
             run_t.gUlransonic=0;
 			SendWifiCmd_To_Order(WIFI_SONIC_OFF);
 			HAL_Delay(10);
@@ -649,7 +658,7 @@ void Tencent_Cloud_Rx_Handler(void)
 	    if(run_t.gPower_flag ==POWER_ON){
 		
              MqttData_Publish_SetUltrasonic(1);
-			 	HAL_Delay(200);
+			 	HAL_Delay(300);
             run_t.gUlransonic=1;
 			SendWifiCmd_To_Order(WIFI_SONIC_ON);
 			HAL_Delay(10);
@@ -662,7 +671,7 @@ void Tencent_Cloud_Rx_Handler(void)
 	  if(run_t.gPower_flag ==POWER_ON){
 	         run_t.gModel=2;
             MqttData_Publish_SetState(2);
-			HAL_Delay(200);
+			HAL_Delay(300);
             
 			SendWifiCmd_To_Order(WIFI_MODE_2);
 		   HAL_Delay(10);
@@ -676,7 +685,7 @@ void Tencent_Cloud_Rx_Handler(void)
 		
 		    run_t.gModel=1;
             MqttData_Publish_SetState(1);
-			HAL_Delay(200);
+			HAL_Delay(300);
            
 			SendWifiCmd_To_Order(WIFI_MODE_1);
 		   HAL_Delay(10);
@@ -695,7 +704,7 @@ void Tencent_Cloud_Rx_Handler(void)
             if( run_t.set_temperature_value > 40)  run_t.set_temperature_value=40;
             if( run_t.set_temperature_value <20 )  run_t.set_temperature_value=20;
             MqttData_Publis_SetTemp(run_t.set_temperature_value);
-			HAL_Delay(200);
+			HAL_Delay(300);
 			SendWifiData_To_WifiSetTemp(run_t.set_temperature_value);
 			HAL_Delay(10);
           
@@ -717,7 +726,7 @@ void Tencent_Cloud_Rx_Handler(void)
 			
          
 			MqttData_Publis_SetFan(run_t.set_wind_speed_value);
-			HAL_Delay(200);
+			HAL_Delay(300);
     		SendWifiData_To_PanelWindSpeed(run_t.set_wind_speed_value);
 			HAL_Delay(10);
           
@@ -736,7 +745,7 @@ void Tencent_Cloud_Rx_Handler(void)
 		   
 			  run_t.app_timer_power_on_flag = 1;
 			   MqttData_Publish_SetOpen(1);  
-			   HAL_Delay(200);
+			   HAL_Delay(300);
 
 			   run_t.RunCommand_Label=POWER_ON;
 			   SendWifiCmd_To_Order(WIFI_POWER_ON);
