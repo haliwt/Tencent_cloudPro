@@ -429,14 +429,13 @@ void Tencent_Cloud_Rx_Handler(void)
     uint8_t i;
     static uint8_t wind_hundred, wind_decade,wind_unit,temp_decade,temp_unit;
 	static uint8_t buzzer_temperature_flag,buzzer_temp_on,wifi_set_temp_value;
-	static uint8_t app_auto_power_ref =0;
-	uint32_t temp;
+
     if( esp8266data.rx_data_success==1){
             esp8266data.rx_data_success=0;
 
 	
      if(wifi_t.received_data_from_tencent_cloud ==0x25){
-	    
+	    wifi_t.received_data_from_tencent_cloud=0;
 		run_t.response_wifi_signal_label = APP_TIMER_POWER_ON_REF;
 		strcpy((char*)TCMQTTRCVPUB,(char *)UART2_DATA.UART_Data);
 	
@@ -753,40 +752,39 @@ void Tencent_Cloud_Rx_Handler(void)
 
 	  case APP_TIMER_POWER_ON_REF :
 
-	    switch(run_t.gPower_On){
-
-		   case POWER_OFF:
+	  
 	  	
 		   if(strstr((char *)TCMQTTRCVPUB,"open\":1")){
 		   
-		        run_t.app_timer_power_on_flag = 1;
-	            run_t.RunCommand_Label = POWER_ON;
-		        MqttData_Publish_SetOpen(1);  
-		        HAL_Delay(300);
-			    SendWifiCmd_To_Order(WIFI_POWER_ON);
-		        HAL_Delay(10);
+			  run_t.app_timer_power_on_flag = 1;
+			  MqttData_Publish_SetPtc(1);
+			  HAL_Delay(300);
+
+			   run_t.RunCommand_Label=POWER_ON;
+			   SendWifiCmd_To_Order(WIFI_POWER_ON);
+			   HAL_Delay(10);
+			   buzzer_temp_on=0;
+		         
+
+				
 				
 			}
-		  break;
-
-		  case POWER_ON:
-	         if(strstr((char *)TCMQTTRCVPUB,"open\":0")){
+           else if(strstr((char *)TCMQTTRCVPUB,"open\":0")){
 		   
 		        run_t.app_timer_power_off_flag = 1;
-	            run_t.RunCommand_Label = POWER_OFF;
-			    MqttData_Publish_SetOpen(0);  
-		        HAL_Delay(300);
-				SendWifiCmd_To_Order(WIFI_POWER_OFF);
-			    HAL_Delay(10);
+
+		    MqttData_Publish_SetPtc(0);
+		    HAL_Delay(300);
+	         run_t.RunCommand_Label=POWER_OFF;
+
+			SendWifiCmd_To_Order(WIFI_POWER_OFF);
+			HAL_Delay(10);
+			buzzer_temp_on=0;
 		
 				
 			}
-		 break;
-	    }
-	    app_auto_power_ref=1;
-	   wifi_t.received_data_from_tencent_cloud=0;
-	
-	   run_t.response_wifi_signal_label = 0xff;
+
+	     run_t.response_wifi_signal_label=0xff;
 
 	  break;
 
