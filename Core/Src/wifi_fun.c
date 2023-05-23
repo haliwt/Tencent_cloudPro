@@ -213,7 +213,7 @@ void RunWifi_Command_Handler(void)
 					}
 
 
-					if(beijing_time_flag == 1){
+					while(beijing_time_flag == 1){
 							beijing_time_flag = 0;
 							wifi_t.get_rx_beijing_time_flag=0; //enable beijing times
 

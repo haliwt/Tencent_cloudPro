@@ -441,8 +441,8 @@ void RunCommand_MainBoard_Fun(void)
 			Update_DHT11_Value();
 			HAL_Delay(200);
 
-			//MqttData_Publish_SetOpen(0);
-	       // HAL_Delay(200);
+			MqttData_Publish_SetOpen(0);
+	        HAL_Delay(200);
 
 			MqttData_Publish_PowerOff_Ref(); 
 			HAL_Delay(200);

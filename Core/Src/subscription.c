@@ -741,7 +741,7 @@ void Tencent_Cloud_Rx_Handler(void)
 			   run_t.RunCommand_Label=POWER_ON;
 			   SendWifiCmd_To_Order(WIFI_POWER_ON);
 			   HAL_Delay(10);
-			   buzzer_temp_on=0;
+			 //  buzzer_temp_on=0;
 		         
 
 				
@@ -757,7 +757,7 @@ void Tencent_Cloud_Rx_Handler(void)
 
 			SendWifiCmd_To_Order(WIFI_POWER_OFF);
 			HAL_Delay(10);
-			buzzer_temp_on=0;
+		//	buzzer_temp_on=0;
 		
 				
 			}
@@ -772,9 +772,10 @@ void Tencent_Cloud_Rx_Handler(void)
 
    if(run_t.response_wifi_signal_label==0xff){
         
-        if(buzzer_temp_on ==0)
+        if(buzzer_temp_on ==0){
+			buzzer_temp_on++;
    	       Buzzer_KeySound();
-		
+        }
          
 		run_t.response_wifi_signal_label=0xf0;
 
