@@ -22,7 +22,7 @@ void SetPowerOn_ForDoing(void)
     run_t.gPower_On=POWER_ON;
 	run_t.gmt_time_flag=0;
 	run_t.wifi_gPower_On = 1;
-    run_t.app_timer_power_off_flag=0;
+ 
 
 	switch(run_t.app_timer_power_on_flag){
 		case 0:
@@ -53,12 +53,12 @@ void SetPowerOn_ForDoing(void)
 	case 1: //app timer timing power of 
 	       run_t.gModel =1;
 		   SendWifiCmd_To_Order(WIFI_POWER_ON);
-		   HAL_Delay(100);
+		   HAL_Delay(300);
 
 	       Parse_Json_Statement();
 
-	       MqttData_Publish_SetOpen(1);  
-		    HAL_Delay(200);
+	    //   MqttData_Publish_SetOpen(1);  
+		//   HAL_Delay(200);
 		     run_t.set_wind_speed_value =100;
 			 run_t.wifi_gPower_On=1;
 		     MqttData_Publish_Update_Data();
@@ -121,16 +121,14 @@ void SetPowerOff_ForDoing(void)
 	run_t.gFan_continueRun =1; //the fan still run 60s
 	run_t.gPower_On = POWER_OFF;
 	run_t.wifi_gPower_On = 0;
-	run_t.app_timer_power_on_flag=0;
-
-	 run_t.set_wind_speed_value =10;
+    run_t.set_wind_speed_value =10;
  
     run_t.gFan = 0;
     run_t.gDry = 0;
 	run_t.gPlasma =0;       //"杀菌"
 	run_t.gUlransonic = 0; // "驱虫"
 	run_t.gModel =1;
-	run_t.app_timer_power_on_flag =0;
+	
 
     
 	PLASMA_SetLow(); //

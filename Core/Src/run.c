@@ -159,14 +159,13 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 
     case 0x01: // power on
 
-	     if(run_t.app_timer_power_on_flag==0){
+	    
          Buzzer_KeySound();
          run_t.gPower_flag = POWER_ON;
 		 run_t.gPower_On = POWER_ON;
          run_t.RunCommand_Label= POWER_ON;
 		  run_t.gModel =1;
 		 run_t.set_wind_speed_value=100;
-		 run_t.app_timer_power_off_flag = 0;
 		 Update_DHT11_Value();
 		 HAL_Delay(200);
 		 if(esp8266data.esp8266_login_cloud_success==1){
@@ -184,7 +183,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 	         Publish_Data_ToTencent_Initial_Data();
 			 HAL_Delay(200);
 		 }
-	    }
+	   
 		 
 	cmd=0xff;  
      break;
@@ -193,7 +192,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 	
 
     case 0x00: //power off
-        if(run_t.app_timer_power_off_flag==0){
+       
         Buzzer_KeySound();
         run_t.gPower_On=POWER_OFF;
         run_t.gPower_flag = POWER_OFF;
@@ -213,7 +212,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 			MqttData_Publish_PowerOff_Ref(); 
 			 HAL_Delay(200);
          }
-       }
+     
     cmd = 0xff;
     break;
          
@@ -386,7 +385,7 @@ void SystemReset(void)
 **********************************************************************/
 void RunCommand_MainBoard_Fun(void)
 {
-
+   uint8_t i;
    static uint8_t power_just_on,send_link_times,the_first_power_off;
     
     if(run_t.buzzer_sound_flag == 1){
@@ -415,6 +414,14 @@ void RunCommand_MainBoard_Fun(void)
 
 		   esp8266data.esp8266_login_cloud_success=1;
 		   SendWifiData_To_Cmd(0x01) ;
+
+		}
+		if( run_t.app_timer_power_on_flag == 1){
+		     run_t.app_timer_power_on_flag=0;
+       
+            for(i=0;i<36;i++){
+		      TCMQTTRCVPUB[i]=0;
+		     }
 
 		}
 
@@ -450,7 +457,14 @@ void RunCommand_MainBoard_Fun(void)
 		  
 		 }
          
-		
+	   if( run_t.app_timer_power_off_flag == 1){
+		     run_t.app_timer_power_off_flag=0;
+       
+            for(i=0;i<36;i++){
+		      TCMQTTRCVPUB[i]=0;
+		     }
+
+		}
        
       
 	break;
