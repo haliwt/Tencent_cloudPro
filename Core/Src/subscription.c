@@ -403,7 +403,7 @@ void Wifi_Rx_InputInfo_Handler(void)
             else{
 				  if(strstr((const char*)esp8266data.data,"+TCMQTTCONN:OK")){
 	              esp8266data.esp8266_login_cloud_success=1;
-	              esp8266data.rx_link_cloud_flag=0;
+	              esp8266data.linking_tencent_cloud_doing=0;
 				  run_t.auto_link_cloud_flag=0xff;
 				  wifi_t.wifi_reconnect_read_flag = 0;
 			  }

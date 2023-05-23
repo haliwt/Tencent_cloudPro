@@ -425,7 +425,7 @@ void RunCommand_MainBoard_Fun(void)
 		 run_t.send_link_cloud_times=0;
 		if(esp8266data.esp8266_login_cloud_success==1){
 	 	     tencent_cloud_flag = 1;
-			 esp8266data.rx_link_cloud_flag =0;
+			 esp8266data.linking_tencent_cloud_doing =0;
 		}
 		
 		MqttData_Publish_SetOpen(0);

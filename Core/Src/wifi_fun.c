@@ -93,7 +93,7 @@ void RunWifi_Command_Handler(void)
 		 
 		 
 	     if(esp8266data.esp8266_login_cloud_success==1){
-		  	esp8266data.rx_link_cloud_flag=0;
+		  	esp8266data.linking_tencent_cloud_doing=0;
 			esp8266data.gTimer_publish_timing=0;
 	        esp8266data.gTimer_subscription_timing=0;
 			wifi_t.has_been_login_flag = 1;
@@ -230,7 +230,7 @@ void RunWifi_Command_Handler(void)
 					   HAL_Delay(10);
 				    }
                     
-                    esp8266data.rx_link_cloud_flag =1; 
+                  
 	   	            wifi_t.get_rx_beijing_time_flag=0;//disenable get beijing timing
 				  }
 
@@ -300,7 +300,7 @@ void RunWifi_Command_Handler(void)
 
 	    if(run_t.gPower_On==POWER_ON ){
 	 
-		 esp8266data.rx_link_cloud_flag =0;
+		 esp8266data.linking_tencent_cloud_doing =0;
 	   	 
 	 
 	   	  if(beijing_flag ==0 ){   //&& wifi_t.gTimer_beijing_time>1){
@@ -357,7 +357,7 @@ void RunWifi_Command_Handler(void)
      }
   
 	if(esp8266data.esp8266_login_cloud_success==1){
-	 	 esp8266data.rx_link_cloud_flag=0;
+	 	 esp8266data.linking_tencent_cloud_doing=0;
 	 	  if(first_connect == 0 ){
 		  	first_connect ++ ;
 		    
@@ -417,7 +417,7 @@ static void AutoReconnect_Wifi_Neware_Function(void)
 								 det_no_wifi_net=0;
 								 run_t.reconnect_tencent_cloud_flag=0;
 								run_t.auto_link_cloud_flag=0xff;
-								esp8266data.rx_link_cloud_flag =0;
+								esp8266data.linking_tencent_cloud_doing =0;
 			
 								SendWifiData_To_Cmd(0x01) ;
 								HAL_Delay(30);

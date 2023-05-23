@@ -62,7 +62,7 @@ typedef struct ESP8266_DATA
 	uint8_t getCloudValue_decade;
 	uint8_t rx_data_len;
 	uint8_t rx_data_name_len;
-	uint8_t rx_link_cloud_flag;
+	uint8_t linking_tencent_cloud_doing;
     uint8_t cmp_flag;
 	uint8_t send_tencent_cloud_data_lable;
     uint8_t subscrible_receive_data_label;
