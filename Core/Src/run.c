@@ -18,7 +18,7 @@ RUN_T run_t;
 
 static void Single_Power_ReceiveCmd(uint8_t cmd);
 static void Single_Command_ReceiveCmd(uint8_t cmd); 
-uint8_t tencent_cloud_flag;
+
 
 
 
@@ -52,7 +52,7 @@ void Decode_RunCmd(void)
 	      if(cmdType_2==1){
 
 		     // WIFI_IC_ENABLE();
-			  tencent_cloud_flag=0;
+			
 			  // wifi_link_tencent_cloud:
 			  Buzzer_KeySound();	
 		     // InitWifiModule_Hardware();
@@ -399,26 +399,21 @@ void RunCommand_MainBoard_Fun(void)
 	case POWER_ON: //1
 		SetPowerOn_ForDoing();
 	   
-		power_just_on=0;
         run_t.gTimer_1s=0;
         run_t.gPower_repeat_times_flag =1;
 		Update_DHT11_Value();
-		HAL_Delay(10);
+		HAL_Delay(20);
 
 		if(esp8266data.esp8266_login_cloud_success==1){
-			tencent_cloud_flag =1;
+		
 	 	    SendWifiData_To_Cmd(0x01) ;
+		    HAL_Delay(50);
 
 			 Subscriber_Data_FromCloud_Handler();
-		     HAL_Delay(200);
+		     HAL_Delay(400);
 		}
 		
-		if(tencent_cloud_flag ==1){
-
-		   esp8266data.esp8266_login_cloud_success=1;
-		   SendWifiData_To_Cmd(0x01) ;
-
-		}
+		
 		if( run_t.app_timer_power_on_flag == 1){
 		     run_t.app_timer_power_on_flag=0;
        
@@ -465,7 +460,7 @@ void RunCommand_MainBoard_Fun(void)
 	    HAL_Delay(10);
 		 run_t.send_link_cloud_times=0;
 		if(esp8266data.esp8266_login_cloud_success==1){
-	 	     tencent_cloud_flag = 1;
+	 	 
 			 esp8266data.linking_tencent_cloud_doing =0;
 	
 			//Update_DHT11_Value();
