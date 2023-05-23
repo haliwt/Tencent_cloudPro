@@ -398,7 +398,7 @@ void RunCommand_MainBoard_Fun(void)
 
 	case POWER_ON: //1
 		SetPowerOn_ForDoing();
-	    run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
+	   
 		power_just_on=0;
         run_t.gTimer_1s=0;
         run_t.gPower_repeat_times_flag =1;
@@ -427,33 +427,64 @@ void RunCommand_MainBoard_Fun(void)
 		     }
 
 		}
-
+		 run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
 	break;
         
     case POWER_OFF: //2
-		SetPowerOff_ForDoing();
+      
+	   if( run_t.app_timer_power_off_flag == 1){
+		     run_t.app_timer_power_off_flag=0;
+			SendWifiCmd_To_Order(WIFI_POWER_OFF);
+			HAL_Delay(10);
+	     run_t.gPower_On=POWER_OFF;
+        run_t.gPower_flag = POWER_OFF;
+        run_t.RunCommand_Label = POWER_OFF;
+		 run_t.set_wind_speed_value=10;
+		 run_t.gModel =1;
+		Update_DHT11_Value();
+		 HAL_Delay(200);
+         if(esp8266data.esp8266_login_cloud_success==1){ 
+         	 run_t.gUlransonic =0;
+			 run_t.gPlasma =0;
+		     run_t.gDry =0;
+			  run_t.set_wind_speed_value=10;
+             run_t.wifi_gPower_On=0;
+			MqttData_Publish_SetOpen(0);  
+			HAL_Delay(200);
+			//MqttData_Publish_PowerOff_Ref(); 
+			// HAL_Delay(200);
+         	}
+       
+            for(i=0;i<36;i++){
+		      TCMQTTRCVPUB[i]=0;
+		     }
+
+		}
+       
+        SetPowerOff_ForDoing();
 	    HAL_Delay(10);
 		 run_t.send_link_cloud_times=0;
 		if(esp8266data.esp8266_login_cloud_success==1){
 	 	     tencent_cloud_flag = 1;
 			 esp8266data.linking_tencent_cloud_doing =0;
 	
-			Update_DHT11_Value();
-			HAL_Delay(200);
+			//Update_DHT11_Value();
+			//HAL_Delay(200);
 
-			MqttData_Publish_SetOpen(0);
-	        HAL_Delay(200);
+			//MqttData_Publish_SetOpen(0);
+	        //HAL_Delay(200);
 
 			MqttData_Publish_PowerOff_Ref(); 
 			HAL_Delay(200);
+			 Subscriber_Data_FromCloud_Handler();
+		     HAL_Delay(200);
 		
 		}
 		
 		if(the_first_power_off ==0){
 
 		    the_first_power_off++;
-			 Subscriber_Data_FromCloud_Handler();
-		     HAL_Delay(200);
+			
 			
 			run_t.RunCommand_Label = POWER_NULL;
 		}
@@ -463,16 +494,7 @@ void RunCommand_MainBoard_Fun(void)
 		  
 		 }
          
-	   if( run_t.app_timer_power_off_flag == 1){
-		     run_t.app_timer_power_off_flag=0;
-			
-       
-            for(i=0;i<36;i++){
-		      TCMQTTRCVPUB[i]=0;
-		     }
-
-		}
-       
+	  
       
 	break;
 
