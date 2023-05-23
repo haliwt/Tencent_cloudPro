@@ -443,27 +443,27 @@ void Tencent_Cloud_Rx_Handler(void)
 	
 	}
 	else{
-			strcpy((char*)TCMQTTRCVPUB,(char *)UART2_DATA.UART_Data);
+		//	strcpy((char*)TCMQTTRCVPUB,(char *)UART2_DATA.UART_Data);
 
     
-    if(strstr((char *)TCMQTTRCVPUB,"nowtemperature\":")){ //WT.EDIT 2023.update
+    if(strstr((char *)UART2_DATA.UART_Data,"nowtemperature\":")){ //WT.EDIT 2023.update
               return ;
      }
 
-    if(strstr((char *)TCMQTTRCVPUB,"Humidity\":")){
+    if(strstr((char *)UART2_DATA.UART_Data,"Humidity\":")){
               return ;
      }
 
-   if(strstr((char *)TCMQTTRCVPUB,"open\":0")){
+   if(strstr((char *)UART2_DATA.UART_Data,"open\":0")){
 		  run_t.response_wifi_signal_label = OPEN_OFF_ITEM;
 		 
 	}
-	else if(strstr((char *)TCMQTTRCVPUB,"open\":1")){
+	else if(strstr((char *)UART2_DATA.UART_Data,"open\":1")){
 	   
 	   run_t.response_wifi_signal_label = OPEN_ON_ITEM;
 	}
 	
-	if(strstr((char *)TCMQTTRCVPUB,"ptc\":0")){
+	if(strstr((char *)UART2_DATA.UART_Data,"ptc\":0")){
             if(run_t.gPower_flag ==POWER_ON){
 				  run_t.gDry=0;
 	           run_t.response_wifi_signal_label = PTC_OFF_ITEM;
@@ -471,7 +471,7 @@ void Tencent_Cloud_Rx_Handler(void)
              }
 			
     }
-    else if(strstr((char *)TCMQTTRCVPUB,"ptc\":1")){
+    else if(strstr((char *)UART2_DATA.UART_Data,"ptc\":1")){
             if(run_t.gPower_flag ==POWER_ON){
 	          run_t.gDry=1;
 			  run_t.response_wifi_signal_label = PTC_ON_ITEM;
@@ -480,7 +480,7 @@ void Tencent_Cloud_Rx_Handler(void)
 
     }
 	
-    if(strstr((char *)TCMQTTRCVPUB,"Anion\":0")){
+    if(strstr((char *)UART2_DATA.UART_Data,"Anion\":0")){
           if(run_t.gPower_flag ==POWER_ON){
 	          //  run_t.gPlasma=0;
 			run_t.response_wifi_signal_label = ANION_OFF_ITEM;
@@ -488,7 +488,7 @@ void Tencent_Cloud_Rx_Handler(void)
              }
 		 
     }
-    else if(strstr((char *)TCMQTTRCVPUB,"Anion\":1")){
+    else if(strstr((char *)UART2_DATA.UART_Data,"Anion\":1")){
             if(run_t.gPower_flag ==POWER_ON){
             //run_t.gPlasma=1;
 			run_t.response_wifi_signal_label = ANION_ON_ITEM;
@@ -496,7 +496,7 @@ void Tencent_Cloud_Rx_Handler(void)
             }
     }
 	
-    if(strstr((char *)TCMQTTRCVPUB,"sonic\":0")){
+    if(strstr((char *)UART2_DATA.UART_Data,"sonic\":0")){
             if(run_t.gPower_flag ==POWER_ON){
            // run_t.gUlransonic=0;
 			run_t.response_wifi_signal_label = SONIC_OFF_ITEM;
@@ -505,7 +505,7 @@ void Tencent_Cloud_Rx_Handler(void)
             }
 		
     }
-    else if(strstr((char *)TCMQTTRCVPUB,"sonic\":1")){
+    else if(strstr((char *)UART2_DATA.UART_Data,"sonic\":1")){
             if(run_t.gPower_flag ==POWER_ON){
             run_t.gUlransonic=1;
 			run_t.response_wifi_signal_label = SONIC_ON_ITEM;
@@ -515,14 +515,14 @@ void Tencent_Cloud_Rx_Handler(void)
     }
 
 	
-    if(strstr((char *)TCMQTTRCVPUB,"state\":1")){
+    if(strstr((char *)UART2_DATA.UART_Data,"state\":1")){
            if(run_t.gPower_flag ==POWER_ON){
             run_t.gModel=1;
 			run_t.response_wifi_signal_label = STATE_AI_MODEL_ITEM;
         	}
 		  
     }
-    else if(strstr((char *)TCMQTTRCVPUB,"state\":2")){
+    else if(strstr((char *)UART2_DATA.UART_Data,"state\":2")){
             if(run_t.gPower_flag ==POWER_ON){
             run_t.gModel=2;
 			run_t.response_wifi_signal_label = STATE_TIMER_MODEL_ITEM;
@@ -530,7 +530,7 @@ void Tencent_Cloud_Rx_Handler(void)
 			
     }
 	
-    if(strstr((char *)TCMQTTRCVPUB,"temperature")){
+    if(strstr((char *)UART2_DATA.UART_Data,"temperature")){
 
 	        if(run_t.gPower_flag ==POWER_ON){
 			run_t.response_wifi_signal_label = TEMPERATURE_ITEM;
@@ -538,7 +538,7 @@ void Tencent_Cloud_Rx_Handler(void)
 	        }
 			
     }
-   if(strstr((char *)TCMQTTRCVPUB,"find")){
+   if(strstr((char *)UART2_DATA.UART_Data,"find")){
 
 			if(run_t.gPower_flag ==POWER_ON){
 
@@ -790,11 +790,6 @@ void Tencent_Cloud_Rx_Handler(void)
 
 	  break;
 
-	 
-
-	  default :
-	  break;
-
 
    }
 
@@ -806,24 +801,13 @@ void Tencent_Cloud_Rx_Handler(void)
 		
          
 		run_t.response_wifi_signal_label=0xf0;
-		wifi_t.received_data_from_tencent_cloud =0;
 
-		if(app_auto_power_ref==1){
-			app_auto_power_ref=0;
-
-		    for(i=0;i<37;i++){
-				   UART2_DATA.UART_Data[i]=0;
-		
-				}
-
-		}
-        else{
 		for(i=0;i<20;i++){
 		   UART2_DATA.UART_Data[i]=0;
-		   TCMQTTRCVPUB[i]=0;
+		   
 
         }
-        }
+      
 		
 	}
 

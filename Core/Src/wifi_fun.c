@@ -76,8 +76,8 @@ void SetTemperatureHost(void(*temperatureHandler)(void))
 ***********************************************/
 void RunWifi_Command_Handler(void)
 {
-    uint32_t temp;
-    static uint8_t first_sub,subscription_flag,beijing_time_flag;
+   
+    static uint8_t first_sub,subscription_flag,beijing_time_flag,wifi_power_off_flag;
 	static uint8_t det_no_wifi_net, beijing_flag,power_on_send_bejing_times;
 	static uint8_t  update_publish_times=0,get_bj_times=0;
 
@@ -256,12 +256,26 @@ void RunWifi_Command_Handler(void)
 
 			   case POWER_OFF:
 
+                    if(wifi_power_off_flag ==0){
+						wifi_power_off_flag++;
+						wifi_t.gTimer_power_off=0;
+					   Subscriber_Data_FromCloud_Handler();
+					   HAL_Delay(200);
+
+
+					}
+
+			   
+
                     if(wifi_t.gTimer_power_off > 137){
 						wifi_t.gTimer_power_off++;
 						Update_DHT11_Value();
 		                HAL_Delay(10);
 						MqttData_Publish_PowerOff_Ref(); 
 			            HAL_Delay(300);
+
+						Subscriber_Data_FromCloud_Handler();
+		                HAL_Delay(200);
 						
 
                     }
