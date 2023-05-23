@@ -192,16 +192,16 @@ void RunWifi_Command_Handler(void)
 
 					}
 
-
-					if(esp8266data.esp8266_login_cloud_success==1){
-					wifi_t.get_rx_beijing_time_flag=0;
-					if(esp8266data.gTimer_publish_timing>123 ){
-					esp8266data.gTimer_publish_timing=0;
-					Publish_Data_ToTencent_Update_Data();
-					HAL_Delay(200);
-
-
-					}
+//
+//					if(esp8266data.esp8266_login_cloud_success==1){
+//					wifi_t.get_rx_beijing_time_flag=0;
+//					if(esp8266data.gTimer_publish_timing>680 ){
+//					esp8266data.gTimer_publish_timing=0;
+//					Publish_Data_ToTencent_Update_Data();
+//					HAL_Delay(200);
+//
+//
+//					}
 
 					if(esp8266data.gTimer_subscription_timing>132 && subscription_flag < 2){
 						subscription_flag ++;
@@ -248,7 +248,7 @@ void RunWifi_Command_Handler(void)
 					wifi_t.runCommand_order_lable= wifi_tencent_publish_dht11_data;
 					}
 
-					}
+					
 
 
 					AutoReconnect_Wifi_Neware_Function();
