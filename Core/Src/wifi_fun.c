@@ -243,7 +243,7 @@ void RunWifi_Command_Handler(void)
 
 
 					if(esp8266data.gTimer_publish_dht11 >64){
-					esp8266data.gTimer_publish_dht11=0;
+						esp8266data.gTimer_publish_dht11=0;
 
 					wifi_t.runCommand_order_lable= wifi_tencent_publish_dht11_data;
 					}
@@ -265,23 +265,12 @@ void RunWifi_Command_Handler(void)
 
 			   case POWER_OFF:
 
-                    if(wifi_power_off_flag ==0){
-						wifi_power_off_flag++;
+                   if(wifi_t.gTimer_power_off > 137){
 						wifi_t.gTimer_power_off=0;
-					   Subscriber_Data_FromCloud_Handler();
-					   HAL_Delay(200);
-
-
-					}
-
-			   
-
-                    if(wifi_t.gTimer_power_off > 137){
-						wifi_t.gTimer_power_off++;
 						Update_DHT11_Value();
 		                HAL_Delay(10);
-						MqttData_Publish_PowerOff_Ref(); 
-			            HAL_Delay(300);
+					//	MqttData_Publish_PowerOff_Ref(); 
+			         //   HAL_Delay(300);
 
 						Subscriber_Data_FromCloud_Handler();
 		                HAL_Delay(200);
@@ -291,7 +280,7 @@ void RunWifi_Command_Handler(void)
 				 wifi_t.gTimer_beijing_time=0;
 		         wifi_t.get_rx_beijing_time_flag=0; //enable beijing times
 		         wifi_t.gTimer_get_beij_times=0;
-				 beijing_time_flag =0;
+				 
 
 			   break;
 		      }
