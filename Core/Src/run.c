@@ -429,26 +429,29 @@ void RunCommand_MainBoard_Fun(void)
         
     case POWER_OFF: //2
 		SetPowerOff_ForDoing();
+	    HAL_Delay(10);
 		 run_t.send_link_cloud_times=0;
 		if(esp8266data.esp8266_login_cloud_success==1){
 	 	     tencent_cloud_flag = 1;
 			 esp8266data.linking_tencent_cloud_doing =0;
-		}
-		Update_DHT11_Value();
-		HAL_Delay(10);
+	
+			Update_DHT11_Value();
+			HAL_Delay(200);
 
-		MqttData_Publish_SetOpen(0);
-        HAL_Delay(200);
+			//MqttData_Publish_SetOpen(0);
+	       // HAL_Delay(200);
 
-		MqttData_Publish_PowerOff_Ref(); 
-		HAL_Delay(300);
+			MqttData_Publish_PowerOff_Ref(); 
+			HAL_Delay(200);
 		
-        Subscriber_Data_FromCloud_Handler();
-		HAL_Delay(200);
-
+		}
+		
 		if(the_first_power_off ==0){
 
 		    the_first_power_off++;
+			
+        	Subscriber_Data_FromCloud_Handler();
+		    HAL_Delay(200);
 			run_t.RunCommand_Label = POWER_NULL;
 		}
 		else{
@@ -496,7 +499,8 @@ void RunCommand_MainBoard_Fun(void)
 
 	case FAN_CONTINUCE_RUN_ONE_MINUTE:
 
-          if(run_t.gFan_counter < 60){
+         if(run_t.gPower_On == POWER_OFF && run_t.app_timer_power_off_flag ==0){
+		  if(run_t.gFan_counter < 60){
           
                     Fan_One_Speed();
                   
@@ -509,7 +513,7 @@ void RunCommand_MainBoard_Fun(void)
 				   FAN_Stop();
 	         }
 	  
-
+         }
 	break;
 
 	case POWER_ON_FAN_CONTINUCE_RUN_ONE_MINUTE:

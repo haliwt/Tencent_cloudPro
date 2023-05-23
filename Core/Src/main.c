@@ -122,19 +122,17 @@ int main(void)
    
     /* USER CODE BEGIN 3 */
 	MainBoard_Self_Inspection_PowerOn_Fun();
-	Decode_Function();
-    RunCommand_MainBoard_Fun();
-    RunWifi_Command_Handler();
 	if(wifi_t.get_rx_beijing_time_flag==0 ){
 	     Tencent_Cloud_Rx_Handler();
 	}
+	Decode_Function();
+    RunCommand_MainBoard_Fun();
+    RunWifi_Command_Handler();
+	
 	
 	USART1_Cmd_Error_Handler(&huart1);
 
-	
-	
-	
-   }
+  }
   /* USER CODE END 3 */
 }
 
