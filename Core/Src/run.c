@@ -388,7 +388,7 @@ void RunCommand_MainBoard_Fun(void)
    uint8_t i;
    static uint8_t power_just_on,send_link_times,the_first_power_off;
     
-    if(run_t.buzzer_sound_flag == 1){
+    if(run_t.buzzer_sound_flag == 1 && run_t.app_timer_power_off_flag==0 && run_t.app_timer_power_on_flag==0){
 	 	run_t.buzzer_sound_flag = 0;
 	    Buzzer_KeySound();
 
@@ -408,6 +408,9 @@ void RunCommand_MainBoard_Fun(void)
 		if(esp8266data.esp8266_login_cloud_success==1){
 			tencent_cloud_flag =1;
 	 	    SendWifiData_To_Cmd(0x01) ;
+
+			 Subscriber_Data_FromCloud_Handler();
+		     HAL_Delay(200);
 		}
 		
 		if(tencent_cloud_flag ==1){
@@ -418,8 +421,6 @@ void RunCommand_MainBoard_Fun(void)
 		}
 		if( run_t.app_timer_power_on_flag == 1){
 		     run_t.app_timer_power_on_flag=0;
-			Subscriber_Data_FromCloud_Handler();
-		    HAL_Delay(200);
        
             for(i=0;i<36;i++){
 		      TCMQTTRCVPUB[i]=0;
@@ -451,9 +452,9 @@ void RunCommand_MainBoard_Fun(void)
 		if(the_first_power_off ==0){
 
 		    the_first_power_off++;
+			 Subscriber_Data_FromCloud_Handler();
+		     HAL_Delay(200);
 			
-        	Subscriber_Data_FromCloud_Handler();
-		    HAL_Delay(200);
 			run_t.RunCommand_Label = POWER_NULL;
 		}
 		else{
@@ -464,8 +465,7 @@ void RunCommand_MainBoard_Fun(void)
          
 	   if( run_t.app_timer_power_off_flag == 1){
 		     run_t.app_timer_power_off_flag=0;
-			 Subscriber_Data_FromCloud_Handler();
-		     HAL_Delay(200);
+			
        
             for(i=0;i<36;i++){
 		      TCMQTTRCVPUB[i]=0;
@@ -515,8 +515,7 @@ void RunCommand_MainBoard_Fun(void)
 				   run_t.RunCommand_Label = POWER_NULL;
 			      
 				   FAN_Stop();
-				   Subscriber_Data_FromCloud_Handler();
-		           HAL_Delay(200);
+				  
 	         }
 	  
          }

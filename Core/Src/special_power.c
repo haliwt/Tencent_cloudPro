@@ -22,7 +22,7 @@ void SetPowerOn_ForDoing(void)
     run_t.gPower_On=POWER_ON;
 	run_t.gmt_time_flag=0;
 	run_t.wifi_gPower_On = 1;
- 
+
 
 	switch(run_t.app_timer_power_on_flag){
 		case 0:
@@ -102,13 +102,13 @@ void SetPowerOn_ForDoing(void)
 					HAL_Delay(2);
 
 			}
-		
+		  run_t.buzzer_sound_flag = 0;
 
 			
 	     break;
 		}
 			
-
+        
 
 
 	
@@ -128,7 +128,7 @@ void SetPowerOff_ForDoing(void)
 	run_t.gPlasma =0;       //"杀菌"
 	run_t.gUlransonic = 0; // "驱虫"
 	run_t.gModel =1;
-	
+	if(run_t.app_timer_power_off_flag==1)run_t.buzzer_sound_flag = 0;
 
     
 	PLASMA_SetLow(); //
