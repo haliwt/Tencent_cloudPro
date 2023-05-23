@@ -551,9 +551,7 @@ void Tencent_Cloud_Rx_Handler(void)
 
       case OPEN_OFF_ITEM:
 
-         switch(run_t.gPower_On){
-
-         case POWER_ON:
+       
 		 	MqttData_Publish_SetPtc(0);
 		    HAL_Delay(300);
 	         run_t.RunCommand_Label=POWER_OFF;
@@ -561,23 +559,14 @@ void Tencent_Cloud_Rx_Handler(void)
 			SendWifiCmd_To_Order(WIFI_POWER_OFF);
 			HAL_Delay(10);
 			buzzer_temp_on=0;
-		break;
+	
 
-		case POWER_OFF:
-		   buzzer_temp_on=0;
-
-		break;
-
-        }
         run_t.response_wifi_signal_label = 0xff;
         
 	  break;
 
 	  case OPEN_ON_ITEM:
       
-        switch(run_t.gPower_On){
-
-		  case POWER_OFF:
 
 		  MqttData_Publish_SetPtc(1);
 		  HAL_Delay(300);
@@ -586,16 +575,6 @@ void Tencent_Cloud_Rx_Handler(void)
 		   SendWifiCmd_To_Order(WIFI_POWER_ON);
 		   HAL_Delay(10);
 		   buzzer_temp_on=0;
-
-		 break;
-
-		 case POWER_ON:
-		     buzzer_temp_on=0;
-
-
-		 break;
-
-        }
 	   	
 	  run_t.response_wifi_signal_label = 0xff;
 
@@ -643,7 +622,6 @@ void Tencent_Cloud_Rx_Handler(void)
 		
 	  case ANION_ON_ITEM: //plasma 
 	  	if(run_t.gPower_flag ==POWER_ON){
-		//	 Buzzer_KeySound();
             MqttData_Publish_SetPlasma(1);
 			HAL_Delay(200);
             run_t.gPlasma=1;
