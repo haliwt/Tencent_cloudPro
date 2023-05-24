@@ -378,7 +378,44 @@ void Subscribe_Rx_Interrupt_Handler(void)
 
 }
  
+/*******************************************************************************
+**
+*Function Name:void Subscribe_Rx_IntHandler(void)
+*Function: interrupt USART2 receive data fun
+*Input Ref: +TCMQTTCONN:OK
+*Return Ref:NO
+*
+********************************************************************************/
+void Wifi_Rx_InputInfo_Handler(void)
+{
+    
+          strcpy((char *)esp8266data.data, (const char *)UART2_DATA.UART_Data);
+          esp8266data.data_size = UART2_DATA.UART_Cnt;
 
+
+		   if(wifi_t.soft_ap_config_flag==1){
+
+               if(strstr((const char*)esp8266data.data,"+TCSAP:WIFI_CONNECT_SUCCESS")){
+              		esp8266data.soft_ap_config_success=1;
+					wifi_t.soft_ap_config_flag=0;
+               	}
+
+			}
+            else{
+				  if(strstr((const char*)esp8266data.data,"+TCMQTTCONN:OK")){
+	              esp8266data.esp8266_login_cloud_success=1;
+	              esp8266data.linking_tencent_cloud_doing=0;
+				  run_t.auto_link_cloud_flag=0xff;
+				  wifi_t.wifi_reconnect_read_flag = 0;
+			  }
+           
+           }
+         UART2_DATA.UART_Flag = 0;
+         UART2_DATA.UART_Cnt=0;
+         
+        
+            
+}
 /*******************************************************************************
     **
     *Function Name:void Tencent_Cloud_Rx_Handler(void)
@@ -522,33 +559,32 @@ void Json_Parse_Command_Fun(void)
    switch(run_t.response_wifi_signal_label){
 
       case OPEN_OFF_ITEM:
-  
-          
-			 	MqttData_Publish_SetOpen(0);  
-				HAL_Delay(350);
-		         run_t.RunCommand_Label=POWER_OFF;
 
-				SendWifiCmd_To_Order(WIFI_POWER_OFF);
-				HAL_Delay(10);
-				buzzer_temp_on=0;
-            
+       
+		 	MqttData_Publish_SetOpen(0);  
+			HAL_Delay(350);
+	         run_t.RunCommand_Label=POWER_OFF;
+
+			SendWifiCmd_To_Order(WIFI_POWER_OFF);
+			HAL_Delay(10);
+			buzzer_temp_on=0;
+	
 
         run_t.response_wifi_signal_label = 0xff;
         
 	  break;
 
 	  case OPEN_ON_ITEM:
+      
 
-	     if(run_t.app_timer_power_on_device_flag ==0){
-			     MqttData_Publish_SetOpen(1);  
-				HAL_Delay(350);
+		     MqttData_Publish_SetOpen(1);  
+			HAL_Delay(350);
 
-			   run_t.RunCommand_Label=POWER_ON;
-			   SendWifiCmd_To_Order(WIFI_POWER_ON);
-			   HAL_Delay(10);
-			   buzzer_temp_on=0;
-	      }
-	  	 
+		   run_t.RunCommand_Label=POWER_ON;
+		   SendWifiCmd_To_Order(WIFI_POWER_ON);
+		   HAL_Delay(10);
+		   buzzer_temp_on=0;
+	   	
 	  run_t.response_wifi_signal_label = 0xff;
 
 	  break;
@@ -708,14 +744,13 @@ void Json_Parse_Command_Fun(void)
 		   if(strstr((char *)TCMQTTRCVPUB,"open\":1")){
 		   
 			  run_t.app_timer_power_on_flag = 1;
-			 
-		     MqttData_Publish_SetOpen(1);  
-			HAL_Delay(350);
+			   MqttData_Publish_SetOpen(1);  
+			   HAL_Delay(350);
 
-		   run_t.RunCommand_Label=POWER_ON;
-		   SendWifiCmd_To_Order(WIFI_POWER_ON);
-		   HAL_Delay(10);
-			 
+			   run_t.RunCommand_Label=POWER_ON;
+			   SendWifiCmd_To_Order(WIFI_POWER_ON);
+			   HAL_Delay(10);
+			 //  buzzer_temp_on=0;
 		         
 
 				
@@ -723,16 +758,15 @@ void Json_Parse_Command_Fun(void)
 			}
            else if(strstr((char *)TCMQTTRCVPUB,"open\":0")){
 		   
-		     run_t.app_timer_power_off_flag = 1;
+		        run_t.app_timer_power_off_flag = 1;
 
-
-
-			MqttData_Publish_SetOpen(0);  
-			HAL_Delay(350);
+		   //   MqttData_Publish_SetOpen(0);  
+			///  HAL_Delay(200);
 	         run_t.RunCommand_Label=POWER_OFF;
 
-			SendWifiCmd_To_Order(WIFI_POWER_OFF);
-			HAL_Delay(10);
+			//SendWifiCmd_To_Order(WIFI_POWER_OFF);
+			//HAL_Delay(10);
+		//	buzzer_temp_on=0;
 		
 				
 			}

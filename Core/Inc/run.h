@@ -107,7 +107,6 @@ typedef struct _RUN_T{
 	uint8_t flash_write_data_flag;
     uint8_t flash_read_data;
 	uint8_t works_break_power_on;
-	uint8_t app_timer_power_on_device_flag;
 
 	//fan:
 	uint8_t gFan_pwm_duty_level;

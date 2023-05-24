@@ -4,9 +4,6 @@
 
 
 
-void USART2_Interrupt_Rx_Handler(void);
-void Wifi_Rx_InputInfo_Handler(void);
-
 
 
 #endif 

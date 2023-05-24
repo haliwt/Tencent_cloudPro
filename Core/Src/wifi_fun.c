@@ -80,7 +80,7 @@ void RunWifi_Command_Handler(void)
     static uint8_t first_sub,subscription_flag,beijing_time_flag,wifi_power_off_flag;
 	static uint8_t det_no_wifi_net, beijing_flag,power_on_send_bejing_times;
 	static uint8_t  update_publish_times=0,get_bj_times=0;
-    uint8_t i;
+
      switch(wifi_t.runCommand_order_lable){
 
          
@@ -101,12 +101,6 @@ void RunWifi_Command_Handler(void)
 			
 				
 		  }
-		  else{
-            for(i=0;i<20;i++){
-		       UART2_DATA.UART_Data[i]=0;
-            }
-
-		 }
 
 		break;
 
@@ -198,18 +192,18 @@ void RunWifi_Command_Handler(void)
 
 					}
 
-
+//
 //					if(esp8266data.esp8266_login_cloud_success==1){
 //					wifi_t.get_rx_beijing_time_flag=0;
 //					if(esp8266data.gTimer_publish_timing>680 ){
-//						esp8266data.gTimer_publish_timing=0;
-//						Publish_Data_ToTencent_Update_Data();
-//						HAL_Delay(200);
+//					esp8266data.gTimer_publish_timing=0;
+//					Publish_Data_ToTencent_Update_Data();
+//					HAL_Delay(200);
 //
 //
 //					}
 
-					if(esp8266data.gTimer_subscription_timing>254 && subscription_flag < 2){
+					if(esp8266data.gTimer_subscription_timing>132 && subscription_flag < 2){
 						subscription_flag ++;
 					
 						esp8266data.gTimer_subscription_timing=0;
@@ -248,7 +242,7 @@ void RunWifi_Command_Handler(void)
 
 
 
-					if(esp8266data.gTimer_publish_dht11 >127){
+					if(esp8266data.gTimer_publish_dht11 >64){
 						esp8266data.gTimer_publish_dht11=0;
 
 					wifi_t.runCommand_order_lable= wifi_tencent_publish_dht11_data;
@@ -275,11 +269,11 @@ void RunWifi_Command_Handler(void)
 						wifi_t.gTimer_power_off=0;
 						Update_DHT11_Value();
 		                HAL_Delay(10);
-						MqttData_Publish_PowerOff_Ref(); 
-			            HAL_Delay(300);
+					//	MqttData_Publish_PowerOff_Ref(); 
+			         //   HAL_Delay(300);
 
 						Subscriber_Data_FromCloud_Handler();
-		                HAL_Delay(300);
+		                HAL_Delay(200);
 						
 
                     }
@@ -300,7 +294,7 @@ void RunWifi_Command_Handler(void)
 
 			esp8266data.gTimer_subscription_timing=0;
 			
-        
+            esp8266data.gTimer_publish_dht11=0;
 			Update_Dht11_Totencent_Value();
 			HAL_Delay(200);
 
