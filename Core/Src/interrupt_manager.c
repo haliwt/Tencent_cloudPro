@@ -16,6 +16,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 		if(__HAL_UART_GET_FLAG(&huart2,UART_FLAG_ORE)!=RESET){
 
              __HAL_UART_CLEAR_OREFLAG(&huart2);
+			 __HAL_UART_CLEAR_FEFLAG(&huart2);
 			UART_Start_Receive_IT(&huart2,UART2_DATA.UART_DataBuf,1);
 
 		}

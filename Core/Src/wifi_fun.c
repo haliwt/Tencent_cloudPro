@@ -203,10 +203,9 @@ void RunWifi_Command_Handler(void)
 //
 //					}
 
-					if(esp8266data.gTimer_subscription_timing>132 && subscription_flag < 2){
-						subscription_flag ++;
-					
+					if(esp8266data.gTimer_subscription_timing>132 && subscription_flag ==0){
 						esp8266data.gTimer_subscription_timing=0;
+						subscription_flag ++;
 						Subscriber_Data_FromCloud_Handler();
 						HAL_Delay(200);
 
@@ -252,15 +251,7 @@ void RunWifi_Command_Handler(void)
 
 
 					AutoReconnect_Wifi_Neware_Function();
-					if(esp8266data.esp8266_login_cloud_success==1){
-					 	 esp8266data.linking_tencent_cloud_doing=0;
-					 	  if(first_connect == 0 ){
-						  	first_connect ++ ;
-						    
-				            SendWifiData_To_Cmd(0x01) ;
-						  }
-		
-					}
+					
 			   break;
 
 			   case POWER_OFF:

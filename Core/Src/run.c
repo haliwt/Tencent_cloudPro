@@ -398,7 +398,8 @@ void RunCommand_MainBoard_Fun(void)
 
 	case POWER_ON: //1
 		SetPowerOn_ForDoing();
-         run_t.gTimer_send_dit=50;
+         run_t.gTimer_send_dit=0;
+	     run_t.gTimer_senddata_panel=0;
 	    run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
 	break;
         
@@ -471,7 +472,7 @@ void RunCommand_MainBoard_Fun(void)
 	break;
 
    case UPDATE_TO_PANEL_DATA: //4
-     if(run_t.gTimer_senddata_panel >30 && run_t.gPower_On==POWER_ON){ //300ms
+     if(run_t.gTimer_senddata_panel >30){ //300ms
 	   	    run_t.gTimer_senddata_panel=0;
 	        ActionEvent_Handler();
 	      
