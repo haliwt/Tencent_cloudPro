@@ -426,7 +426,7 @@ void RunCommand_MainBoard_Fun(void)
 	break;
         
     case POWER_OFF: //2
-      
+       run_t.app_timer_power_on_device_flag=0;
 	   if( run_t.app_timer_power_off_flag == 1){
 		     run_t.app_timer_power_off_flag=0;
 			SendWifiCmd_To_Order(WIFI_POWER_OFF);

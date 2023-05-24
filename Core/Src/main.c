@@ -106,10 +106,12 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
    HAL_TIM_Base_Start_IT(&htim3);//HAL_TIM_Base_Start(&htim3);
+    __HAL_UART_ENABLE_IT(&huart1,UART_IT_ERR);
    UART_Start_Receive_IT(&huart1,inputBuf,1);
    //DMA usart2
   // UART_Start_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,1);
-    __HAL_UART_ENABLE_IT(&huart2,UART_IT_RXNE);
+   __HAL_UART_ENABLE_IT(&huart2,UART_IT_ERR);
+   __HAL_UART_ENABLE_IT(&huart2,UART_IT_RXNE);
   /* USER CODE END 2 */
 
 
@@ -132,9 +134,9 @@ int main(void)
 		 Json_Parse_Command_Fun();
 	}
 
-	
-	USART1_Cmd_Error_Handler(&huart1);
-	USART1_Cmd_Error_Handler(&huart2);
+	//Wifi_Rx_InputInfo_Handler();
+	//USART1_Cmd_Error_Handler(&huart1);
+	//USART1_Cmd_Error_Handler(&huart2);
 
   }
   /* USER CODE END 3 */
