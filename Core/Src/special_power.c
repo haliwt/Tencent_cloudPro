@@ -95,6 +95,7 @@ void SetPowerOn_ForDoing(void)
 
 			}
 		 
+			 HAL_Delay(100);
 
 		     run_t.set_wind_speed_value =100;
 			 run_t.wifi_gPower_On=1;
@@ -149,7 +150,7 @@ void ActionEvent_Handler(void)
 
 if(run_t.works_break_power_on==0) { 
 
-    Fan_RunSpeed_Fun();
+    
 	if(run_t.gDry == 1){
 
 	   PTC_SetHigh();
@@ -185,6 +186,8 @@ if(run_t.works_break_power_on==0) {
 		run_t.gFan_continueRun=1;        
 
 	}
+
+	Fan_RunSpeed_Fun();
 		
    }
 

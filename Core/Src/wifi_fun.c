@@ -138,7 +138,7 @@ void RunWifi_Command_Handler(void)
 				 HAL_Delay(200);
 
 				Subscriber_Data_FromCloud_Handler();
-				HAL_Delay(200);
+				HAL_Delay(300);
 				wifi_t.runCommand_order_lable= wifi_tencent_subscription_data;
 	           
 	   	    }
@@ -178,9 +178,7 @@ void RunWifi_Command_Handler(void)
 
 	   	case wifi_publish_update_tencent_cloud_data://05
 
-		      switch(run_t.gPower_On){
-
-			    case POWER_ON:
+		     
 
 //					if(update_publish_times ==0 ){
 //					update_publish_times++;
@@ -212,8 +210,8 @@ void RunWifi_Command_Handler(void)
 					}
 
 
-					while(beijing_time_flag == 1){
-							beijing_time_flag = 0;
+					while(run_t.beijing_time_flag == 1){
+							run_t.beijing_time_flag = 0;
 							wifi_t.get_rx_beijing_time_flag=0; //enable beijing times
 
 							if(get_bj_times < 2){
@@ -252,29 +250,9 @@ void RunWifi_Command_Handler(void)
 
 					AutoReconnect_Wifi_Neware_Function();
 					
-			   break;
+			 
 
-			   case POWER_OFF:
-
-                   if(wifi_t.gTimer_power_off > 137){
-						wifi_t.gTimer_power_off=0;
-						Update_DHT11_Value();
-		                HAL_Delay(10);
-					//	MqttData_Publish_PowerOff_Ref(); 
-			         //   HAL_Delay(300);
-
-						Subscriber_Data_FromCloud_Handler();
-		                HAL_Delay(200);
-						
-
-                    }
-				 wifi_t.gTimer_beijing_time=0;
-		         wifi_t.get_rx_beijing_time_flag=0; //enable beijing times
-		         wifi_t.gTimer_get_beij_times=0;
-				 
-
-			   break;
-		      }
+			 
 
 	   break;
 
@@ -286,7 +264,11 @@ void RunWifi_Command_Handler(void)
 			esp8266data.gTimer_subscription_timing=0;
 			
             esp8266data.gTimer_publish_dht11=0;
-			Update_Dht11_Totencent_Value();
+			if(run_t.gPower_flag == POWER_ON){
+				Update_Dht11_Totencent_Value();
+				HAL_Delay(200);
+			}
+			Subscriber_Data_FromCloud_Handler();
 			HAL_Delay(200);
 
 			if(run_t.gPower_On ==POWER_ON){
@@ -359,7 +341,7 @@ void RunWifi_Command_Handler(void)
 		  
           if(get_rx_beijing_time_flag==1  ){
 		  	get_rx_beijing_time_flag=0;
-		     beijing_time_flag = 1;
+		    run_t.beijing_time_flag = 1;
 		  	// wifi_t.gTimer_beijing_time=0;
 		      beijing_flag=0;
 		  	wifi_t.real_hours = (UART2_DATA.UART_Data[134]-0x30)*10 + UART2_DATA.UART_Data[135]-0x30;

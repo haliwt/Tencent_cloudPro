@@ -17,12 +17,12 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 
              __HAL_UART_CLEAR_OREFLAG(&huart2);
 			 __HAL_UART_CLEAR_FEFLAG(&huart2);
-			UART_Start_Receive_IT(&huart2,UART2_DATA.UART_DataBuf,1);
+			//UART_Start_Receive_IT(&huart2,UART2_DATA.UART_DataBuf,1);
 
 		}
 		__HAL_UNLOCK(&huart2);
 		   
-          temp=USART2->ISR;
+          temp= USART2->TDR;
           temp = USART2->RDR;
 		UART_Start_Receive_IT(&huart2,UART2_DATA.UART_DataBuf,1);
 
@@ -37,7 +37,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 	
 			}
 			__HAL_UNLOCK(&huart1);
-		  temp=USART1->ISR;
+		  temp = USART1 ->TDR;
           temp = USART1->RDR;
 	     UART_Start_Receive_IT(&huart1,inputBuf,1);
 	
@@ -64,7 +64,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     {
            
         
-       USART2->ISR = 0xf5;
+        //  USART2->ISR = 0xf5; 
 	
 	      if(esp8266data.linking_tencent_cloud_doing ==1){
 
@@ -81,9 +81,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	      } 
 		  else{
 
-		        
-
-		        if(wifi_t.get_rx_beijing_time_flag==1){
+		         if(wifi_t.get_rx_beijing_time_flag==1){
 					UART2_DATA.UART_Data[UART2_DATA.UART_Cnt] = UART2_DATA.UART_DataBuf[0];
 					UART2_DATA.UART_Cnt++;
 
@@ -163,7 +161,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	    wifi_t.gTimer_get_beijing_time++;
 
 	   wifi_t.gTimer_beijing_time++;
-	
+	    run_t.gTimer_app_power_on++;
 	  
 	 
 	   wifi_t.gTimer_get_beij_times++;
