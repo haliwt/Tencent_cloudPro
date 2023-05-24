@@ -53,16 +53,13 @@ void SetPowerOn_ForDoing(void)
 	case 1: //app timer timing power of 
 	       run_t.gModel =1;
 		   SendWifiCmd_To_Order(WIFI_POWER_ON);
-		   HAL_Delay(300);
+		   HAL_Delay(10);
 
 	       Parse_Json_Statement();
 
 	    //   MqttData_Publish_SetOpen(1);  
 		//   HAL_Delay(200);
-		     run_t.set_wind_speed_value =100;
-			 run_t.wifi_gPower_On=1;
-		     MqttData_Publish_Update_Data();
-		     HAL_Delay(200);
+		     
 
 
 
@@ -103,6 +100,11 @@ void SetPowerOn_ForDoing(void)
 
 			}
 		  run_t.buzzer_sound_flag = 0;
+
+		     run_t.set_wind_speed_value =100;
+			 run_t.wifi_gPower_On=1;
+		     MqttData_Publish_Update_Data();
+		     HAL_Delay(200);
 
 			
 	     break;

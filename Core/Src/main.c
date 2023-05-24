@@ -133,8 +133,6 @@ int main(void)
 	}
 
 	
-	USART1_Cmd_Error_Handler(&huart1);
-	USART1_Cmd_Error_Handler(&huart2);
 
   }
   /* USER CODE END 3 */
