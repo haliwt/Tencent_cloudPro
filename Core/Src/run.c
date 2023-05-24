@@ -410,7 +410,7 @@ void RunCommand_MainBoard_Fun(void)
 		    HAL_Delay(50);
 
 			 Subscriber_Data_FromCloud_Handler();
-		     HAL_Delay(400);
+		     HAL_Delay(300);
 		}
 		
 		
@@ -446,8 +446,7 @@ void RunCommand_MainBoard_Fun(void)
              run_t.wifi_gPower_On=0;
 			MqttData_Publish_SetOpen(0);  
 			HAL_Delay(200);
-			//MqttData_Publish_PowerOff_Ref(); 
-			// HAL_Delay(200);
+			
          	}
        
             for(i=0;i<36;i++){
@@ -463,8 +462,8 @@ void RunCommand_MainBoard_Fun(void)
 	 	 
 			 esp8266data.linking_tencent_cloud_doing =0;
 	
-			//Update_DHT11_Value();
-			//HAL_Delay(200);
+			Update_DHT11_Value();
+			HAL_Delay(200);
 
 			//MqttData_Publish_SetOpen(0);
 	        //HAL_Delay(200);

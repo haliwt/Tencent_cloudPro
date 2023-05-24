@@ -53,40 +53,38 @@ void SetPowerOn_ForDoing(void)
 	case 1: //app timer timing power of 
 	       run_t.gModel =1;
 		   SendWifiCmd_To_Order(WIFI_POWER_ON);
+		   HAL_Delay(10);
+
+		   MqttData_Publish_SetOpen(1);  
 		   HAL_Delay(300);
 
 	       Parse_Json_Statement();
 
-	    //   MqttData_Publish_SetOpen(1);  
-		//   HAL_Delay(200);
-		     run_t.set_wind_speed_value =100;
-			 run_t.wifi_gPower_On=1;
-		     MqttData_Publish_Update_Data();
-		     HAL_Delay(200);
-
+	     
+		 
 
 
 			if( run_t.gPlasma==1){ //Anion
 
 				SendWifiCmd_To_Order(WIFI_KILL_ON);
-				HAL_Delay(2);
+				HAL_Delay(5);
 			}
 			else{
 				run_t.gPlasma =0;
 				SendWifiCmd_To_Order(WIFI_KILL_OFF);
-				HAL_Delay(2);
+				HAL_Delay(5);
 			}
 
 
 			if(run_t.gUlransonic==1){
 
 					SendWifiCmd_To_Order(WIFI_SONIC_ON);
-					HAL_Delay(2);
+					HAL_Delay(5);
 			}
 			else {
 					run_t.gUlransonic=0;
 					SendWifiCmd_To_Order(WIFI_SONIC_OFF);
-					HAL_Delay(2);
+					HAL_Delay(5);
 			}
 
 
@@ -94,15 +92,20 @@ void SetPowerOn_ForDoing(void)
 			if(run_t.gDry==1){
 
 				SendWifiCmd_To_Order(WIFI_PTC_ON);
-				HAL_Delay(2);
+				HAL_Delay(5);
 			}
 			else{
 					run_t.gDry=0;
 					SendWifiCmd_To_Order(WIFI_PTC_OFF);
-					HAL_Delay(2);
+					HAL_Delay(5);
 
 			}
 		  run_t.buzzer_sound_flag = 0;
+
+		  
+		          run_t.set_wind_speed_value =100;
+				  MqttData_Publish_Update_Data();
+				  HAL_Delay(350);
 
 			
 	     break;

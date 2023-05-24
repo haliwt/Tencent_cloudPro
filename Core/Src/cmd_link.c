@@ -73,7 +73,8 @@ void USART1_Cmd_Error_Handler(UART_HandleTypeDef *huart)
          __HAL_UART_GET_FLAG(&huart1,USART_ISR_FE);
 		 
 		
-         if(UART_FLAG_ORE==1 ){
+         if(UART_FLAG_ORE==1 || UART_FLAG_NE==1 || USART_ISR_FE==1
+		 	){
            __HAL_UART_CLEAR_OREFLAG(&huart1);
               __HAL_UART_CLEAR_NEFLAG(&huart1);
                __HAL_UART_CLEAR_FEFLAG(&huart1);

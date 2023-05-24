@@ -559,24 +559,24 @@ void Json_Parse_Command_Fun(void)
    switch(run_t.response_wifi_signal_label){
 
       case OPEN_OFF_ITEM:
+  
+            if(run_t.gPower_On == POWER_ON){
+			 	MqttData_Publish_SetOpen(0);  
+				HAL_Delay(350);
+		         run_t.RunCommand_Label=POWER_OFF;
 
-       
-		 	MqttData_Publish_SetOpen(0);  
-			HAL_Delay(350);
-	         run_t.RunCommand_Label=POWER_OFF;
-
-			SendWifiCmd_To_Order(WIFI_POWER_OFF);
-			HAL_Delay(10);
-			buzzer_temp_on=0;
-	
+				SendWifiCmd_To_Order(WIFI_POWER_OFF);
+				HAL_Delay(10);
+				buzzer_temp_on=0;
+            }
 
         run_t.response_wifi_signal_label = 0xff;
         
 	  break;
 
 	  case OPEN_ON_ITEM:
-      
 
+	  	 if(run_t.gPower_On == POWER_OFF){
 		     MqttData_Publish_SetOpen(1);  
 			HAL_Delay(350);
 
@@ -584,7 +584,7 @@ void Json_Parse_Command_Fun(void)
 		   SendWifiCmd_To_Order(WIFI_POWER_ON);
 		   HAL_Delay(10);
 		   buzzer_temp_on=0;
-	   	
+	  	 	}
 	  run_t.response_wifi_signal_label = 0xff;
 
 	  break;
@@ -744,13 +744,14 @@ void Json_Parse_Command_Fun(void)
 		   if(strstr((char *)TCMQTTRCVPUB,"open\":1")){
 		   
 			  run_t.app_timer_power_on_flag = 1;
-			   MqttData_Publish_SetOpen(1);  
-			   HAL_Delay(350);
+			 
+		     MqttData_Publish_SetOpen(1);  
+			HAL_Delay(350);
 
-			   run_t.RunCommand_Label=POWER_ON;
-			   SendWifiCmd_To_Order(WIFI_POWER_ON);
-			   HAL_Delay(10);
-			 //  buzzer_temp_on=0;
+		   run_t.RunCommand_Label=POWER_ON;
+		   SendWifiCmd_To_Order(WIFI_POWER_ON);
+		   HAL_Delay(10);
+			 
 		         
 
 				
@@ -758,15 +759,16 @@ void Json_Parse_Command_Fun(void)
 			}
            else if(strstr((char *)TCMQTTRCVPUB,"open\":0")){
 		   
-		        run_t.app_timer_power_off_flag = 1;
+		     run_t.app_timer_power_off_flag = 1;
 
-		   //   MqttData_Publish_SetOpen(0);  
-			///  HAL_Delay(200);
+
+
+			MqttData_Publish_SetOpen(0);  
+			HAL_Delay(350);
 	         run_t.RunCommand_Label=POWER_OFF;
 
-			//SendWifiCmd_To_Order(WIFI_POWER_OFF);
-			//HAL_Delay(10);
-		//	buzzer_temp_on=0;
+			SendWifiCmd_To_Order(WIFI_POWER_OFF);
+			HAL_Delay(10);
 		
 				
 			}

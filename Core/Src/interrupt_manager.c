@@ -25,7 +25,12 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     if(huart->Instance==USART2)
     {
            
-     
+     if(USART2->ISR & UART_FLAG_RXFNE){
+
+	  UART2_DATA.UART_DataBuf[0] = USART2 ->RDR;
+      
+		  
+	
 	
 	      if(esp8266data.linking_tencent_cloud_doing ==1){
 
@@ -52,8 +57,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 				else
 				Subscribe_Rx_Interrupt_Handler();
 	      }
+     	}
 	   
-      HAL_UART_Receive_IT(&huart2,UART2_DATA.UART_DataBuf,1);
+     // HAL_UART_Receive_IT(&huart2,UART2_DATA.UART_DataBuf,1);
 	}
 
 	
@@ -98,6 +104,46 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   
  }
 
+/***********************************************************************************
+***********************************************************************************/
+void USART2_Interrupt_Rx_Handler(void)
+{
+	if(USART2->ISR & UART_FLAG_RXFNE){
+
+	  UART2_DATA.UART_DataBuf[0] = USART2 ->RDR;
+      
+		  
+	
+	
+	      if(esp8266data.linking_tencent_cloud_doing ==1){
+
+			UART2_DATA.UART_Data[UART2_DATA.UART_Cnt] = UART2_DATA.UART_DataBuf[0];
+			UART2_DATA.UART_Cnt++;
+
+			if(*UART2_DATA.UART_DataBuf==0X0A) // 0x0A = "\n"
+			{
+				UART2_DATA.UART_Flag = 1;
+				Wifi_Rx_InputInfo_Handler();
+				UART2_DATA.UART_Cnt=0;
+			}
+
+	      } 
+		  else{
+
+		        
+
+		        if(wifi_t.get_rx_beijing_time_flag==1){
+					UART2_DATA.UART_Data[UART2_DATA.UART_Cnt] = UART2_DATA.UART_DataBuf[0];
+					UART2_DATA.UART_Cnt++;
+
+				}
+				else
+				Subscribe_Rx_Interrupt_Handler();
+	      }
+     	}
+
+
+}
 
 /**
   * Function Name: void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
