@@ -38,7 +38,7 @@ typedef enum _esp8266_para{
 
 typedef struct ESP8266_DATA
 {
-    uint8_t data[150];
+    uint8_t data[16];
     uint8_t  data_size;
     uint8_t flag;
 	uint8_t wifi_RunState;

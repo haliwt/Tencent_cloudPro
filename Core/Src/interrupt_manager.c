@@ -49,34 +49,41 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 void Wifi_Rx_InputInfo_Handler(void)
 {
     
-        strcpy((char *)esp8266data.data, (const char *)UART2_DATA.UART_Data);
+    strncpy((char *)esp8266data.data, (const char *)UART2_DATA.UART_Data,16);
+        //  esp8266data.data_size = UART2_DATA.UART_Cnt;
 
-#if 1
-		 
-		   	  
+
+		   if(wifi_t.soft_ap_config_flag==1){
+
                if(strstr((const char*)esp8266data.data,"+TCSAP:WIFI_CONNECT_SUCCESS")){
-              	//	esp8266data.soft_ap_config_success=1;
+              		esp8266data.soft_ap_config_success=1;
 					esp8266data.esp8266_login_cloud_success=1;
-	                esp8266data.linking_tencent_cloud_doing=0;
+			        esp8266data.linking_tencent_cloud_doing=0;
 					wifi_t.soft_ap_config_flag=0;
                	}
-                else if(strstr((const char*)esp8266data.data,"+TCMQTTCONN:OK")){
-	              esp8266data.esp8266_login_cloud_success=1;
+
+			   if(strstr((const char*)esp8266data.data,"+TCMQTTCONN:OK")){
+	               esp8266data.esp8266_login_cloud_success=1;
 	              esp8266data.linking_tencent_cloud_doing=0;
 				  run_t.auto_link_cloud_flag=0xff;
 				  wifi_t.wifi_reconnect_read_flag = 0;
-                   wifi_t.soft_ap_config_flag=0;
+				  wifi_t.soft_ap_config_flag=0;
+			   }
+
+			}
+            else{
+				  if(strstr((const char*)esp8266data.data,"+TCMQTTCONN:OK")){
+	               esp8266data.esp8266_login_cloud_success=1;
+	              esp8266data.linking_tencent_cloud_doing=0;
+				  run_t.auto_link_cloud_flag=0xff;
+				  wifi_t.wifi_reconnect_read_flag = 0;
 			  }
-              else{
            
-           
-                   UART2_DATA.UART_Flag = 0;
-                   UART2_DATA.UART_Cnt=0;
-                  
-              }
+           }
+         UART2_DATA.UART_Flag = 0;
+         UART2_DATA.UART_Cnt=0;
 		 
-         
-#endif        
+  
             
 }
 

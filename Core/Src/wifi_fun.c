@@ -80,7 +80,7 @@ void RunWifi_Command_Handler(void)
     static uint8_t first_sub,subscription_flag,beijing_time_flag,wifi_power_off_flag;
 	static uint8_t det_no_wifi_net, beijing_flag,power_on_send_bejing_times;
 	static uint8_t  update_publish_times=0,get_bj_times=0;
-
+    uint8_t i;
      switch(wifi_t.runCommand_order_lable){
 
          
@@ -101,6 +101,12 @@ void RunWifi_Command_Handler(void)
 			
 				
 		  }
+		  else{
+            for(i=0;i<20;i++){
+		       UART2_DATA.UART_Data[i]=0;
+            }
+
+		 }
 
 		break;
 
