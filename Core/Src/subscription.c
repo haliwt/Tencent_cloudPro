@@ -576,14 +576,15 @@ void Json_Parse_Command_Fun(void)
 
 	  case OPEN_ON_ITEM:
       
-
-		     MqttData_Publish_SetOpen(1);  
+       if(run_t.app_timer_power_on_flag==0){
+		    MqttData_Publish_SetOpen(1);  
 			HAL_Delay(350);
 
 		   run_t.RunCommand_Label=POWER_ON;
 		   SendWifiCmd_To_Order(WIFI_POWER_ON);
 		   HAL_Delay(10);
 		   buzzer_temp_on=0;
+		}
 	   	
 	  run_t.response_wifi_signal_label = 0xff;
 

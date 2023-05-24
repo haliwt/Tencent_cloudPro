@@ -89,7 +89,7 @@ typedef struct _RUN_T{
 
 
 	uint8_t iwdg_the_first_falg;
-    uint8_t gPower_repeat_times_flag;
+   
 	uint8_t gTimer_usart_error;
     //app timer
 	//uint8_t app_timer_power_on_ref;
@@ -142,8 +142,7 @@ typedef struct _RUN_T{
 
 	  uint8_t gTimer_beijing_time;
 	  
-	
-	uint8_t gTimer_1s;
+
 
 	uint8_t gTimer_senddata_panel;
 	

@@ -386,7 +386,7 @@ void SystemReset(void)
 void RunCommand_MainBoard_Fun(void)
 {
    uint8_t i;
-   static uint8_t power_just_on,send_link_times,the_first_power_off;
+   static uint8_t send_link_times,the_first_power_off;
     
     if(run_t.buzzer_sound_flag == 1 && run_t.app_timer_power_off_flag==0 && run_t.app_timer_power_on_flag==0){
 	 	run_t.buzzer_sound_flag = 0;
@@ -398,36 +398,8 @@ void RunCommand_MainBoard_Fun(void)
 
 	case POWER_ON: //1
 		SetPowerOn_ForDoing();
-	   
-		power_just_on=0;
-        run_t.gTimer_1s=0;
-        run_t.gPower_repeat_times_flag =1;
-		Update_DHT11_Value();
-		HAL_Delay(10);
-
-		if(esp8266data.esp8266_login_cloud_success==1){
-			tencent_cloud_flag =1;
-	 	    SendWifiData_To_Cmd(0x01) ;
-
-			 Subscriber_Data_FromCloud_Handler();
-		     HAL_Delay(200);
-		}
-		
-		if(tencent_cloud_flag ==1){
-
-		   esp8266data.esp8266_login_cloud_success=1;
-		   SendWifiData_To_Cmd(0x01) ;
-
-		}
-		if( run_t.app_timer_power_on_flag == 1){
-		     run_t.app_timer_power_on_flag=0;
-       
-            for(i=0;i<36;i++){
-		      TCMQTTRCVPUB[i]=0;
-		     }
-
-		}
-		 run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
+         run_t.gTimer_send_dit=50;
+	    run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
 	break;
         
     case POWER_OFF: //2
@@ -509,18 +481,18 @@ void RunCommand_MainBoard_Fun(void)
 
           run_t.gTimer_send_dit=0;
 		  Update_DHT11_Value();
-
-
-
-	  }
+     }
 	 
-	 if((run_t.gTimer_1s>32 && run_t.gPower_flag == POWER_ON)||power_just_on < 10){
-		   power_just_on ++ ;
-		   run_t.gTimer_1s=0;
-		   Update_DHT11_Value();
-	
-	}
-	
+
+
+	if( run_t.app_timer_power_on_flag == 1){
+		     run_t.app_timer_power_on_flag=0;
+       
+            for(i=0;i<36;i++){
+		      TCMQTTRCVPUB[i]=0;
+		     }
+
+		}
     break;
 
 	case FAN_CONTINUCE_RUN_ONE_MINUTE:

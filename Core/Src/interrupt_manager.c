@@ -10,15 +10,20 @@
 
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
+   uint32_t temp;
 	if(huart->Instance==USART2){
 
 		if(__HAL_UART_GET_FLAG(&huart2,UART_FLAG_ORE)!=RESET){
 
              __HAL_UART_CLEAR_OREFLAG(&huart2);
-			UART_Start_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,1);
+			UART_Start_Receive_IT(&huart2,UART2_DATA.UART_DataBuf,1);
 
 		}
 		__HAL_UNLOCK(&huart2);
+		   
+          temp=USART2->ISR;
+          temp = USART2->RDR;
+		UART_Start_Receive_IT(&huart2,UART2_DATA.UART_DataBuf,1);
 
 
 	}
@@ -31,7 +36,9 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 	
 			}
 			__HAL_UNLOCK(&huart1);
-	
+		  temp=USART1->ISR;
+          temp = USART1->RDR;
+	     UART_Start_Receive_IT(&huart1,inputBuf,1);
 	
 		}
 
@@ -55,7 +62,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     if(huart->Instance==USART2)
     {
            
-     
+        
+       USART2->ISR = 0xf5;
 	
 	      if(esp8266data.linking_tencent_cloud_doing ==1){
 
@@ -146,7 +154,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	 if(tm0 > 99){//100ms *10 = 1000ms =1s
         tm0 =0;
 		tm1++;
-        run_t.gTimer_1s ++;
+    
        esp8266data.gTimer_publish_dht11++;
 	   esp8266data.gTimer_publish_timing++;
 	   esp8266data.gTimer_subscription_timing++;
