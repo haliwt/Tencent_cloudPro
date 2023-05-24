@@ -182,15 +182,15 @@ void RunWifi_Command_Handler(void)
 
 			    case POWER_ON:
 
-					if(update_publish_times ==0 ){
-					update_publish_times++;
-
-					MqttData_Publish_SetOpen(0x01);
-					HAL_Delay(200);
-					Publish_Data_ToTencent_Update_Data();
-					HAL_Delay(200);
-
-					}
+//					if(update_publish_times ==0 ){
+//					update_publish_times++;
+//
+//					//MqttData_Publish_SetOpen(0x01);
+//					//HAL_Delay(200);
+//					//Publish_Data_ToTencent_Update_Data();
+//					//HAL_Delay(200);
+//
+//					}
 
 //
 //					if(esp8266data.esp8266_login_cloud_success==1){

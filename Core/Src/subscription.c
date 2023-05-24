@@ -750,7 +750,7 @@ void Json_Parse_Command_Fun(void)
 			   run_t.RunCommand_Label=POWER_ON;
 			   SendWifiCmd_To_Order(WIFI_POWER_ON);
 			   HAL_Delay(10);
-			 //  buzzer_temp_on=0;
+			   buzzer_temp_on=0;
 		         
 
 				
@@ -766,7 +766,7 @@ void Json_Parse_Command_Fun(void)
 
 			SendWifiCmd_To_Order(WIFI_POWER_OFF);
 			HAL_Delay(10);
-		
+		      buzzer_temp_on=0;
 				
 			}
 
