@@ -108,6 +108,7 @@ typedef struct _RUN_T{
     uint8_t flash_read_data;
 	uint8_t works_break_power_on;
 	uint8_t beijing_time_flag ;
+	uint8_t set_beijing_time_flag;
 
 	//fan:
 	uint8_t gFan_pwm_duty_level;
@@ -141,7 +142,7 @@ typedef struct _RUN_T{
 	  uint8_t  wind_speed_unit;
       uint8_t wifi_config_net_lable;
 
-	  uint8_t gTimer_beijing_time;
+
 	  uint8_t gTimer_app_power_on;
 	  
 

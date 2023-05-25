@@ -31,11 +31,11 @@ typedef struct _WIFI_FUN{
     uint8_t runCommand_order_lable;
 	uint8_t has_been_login_flag;
     uint8_t soft_ap_config_flag;
-    uint8_t get_rx_beijing_time_flag;
+    uint8_t get_rx_beijing_time_enable;
 	uint8_t rx_beijing_decode_flag;
 	
 	uint8_t wifi_reconnect_read_flag;
-	uint8_t gTimer_get_beij_times;
+	
 	uint8_t tencent_cloud_command_power_on;
 
 

@@ -127,7 +127,7 @@ int main(void)
 	Decode_Function();
     RunCommand_MainBoard_Fun();
     RunWifi_Command_Handler();
-    if(wifi_t.get_rx_beijing_time_flag==0 ){
+    if(wifi_t.get_rx_beijing_time_enable==0 ){
 	     Tencent_Cloud_Rx_Handler();
 		 Json_Parse_Command_Fun();
 	}

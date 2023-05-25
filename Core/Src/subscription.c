@@ -430,7 +430,8 @@ void Tencent_Cloud_Rx_Handler(void)
 
     if( esp8266data.rx_data_success==1){
             esp8266data.rx_data_success=0;
-
+          run_t.set_beijing_time_flag=0;
+		  wifi_t.get_rx_beijing_time_enable=0; //enable beijing times
 	
      if(wifi_t.received_data_from_tencent_cloud ==0x25){
 	    wifi_t.received_data_from_tencent_cloud=0;
@@ -560,7 +561,7 @@ void Json_Parse_Command_Fun(void)
 
       case OPEN_OFF_ITEM:
 
-       
+            if(run_t.app_timer_power_off_flag ==0){
 		 	MqttData_Publish_SetOpen(0);  
 			HAL_Delay(350);
 	         run_t.RunCommand_Label=POWER_OFF;
@@ -569,7 +570,7 @@ void Json_Parse_Command_Fun(void)
 			HAL_Delay(5);
 			buzzer_temp_on=0;
 	
-
+            	}
         run_t.response_wifi_signal_label = 0xff;
         
 	  break;
@@ -746,7 +747,8 @@ void Json_Parse_Command_Fun(void)
 
 	  case APP_TIMER_POWER_ON_REF :
 
-	  
+	       run_t.set_beijing_time_flag=0;
+		   wifi_t.get_rx_beijing_time_enable=0; //enable beijing times
 	  	
 		   if(strstr((char *)TCMQTTRCVPUB,"open\":1")){
 		   
@@ -887,7 +889,7 @@ void Wifi_Rx_Beijing_Time_Handler(void)
 			 if(UART2_DATA.UART_DataBuf[0] ==20){
 
 		          wifi_t.rx_beijing_decode_flag =1;
-				  wifi_t.get_rx_beijing_time_flag=0 ;
+				  wifi_t.get_rx_beijing_time_enable=0 ;
 				  esp8266data.rx_data_state=0; //=1
 				  
 		     }

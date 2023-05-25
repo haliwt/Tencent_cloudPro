@@ -81,7 +81,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	      } 
 		  else{
 
-		         if(wifi_t.get_rx_beijing_time_flag==1){
+		         if(wifi_t.get_rx_beijing_time_enable==1){
 					UART2_DATA.UART_Data[UART2_DATA.UART_Cnt] = UART2_DATA.UART_DataBuf[0];
 					UART2_DATA.UART_Cnt++;
 
@@ -160,12 +160,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 	    wifi_t.gTimer_get_beijing_time++;
 
-	   wifi_t.gTimer_beijing_time++;
+	  
 	    run_t.gTimer_app_power_on++;
 	  
 	 
-	   wifi_t.gTimer_get_beij_times++;
-	
+
 	   run_t.gTimer_usart_error++;
 	   wifi_t.gTimer_reconnect_wifi++;
 	   run_t.gTimer_usart2_error++;

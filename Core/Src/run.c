@@ -388,7 +388,7 @@ void RunCommand_MainBoard_Fun(void)
    uint8_t i;
    static uint8_t send_link_times,the_first_power_off,fan_continuce;
     
-    if(run_t.buzzer_sound_flag == 1 && run_t.app_timer_power_off_flag==0 && run_t.app_timer_power_on_flag==0){
+    if(run_t.buzzer_sound_flag == 1 ){
 	 	run_t.buzzer_sound_flag = 0;
 	    Buzzer_KeySound();
 
