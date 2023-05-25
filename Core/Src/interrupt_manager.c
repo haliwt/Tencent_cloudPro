@@ -11,23 +11,23 @@
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
    uint32_t temp;
-	if(huart->Instance==USART2){
-
-		if(__HAL_UART_GET_FLAG(&huart2,UART_FLAG_ORE)!=RESET){
-
-             __HAL_UART_CLEAR_OREFLAG(&huart2);
-			 __HAL_UART_CLEAR_FEFLAG(&huart2);
-			//UART_Start_Receive_IT(&huart2,UART2_DATA.UART_DataBuf,1);
-
-		}
-		__HAL_UNLOCK(&huart2);
-		   
-          temp= USART2->ISR;
-          temp = USART2->RDR;
-		UART_Start_Receive_IT(&huart2,UART2_DATA.UART_DataBuf,1);
-
-
-	}
+//	if(huart->Instance==USART2){
+//
+//		if(__HAL_UART_GET_FLAG(&huart2,UART_FLAG_ORE)!=RESET){
+//
+//             __HAL_UART_CLEAR_OREFLAG(&huart2);
+//		
+//			UART_Start_Receive_IT(&huart2,UART2_DATA.UART_DataBuf,1);
+//
+//		}
+//		__HAL_UNLOCK(&huart2);
+//		   
+//          temp= USART2->ISR;
+//          temp = USART2->RDR;
+//		UART_Start_Receive_IT(&huart2,UART2_DATA.UART_DataBuf,1);
+//
+//
+//	}
 	if(huart->Instance==USART1){
 	
 			if(__HAL_UART_GET_FLAG(&huart1,UART_FLAG_ORE)!=RESET){
@@ -37,7 +37,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 	
 			}
 			__HAL_UNLOCK(&huart1);
-		  temp = USART1 ->ISR;
+		//  temp = USART1 ->ISR;
           temp = USART1->RDR;
 	     UART_Start_Receive_IT(&huart1,inputBuf,1);
 	
@@ -58,12 +58,12 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
     static uint8_t state=0;
-   
+    uint32_t temp ;
     //wifi usart2
     if(huart->Instance==USART2)
     {
            
-        
+         
         //  USART2->ISR = 0xf5; 
 	
 	      if(esp8266data.linking_tencent_cloud_doing ==1){
@@ -89,7 +89,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 				else
 				Subscribe_Rx_Interrupt_Handler();
 	      }
-	   
+	  
       HAL_UART_Receive_IT(&huart2,UART2_DATA.UART_DataBuf,1);
 	}
 

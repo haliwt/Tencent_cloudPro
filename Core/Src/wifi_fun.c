@@ -76,7 +76,7 @@ void SetTemperatureHost(void(*temperatureHandler)(void))
 ***********************************************/
 void RunWifi_Command_Handler(void)
 {
-   
+    uint8_t i;
     static uint8_t first_sub,subscription_flag,beijing_time_flag,wifi_power_off_flag;
 	static uint8_t det_no_wifi_net, beijing_flag;
 	static uint8_t  update_publish_times=0,get_bj_times=0;
@@ -179,7 +179,8 @@ void RunWifi_Command_Handler(void)
 	   	case wifi_publish_update_tencent_cloud_data://05
 
 		      while(run_t.beijing_time_flag == 1){
-				run_t.beijing_time_flag = 0;
+				run_t.beijing_time_flag ++;
+				wifi_t.gTimer_get_beijing_time=0;
 				wifi_t.get_rx_beijing_time_enable=0;//disenable get beijing timing
 
 				if(get_bj_times < 2){
@@ -237,7 +238,7 @@ void RunWifi_Command_Handler(void)
 			 	}
 			
 			
-			if(wifi_t.gTimer_get_beijing_time > 242 ){ //&& run_t.power_on_send_bejing_times==0){ //
+			if(wifi_t.gTimer_get_beijing_time > 340 ){ //&& run_t.power_on_send_bejing_times==0){ //
 			   wifi_t.gTimer_get_beijing_time=0;
 			  
 			   run_t.set_beijing_time_flag=1; //set beijing times .
@@ -314,7 +315,14 @@ void RunWifi_Command_Handler(void)
 	 
      }
   
+     if(run_t.beijing_time_flag ==2){
+	     run_t.beijing_time_flag++; 
+         for(i=0;i<150;i++){
+	      UART2_DATA.UART_Data[i]=0;
 
+         }
+
+	 }
 
 	
   }
