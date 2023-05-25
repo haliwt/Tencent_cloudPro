@@ -316,7 +316,7 @@ void RunWifi_Command_Handler(void)
 	       if(run_t.gTimer_read_beijing_time > 2 && run_t.gTimer_read_beijing_time < 4){
 				run_t.gTimer_read_beijing_time=0;
 			   	Get_Beijing_Time();
-				HAL_Delay(1000);
+				HAL_Delay(200);
 			    run_t.beijing_time_flag = 1;
 				
 			  	wifi_t.real_hours = (UART2_DATA.UART_Data[134]-0x30)*10 + UART2_DATA.UART_Data[135]-0x30;

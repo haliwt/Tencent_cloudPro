@@ -101,12 +101,12 @@ void USART2_Cmd_Error_Handler(UART_HandleTypeDef *huart)
 	if(huart==&huart2){
 
 
-      if(run_t.gTimer_usart2_error >7){
+      if(run_t.gTimer_usart2_error >67){
 	  	run_t.gTimer_usart2_error=0;
 	      __HAL_UART_GET_FLAG(&huart2,UART_FLAG_ORE);//UART_FLAG_NE
          __HAL_UART_GET_FLAG(&huart2,UART_FLAG_NE); //USART_ISR_FE
          __HAL_UART_GET_FLAG(&huart2,USART_ISR_FE);
-		 UART_Start_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,1);
+		// UART_Start_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,1);
 		
          if(UART_FLAG_ORE==1 ){
            __HAL_UART_CLEAR_OREFLAG(&huart2);
