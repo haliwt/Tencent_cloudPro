@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
+#include "run.h"
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart1;
@@ -105,9 +106,28 @@ void MX_USART2_UART_Init(void)
   huart2.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
   if (HAL_UART_Init(&huart2) != HAL_OK)
   {
-    Error_Handler();
+    run_t.usart2_error_falg =1;
+	Error_Handler();
+	
   }
   /* USER CODE BEGIN USART2_Init 2 */
+  if(HAL_UARTEx_SetTxFifoThreshold(&huart2, UART_TXFIFO_THRESHOLD_1_8)!= HAL_OK)
+  {
+    run_t.usart2_error_falg =1;
+	Error_Handler();
+
+  }
+  if(HAL_UARTEx_SetRxFifoThreshold(&huart2, UART_RXFIFO_THRESHOLD_1_8)!= HAL_OK)
+  {
+     run_t.usart2_error_falg =1;
+	 Error_Handler();
+  }
+  if(HAL_UARTEx_DisableFifoMode(&huart2) !=HAL_OK)
+  {
+     run_t.usart2_error_falg =1;
+	 Error_Handler();
+
+  }
 
   /* USER CODE END USART2_Init 2 */
 

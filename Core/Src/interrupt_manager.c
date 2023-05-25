@@ -22,7 +22,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 		}
 		__HAL_UNLOCK(&huart2);
 		   
-          temp= USART2->TDR;
+          temp= USART2->ISR;
           temp = USART2->RDR;
 		UART_Start_Receive_IT(&huart2,UART2_DATA.UART_DataBuf,1);
 
@@ -37,7 +37,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 	
 			}
 			__HAL_UNLOCK(&huart1);
-		  temp = USART1 ->TDR;
+		  temp = USART1 ->ISR;
           temp = USART1->RDR;
 	     UART_Start_Receive_IT(&huart1,inputBuf,1);
 	

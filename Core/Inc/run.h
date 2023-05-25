@@ -84,6 +84,7 @@ typedef struct _RUN_T{
 	uint8_t buzzer_sound_flag ;
     //iwdg ref
 	uint8_t process_run_guarantee_flag;
+	uint8_t usart2_error_falg ;
 	
  
 

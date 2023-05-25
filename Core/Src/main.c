@@ -129,10 +129,11 @@ int main(void)
     RunWifi_Command_Handler();
     if(wifi_t.get_rx_beijing_time_enable==0 ){
 	     Tencent_Cloud_Rx_Handler();
-		 Json_Parse_Command_Fun();
+		 
 	}
+   Json_Parse_Command_Fun();
    USART1_Cmd_Error_Handler(&huart1);
-   USART2_Cmd_Error_Handler(&huart2);
+ //  USART2_Cmd_Error_Handler(&huart2);
 	
 
   }
@@ -194,12 +195,21 @@ void SystemClock_Config(void)
   */
 void Error_Handler(void)
 {
+   uint32_t temp;
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
-  __disable_irq();
-  while (1)
-  {
+   if(run_t.usart2_error_falg ==1){
+   	   run_t.usart2_error_falg=0;
+      __HAL_UART_CLEAR_OREFLAG(&huart2);
+       temp=USART2->ISR;
+       temp = USART2->RDR;
+	   UART_Start_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,1);
   }
+  /* User can add his own implementation to report the HAL error return state */
+ // __disable_irq();
+ // while (1)
+ // {
+ //        
+ // }
   /* USER CODE END Error_Handler_Debug */
 }
 

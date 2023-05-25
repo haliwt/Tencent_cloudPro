@@ -449,7 +449,7 @@ void RunCommand_MainBoard_Fun(void)
 	break;
 
    case UPDATE_TO_PANEL_DATA: //4
-     if(run_t.gTimer_senddata_panel >30){ //300ms
+     if(run_t.gTimer_senddata_panel >50){ //300ms
 	   	    run_t.gTimer_senddata_panel=0;
 	        ActionEvent_Handler();
 	      
