@@ -178,79 +178,43 @@ void RunWifi_Command_Handler(void)
 
 	   	case wifi_publish_update_tencent_cloud_data://05
 
-		     
+		      while(run_t.beijing_time_flag == 1){
+				run_t.beijing_time_flag = 0;
+				wifi_t.get_rx_beijing_time_enable=0;//disenable get beijing timing
 
-//					if(update_publish_times ==0 ){
-//					update_publish_times++;
-//
-//					//MqttData_Publish_SetOpen(0x01);
-//					//HAL_Delay(200);
-//					//Publish_Data_ToTencent_Update_Data();
-//					//HAL_Delay(200);
-//
-//					}
+				if(get_bj_times < 2){
+				get_bj_times++;
+				wifi_t.runCommand_order_lable= wifi_get_beijing_time;
+				run_t.set_beijing_time_flag =1;
 
-//
-//					if(esp8266data.esp8266_login_cloud_success==1){
-//					wifi_t.get_rx_beijing_time_enable=0;
-//					if(esp8266data.gTimer_publish_timing>680 ){
-//					esp8266data.gTimer_publish_timing=0;
-//					Publish_Data_ToTencent_Update_Data();
-//					HAL_Delay(200);
-//
-//
-//					}
+				}
 
-//					if(esp8266data.gTimer_subscription_timing>132 && subscription_flag ==0){
-//						esp8266data.gTimer_subscription_timing=0;
-//						subscription_flag ++;
-//						Subscriber_Data_FromCloud_Handler();
-//						HAL_Delay(200);
-//
-//					}
+				if(wifi_t.real_hours < 25 && wifi_t.real_minutes < 61){
 
+				SendData_Real_GMT(wifi_t.real_hours);
+				HAL_Delay(10);
+				SendData_Real_GMT_Minute(wifi_t.real_minutes);
+				HAL_Delay(10);
+				SendData_Real_GMT_Second(wifi_t.real_seconds);
+				HAL_Delay(10);
+				}
 
-					while(run_t.beijing_time_flag == 1){
-							run_t.beijing_time_flag = 0;
-							wifi_t.get_rx_beijing_time_enable=0;//disenable get beijing timing
+			  }
 
-							if(get_bj_times < 2){
-								get_bj_times++;
-								wifi_t.runCommand_order_lable= wifi_get_beijing_time;
-								run_t.set_beijing_time_flag =1;
-							
-                            }
-                    
-							if(wifi_t.real_hours < 25 && wifi_t.real_minutes < 61){
+              if(run_t.gTimer_publish_dht11 >138){
+				   run_t.gTimer_publish_dht11=0;
 
-								SendData_Real_GMT(wifi_t.real_hours);
-								HAL_Delay(10);
-								SendData_Real_GMT_Minute(wifi_t.real_minutes);
-								HAL_Delay(10);
-								SendData_Real_GMT_Second(wifi_t.real_seconds);
-								HAL_Delay(10);
-							}
+				wifi_t.runCommand_order_lable= wifi_tencent_publish_dht11_data;
+			}
 
-						
-						
-					}
+			if(run_t.gTimer_auto_detected_net_link_state > 6){		
 
+				  run_t.gTimer_auto_detected_net_link_state=0;
 
-
-
-					if(run_t.gTimer_publish_dht11 >138){
-						run_t.gTimer_publish_dht11=0;
-
-						wifi_t.runCommand_order_lable= wifi_tencent_publish_dht11_data;
-					}
-
-					
-
-
-					AutoReconnect_Wifi_Neware_Function();
+			      AutoReconnect_Wifi_Neware_Function();
 					
 			 
-
+			}
 			 
 
 	   break;
@@ -266,7 +230,7 @@ void RunWifi_Command_Handler(void)
 			if(run_t.gPower_flag == POWER_ON){
 			 if(run_t.app_timer_power_off_flag == 0 && (run_t.app_timer_power_on_flag==0||run_t.app_timer_power_on_flag==3)){
 				Update_Dht11_Totencent_Value();
-				HAL_Delay(200);
+				HAL_Delay(350);
 			
 			   //  Subscriber_Data_FromCloud_Handler();
 			   //  HAL_Delay(200);

@@ -163,7 +163,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	    run_t.gTimer_publish_dht11++;
 	    run_t.gTimer_app_power_on++;
 	    run_t.gTimer_read_beijing_time++;
-	 
+	   run_t.gTimer_auto_detected_net_link_state++;
 
 	   run_t.gTimer_usart_error++;
 	   wifi_t.gTimer_reconnect_wifi++;

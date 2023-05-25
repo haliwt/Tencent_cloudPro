@@ -766,12 +766,13 @@ void Json_Parse_Command_Fun(void)
 				
 				
 			}
-           else if(strstr((char *)TCMQTTRCVPUB,"open\":0")){
+		   
+            if(strstr((char *)TCMQTTRCVPUB,"open\":0")){
 		   
 		        run_t.app_timer_power_off_flag = 1;
 
 		 			MqttData_Publish_SetOpen(0);  
-			HAL_Delay(350);
+			       HAL_Delay(350);
 	         run_t.RunCommand_Label=POWER_OFF;
 
 			SendWifiCmd_To_Order(WIFI_POWER_OFF);

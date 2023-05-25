@@ -146,6 +146,7 @@ typedef struct _RUN_T{
 	  uint8_t gTimer_app_power_on;
 	  uint8_t gTimer_publish_dht11;
 	  uint8_t gTimer_read_beijing_time;
+	  uint8_t gTimer_auto_detected_net_link_state;
 	  
 
 
