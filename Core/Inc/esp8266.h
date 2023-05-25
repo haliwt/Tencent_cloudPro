@@ -74,7 +74,7 @@ typedef struct ESP8266_DATA
 
  
 	uint8_t gTimer_publish_timing;
-	uint8_t gTimer_publish_dht11;
+	
 	
 }ESP8266DATATypedef;
 

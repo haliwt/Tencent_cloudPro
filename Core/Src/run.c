@@ -401,6 +401,7 @@ void RunCommand_MainBoard_Fun(void)
          run_t.gTimer_send_dit=0;
 	     run_t.gTimer_senddata_panel=0;
 		 run_t.gTimer_app_power_on=0;
+		 run_t.app_timer_power_off_flag =0;
 	    run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
 	break;
         
@@ -458,24 +459,27 @@ void RunCommand_MainBoard_Fun(void)
 
           run_t.gTimer_send_dit=0;
 		  Update_DHT11_Value();
+	 
      }
 	 
 
+   if(run_t.app_timer_power_on_flag==2){
+     	run_t.app_timer_power_on_flag++;
+     Subscriber_Data_FromCloud_Handler();
+	HAL_Delay(200);
 
+
+   }
 	
    
 
-	if(run_t.gTimer_app_power_on >58 &&   run_t.app_timer_power_on_flag == 1 ){
+	if(run_t.gTimer_app_power_on >37 &&   run_t.app_timer_power_on_flag == 1){
      run_t.gTimer_app_power_on=0;
-	 run_t.app_timer_power_on_flag = 0;
+	 run_t.app_timer_power_on_flag++;
 	    for(i=0;i<36;i++){
 		      TCMQTTRCVPUB[i]=0;
 		  }
-
-	
-		   run_t.app_timer_power_on_flag=0;
-	        Subscriber_Data_FromCloud_Handler();
-			HAL_Delay(300);
+         
        
 		
 	}
@@ -483,13 +487,7 @@ void RunCommand_MainBoard_Fun(void)
 
 	case FAN_CONTINUCE_RUN_ONE_MINUTE:
 
-	     if(fan_continuce == 0){
-		 	fan_continuce ++;
-			Subscriber_Data_FromCloud_Handler();
-			HAL_Delay(300);
-
-
-		 }
+	     
 
 		
 
@@ -505,6 +503,13 @@ void RunCommand_MainBoard_Fun(void)
 				   run_t.RunCommand_Label = POWER_NULL;
 			      
 				   FAN_Stop();
+                   if(fan_continuce == 0){
+		 	       fan_continuce ++;
+			        Subscriber_Data_FromCloud_Handler();
+			       HAL_Delay(300);
+
+
+		            }
 				  
 	         }
 	  
@@ -554,7 +559,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 
 	if(self_power_on_flag==0){
         self_power_on_flag ++ ;
-		run_t.power_on_send_bejing_times=0;
+	
         Buzzer_KeySound();
 
     

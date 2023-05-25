@@ -95,7 +95,7 @@ typedef struct _RUN_T{
 	//uint8_t app_timer_power_on_ref;
 	uint8_t app_timer_power_on_flag ;
 	uint8_t app_timer_power_off_flag ;
-	uint8_t power_on_send_bejing_times;
+
     
     uint8_t decodeFlag;
 	uint8_t sendtimes;
@@ -144,6 +144,8 @@ typedef struct _RUN_T{
 
 
 	  uint8_t gTimer_app_power_on;
+	  uint8_t gTimer_publish_dht11;
+	  uint8_t gTimer_read_beijing_time;
 	  
 
 

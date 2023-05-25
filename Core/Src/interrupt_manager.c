@@ -154,15 +154,15 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         tm0 =0;
 		tm1++;
     
-       esp8266data.gTimer_publish_dht11++;
+      
 	   esp8266data.gTimer_publish_timing++;
 	   esp8266data.gTimer_subscription_timing++;
 
 	    wifi_t.gTimer_get_beijing_time++;
 
-	  
+	    run_t.gTimer_publish_dht11++;
 	    run_t.gTimer_app_power_on++;
-	  
+	    run_t.gTimer_read_beijing_time++;
 	 
 
 	   run_t.gTimer_usart_error++;

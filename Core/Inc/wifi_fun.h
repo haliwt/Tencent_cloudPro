@@ -32,7 +32,7 @@ typedef struct _WIFI_FUN{
 	uint8_t has_been_login_flag;
     uint8_t soft_ap_config_flag;
     uint8_t get_rx_beijing_time_enable;
-	uint8_t rx_beijing_decode_flag;
+	
 	
 	uint8_t wifi_reconnect_read_flag;
 	
