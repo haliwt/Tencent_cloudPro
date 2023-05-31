@@ -238,7 +238,7 @@ void RunWifi_Command_Handler(void)
 			 	}
 			
 			
-			if(wifi_t.gTimer_get_beijing_time > 340 ){ //&& run_t.power_on_send_bejing_times==0){ //
+			if(wifi_t.gTimer_get_beijing_time > 423){ //&& run_t.power_on_send_bejing_times==0){ //
 			   wifi_t.gTimer_get_beijing_time=0;
 			  
 			   run_t.set_beijing_time_flag=1; //set beijing times .

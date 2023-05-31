@@ -112,7 +112,7 @@ int main(void)
   /* USER CODE END 2 */
 
     __HAL_UART_ENABLE_IT(&huart1,UART_IT_ERR);
-  //  __HAL_UART_ENABLE_IT(&huart2,UART_IT_ERR);
+    __HAL_UART_ENABLE_IT(&huart2,UART_IT_ERR);
    run_t.RunCommand_Label = POWER_OFF;
    //run_t.set_wind_speed_value=100;
   /* Infinite loop */
@@ -133,7 +133,7 @@ int main(void)
 	}
   
    USART1_Cmd_Error_Handler(&huart1);
-  // USART2_Cmd_Error_Handler(&huart2);
+   USART2_Cmd_Error_Handler(&huart2);
 	
 
   }
@@ -199,9 +199,7 @@ void Error_Handler(void)
   /* USER CODE BEGIN Error_Handler_Debug */
    if(run_t.usart2_error_falg ==1){
    	   run_t.usart2_error_falg=0;
-//      __HAL_UART_CLEAR_OREFLAG(&huart2);
-//       temp=USART2->ISR;
-//       temp = USART2->RDR;
+      __HAL_UART_CLEAR_OREFLAG(&huart2);
 	   temp = USART2->RDR;
 
 	   UART_Start_Receive_IT(&huart2,(uint8_t *)UART2_DATA.UART_DataBuf,1);
