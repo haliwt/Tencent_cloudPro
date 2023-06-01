@@ -594,7 +594,7 @@ void RunCommand_Connect_Handler(void)
 			 HAL_Delay(200);
 		 }
 
-		 run_t.rx_command_tag= KEY_NULL;
+		 run_t.rx_command_tag=RUN_COMMAND ;//KEY_NULL;
 	    break;
 
 	   case POWER_OFF:
@@ -619,7 +619,13 @@ void RunCommand_Connect_Handler(void)
 			 HAL_Delay(200);
 
          }
-          run_t.rx_command_tag= KEY_NULL;
+          run_t.rx_command_tag= RUN_COMMAND;
+	   break;
+
+	   case RUN_COMMAND:
+	     	RunCommand_MainBoard_Fun();
+
+
 	   break;
 
 
