@@ -113,6 +113,7 @@ int main(void)
 
     __HAL_UART_ENABLE_IT(&huart1,UART_IT_ERR);
     __HAL_UART_ENABLE_IT(&huart2,UART_IT_ERR);
+    run_t.rx_command_tag= RUN_COMMAND;
    run_t.RunCommand_Label = POWER_OFF;
    //run_t.set_wind_speed_value=100;
   /* Infinite loop */

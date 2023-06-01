@@ -177,6 +177,7 @@ void RunWifi_Command_Handler(void)
 		break;
 
 	   	case wifi_publish_update_tencent_cloud_data://05
+	   	      	
 
 		      while(run_t.beijing_time_flag == 1){
 				run_t.beijing_time_flag ++;

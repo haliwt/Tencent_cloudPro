@@ -7,7 +7,7 @@ IWDG_HandleTypeDef IWDG_Handler; //�������Ź����
 void Buzzer_KeySound(void)
 {
 
-  unsigned int m=30;//40;//70;//70;//80;//80
+  unsigned int m=40;//40;//70;//70;//80;//80
 	while(m--){
 
     HAL_GPIO_TogglePin(BUZZER_GPIO,BUZZER_PIN);//BEEP=!BEEP;
