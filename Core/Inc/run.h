@@ -172,7 +172,7 @@ extern RUN_T run_t;
 
 
 
-void RunCommand_MainBoard_Fun(uint8_t keyflag);
+void RunCommand_MainBoard_Fun(void);
 
 
 

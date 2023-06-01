@@ -128,7 +128,7 @@ int main(void)
 	if(run_t.decodeFlag==0){
 	    RunCommand_Connect_Handler();
 		if(run_t.rx_command_tag== KEY_NULL)
-	         RunCommand_MainBoard_Fun(run_t.RunCommand_Label);
+	         RunCommand_MainBoard_Fun();
 
 	}
     RunWifi_Command_Handler();

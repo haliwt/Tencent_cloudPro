@@ -346,7 +346,7 @@ void SystemReset(void)
 	*Return Ref: NO
 	*
 **********************************************************************/
-void RunCommand_MainBoard_Fun(uint8_t keyflag)
+void RunCommand_MainBoard_Fun(void)
 {
    uint8_t i;
    static uint8_t send_link_times,the_first_power_off,fan_continuce;
@@ -357,7 +357,7 @@ void RunCommand_MainBoard_Fun(uint8_t keyflag)
 
 	 }
   
-   switch(keyflag){
+   switch(run_t.RunCommand_Label){
 
 	case POWER_ON: //1
 	      run_t.power_off_by_touchkey =0;
@@ -367,7 +367,7 @@ void RunCommand_MainBoard_Fun(uint8_t keyflag)
 	     run_t.gTimer_senddata_panel=0;
 		 run_t.gTimer_app_power_on=0;
 		 run_t.app_timer_power_off_flag =0;
-	    keyflag= UPDATE_TO_PANEL_DATA;
+	   run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
     
 	break;
         
@@ -395,12 +395,12 @@ void RunCommand_MainBoard_Fun(uint8_t keyflag)
 		    the_first_power_off++;
 			
 			
-			keyflag = POWER_NULL;
+			run_t.RunCommand_Label= POWER_NULL;
 		}
 		else{
 			
 		  run_t.gFan_counter=0;
-		  keyflag = FAN_CONTINUCE_RUN_ONE_MINUTE;
+		run_t.RunCommand_Label = FAN_CONTINUCE_RUN_ONE_MINUTE;
 		  
 		 }
          
@@ -454,7 +454,7 @@ void RunCommand_MainBoard_Fun(uint8_t keyflag)
 	}
     break;
 
-	case FAN_CONTINUCE_RUN_ONE_MINUTE:
+	case FAN_CONTINUCE_RUN_ONE_MINUTE: //6
 
 	     
          run_t.power_on_by_touchkey =0;
@@ -469,7 +469,7 @@ void RunCommand_MainBoard_Fun(uint8_t keyflag)
            else{
 		           
 				   run_t.gFan_counter=0;
-				   keyflag = POWER_NULL;
+				  run_t.RunCommand_Label = POWER_NULL;
 			      
 				   FAN_Stop();
                    if(fan_continuce == 0){
