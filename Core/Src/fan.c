@@ -23,19 +23,28 @@ void FAN_Stop(void)
    FAN_CW_SetLow(); //brake
   //  FAN_GPIO_Init();
   // HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6,GPIO_PIN_RESET);
-   HAL_TIM_PWM_Stop(&htim16,TIM_CHANNEL_1);
+   //HAL_TIM_PWM_Stop(&htim16,TIM_CHANNEL_1);
    SetLevel_Fan_PWMA(0);//SetLevel_Fan_PWMA(16);
+}
+
+void Fan_One_Power_Off_Speed(void)
+{
+	// SetLevel_Fan_PWMA(25);
+	 FAN_CW_SetLow(); //brake
+	 FAN_GPIO_Init();
+     //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6,GPIO_PIN_SET);
+	
+
+
 }
 
 void Fan_One_Speed(void)
 {
-	 SetLevel_Fan_PWMA(20);//SetLevel_Fan_PWMA(16);
-	//FAN_CW_SetLow(); //brake
-	//HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6,GPIO_PIN_SET);
+
+	SetLevel_Fan_PWMA(20);
 
 
 }
-
 
 void Fan_Two_Speed(void)
 {

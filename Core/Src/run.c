@@ -161,7 +161,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
     
 		 //   PTC_SetHigh();
             Buzzer_KeySound();
-            run_t.rx_command_tag=POWER_ON;//run_t.power_on_by_touchkey=1;
+            run_t.rx_command_tag=POWER_ON;
 	     
 	  
 	    
@@ -175,7 +175,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
      
       //  PTC_SetLow();
         Buzzer_KeySound();
-         run_t.rx_command_tag=POWER_OFF;//run_t.power_on_by_touchkey=1;
+         run_t.rx_command_tag=POWER_OFF;
         cmd = 0xff;
     break;
          
@@ -360,7 +360,7 @@ void RunCommand_MainBoard_Fun(void)
    switch(run_t.RunCommand_Label){
 
 	case POWER_ON: //1
-	      run_t.power_off_by_touchkey =0;
+	     
 			SetPowerOn_ForDoing();
 	      run_t.gPower_On=POWER_ON;
          run_t.gTimer_send_dit=0;
@@ -372,7 +372,7 @@ void RunCommand_MainBoard_Fun(void)
 	break;
         
     case POWER_OFF: //2
-         run_t.power_on_by_touchkey =0;
+     
          SetPowerOff_ForDoing();
 	     run_t.gPower_On=POWER_OFF;
         run_t.gPower_flag = POWER_OFF;
@@ -381,28 +381,16 @@ void RunCommand_MainBoard_Fun(void)
 		 run_t.gModel =1;
 		run_t.app_timer_power_on_flag =0;
 		fan_continuce =0;
+	
        
         
 	    MqttData_Publish_PowerOff_Ref(); 
 	    HAL_Delay(300);
 		SetPowerOff_ForDoing();
-
-		
-		if(the_first_power_off ==0){
-			Subscriber_Data_FromCloud_Handler();
-			HAL_Delay(300);
-
-		    the_first_power_off++;
-			
-			
-			run_t.RunCommand_Label= POWER_NULL;
-		}
-		else{
-			
-		  run_t.gFan_counter=0;
-		run_t.RunCommand_Label = FAN_CONTINUCE_RUN_ONE_MINUTE;
+         run_t.gFan_counter=0;
+	    run_t.RunCommand_Label = FAN_CONTINUCE_RUN_ONE_MINUTE;
 		  
-		 }
+		 
          
        if(run_t.app_timer_power_off_flag==1){ 
          	run_t.app_timer_power_off_flag=0;
@@ -416,7 +404,7 @@ void RunCommand_MainBoard_Fun(void)
 	break;
 
    case UPDATE_TO_PANEL_DATA: //4
-   run_t.power_off_by_touchkey =0;
+ 
    
      if(run_t.gTimer_senddata_panel >50){ //300ms
 	   	    run_t.gTimer_senddata_panel=0;
@@ -454,18 +442,23 @@ void RunCommand_MainBoard_Fun(void)
 	}
     break;
 
-	case FAN_CONTINUCE_RUN_ONE_MINUTE: //6
+	case FAN_CONTINUCE_RUN_ONE_MINUTE: //7
 
-	     
-         run_t.power_on_by_touchkey =0;
-		
+	 if(run_t.power_off_fan_state==1){
+		 run_t.power_off_fan_state++;
+	     run_t.RunCommand_Label = POWER_NULL;
+
+
+	 }
+	else{
 
          if(run_t.gPower_On == POWER_OFF && run_t.app_timer_power_off_flag ==0){
 		  if(run_t.gFan_counter < 60){
           
-                    Fan_One_Speed();
+                  //  Fan_One_Speed();
+					Fan_One_Power_Off_Speed();
                   
-            }       
+           }       
            else{
 		           
 				   run_t.gFan_counter=0;
@@ -483,6 +476,7 @@ void RunCommand_MainBoard_Fun(void)
 	         }
 	  
          }
+	}
 	break;
 
 	case POWER_ON_FAN_CONTINUCE_RUN_ONE_MINUTE:

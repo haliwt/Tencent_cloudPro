@@ -88,8 +88,8 @@ typedef struct _RUN_T{
     //iwdg ref
 	uint8_t process_run_guarantee_flag;
 	uint8_t usart2_error_falg ;
-	uint8_t power_off_by_touchkey ;
-	uint8_t power_on_by_touchkey ;
+	uint8_t power_off_fan_state ;
+
 	
  
 
