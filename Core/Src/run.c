@@ -41,6 +41,7 @@ void Decode_RunCmd(void)
   
       case 'P': //power on and off
         
+        //   Buzzer_KeySound();
            Single_Power_ReceiveCmd(cmdType_2);  
            
       break;
@@ -152,22 +153,14 @@ void Decode_RunCmd(void)
 **********************************************************************/
 static void Single_Power_ReceiveCmd(uint8_t cmd)
 {
-
-   
+  
     
     switch(cmd){
 
     case 0x01: // power on
-         run_t.power_off_by_touchkey =0;
-	     switch(run_t.power_on_by_touchkey){
 
-		 case 0:
-		    PTC_SetHigh();
-            Buzzer_KeySound();
-            run_t.power_on_by_touchkey=1;
-	     break;
-
-	     case 1:
+	    
+         Buzzer_KeySound();
          run_t.gPower_flag = POWER_ON;
 		 run_t.gPower_On = POWER_ON;
          run_t.RunCommand_Label= POWER_ON;
@@ -190,8 +183,8 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 	         Publish_Data_ToTencent_Initial_Data();
 			 HAL_Delay(200);
 		 }
-	    break;
-	    }
+	   
+		 
 	cmd=0xff;  
      break;
 
@@ -199,17 +192,8 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 	
 
     case 0x00: //power off
-        run_t.power_on_by_touchkey =0;
-        switch(run_t.power_off_by_touchkey){
-
-        case 0:
-        PTC_SetLow();
+       
         Buzzer_KeySound();
-        run_t.power_off_by_touchkey =1;
-        break;
-
-        case 1:
-
         run_t.gPower_On=POWER_OFF;
         run_t.gPower_flag = POWER_OFF;
         run_t.RunCommand_Label = POWER_OFF;
@@ -228,8 +212,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 			MqttData_Publish_PowerOff_Ref(); 
 			 HAL_Delay(200);
          }
-        break;
-      }
+     
     cmd = 0xff;
     break;
          
@@ -400,7 +383,7 @@ void SystemReset(void)
 	*Return Ref: NO
 	*
 **********************************************************************/
-void RunCommand_MainBoard_Fun(uint8_t keyflag)
+void RunCommand_MainBoard_Fun(void)
 {
    uint8_t i;
    static uint8_t send_link_times,the_first_power_off,fan_continuce;
@@ -411,23 +394,19 @@ void RunCommand_MainBoard_Fun(uint8_t keyflag)
 
 	 }
   
-   switch(keyflag){
+   switch(run_t.RunCommand_Label){
 
 	case POWER_ON: //1
-	      run_t.power_off_by_touchkey =0;
 			SetPowerOn_ForDoing();
-	      run_t.gPower_On=POWER_ON;
          run_t.gTimer_send_dit=0;
 	     run_t.gTimer_senddata_panel=0;
 		 run_t.gTimer_app_power_on=0;
 		 run_t.app_timer_power_off_flag =0;
-	    keyflag= UPDATE_TO_PANEL_DATA;
-    
+	    run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
 	break;
         
     case POWER_OFF: //2
-         run_t.power_on_by_touchkey =0;
-         SetPowerOff_ForDoing();
+      
 	     run_t.gPower_On=POWER_OFF;
         run_t.gPower_flag = POWER_OFF;
         run_t.RunCommand_Label = POWER_OFF;
@@ -449,12 +428,12 @@ void RunCommand_MainBoard_Fun(uint8_t keyflag)
 		    the_first_power_off++;
 			
 			
-			keyflag = POWER_NULL;
+			run_t.RunCommand_Label = POWER_NULL;
 		}
 		else{
 			
 		  run_t.gFan_counter=0;
-		  keyflag = FAN_CONTINUCE_RUN_ONE_MINUTE;
+		  run_t.RunCommand_Label = FAN_CONTINUCE_RUN_ONE_MINUTE;
 		  
 		 }
          
@@ -470,8 +449,6 @@ void RunCommand_MainBoard_Fun(uint8_t keyflag)
 	break;
 
    case UPDATE_TO_PANEL_DATA: //4
-   run_t.power_off_by_touchkey =0;
-   
      if(run_t.gTimer_senddata_panel >50){ //300ms
 	   	    run_t.gTimer_senddata_panel=0;
 	        ActionEvent_Handler();
@@ -511,7 +488,7 @@ void RunCommand_MainBoard_Fun(uint8_t keyflag)
 	case FAN_CONTINUCE_RUN_ONE_MINUTE:
 
 	     
-         run_t.power_on_by_touchkey =0;
+
 		
 
          if(run_t.gPower_On == POWER_OFF && run_t.app_timer_power_off_flag ==0){
@@ -523,7 +500,7 @@ void RunCommand_MainBoard_Fun(uint8_t keyflag)
            else{
 		           
 				   run_t.gFan_counter=0;
-				   keyflag = POWER_NULL;
+				   run_t.RunCommand_Label = POWER_NULL;
 			      
 				   FAN_Stop();
                    if(fan_continuce == 0){

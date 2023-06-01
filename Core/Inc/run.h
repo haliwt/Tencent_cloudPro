@@ -85,8 +85,6 @@ typedef struct _RUN_T{
     //iwdg ref
 	uint8_t process_run_guarantee_flag;
 	uint8_t usart2_error_falg ;
-	uint8_t power_off_by_touchkey ;
-	uint8_t power_on_by_touchkey ;
 	
  
 
@@ -170,9 +168,8 @@ extern RUN_T run_t;
 
 
 
-void RunCommand_MainBoard_Fun(uint8_t keyflag);
 
-
+void  RunCommand_MainBoard_Fun(void);
 
 void Decode_RunCmd(void);
 

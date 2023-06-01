@@ -156,7 +156,7 @@ void MX_TIM16_Init(void)
 {
 
   /* USER CODE BEGIN TIM16_Init 0 */
-   //fan by used this tim16
+
   /* USER CODE END TIM16_Init 0 */
 
   TIM_OC_InitTypeDef sConfigOC = {0};
@@ -166,9 +166,9 @@ void MX_TIM16_Init(void)
 
   /* USER CODE END TIM16_Init 1 */
   htim16.Instance = TIM16;
-  htim16.Init.Prescaler = 23;  //F = 24/(23+1)=1MHz
+  htim16.Init.Prescaler = 23;
   htim16.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim16.Init.Period = 24;// F= 1/(24+1)MHZ = 40KHz ,T= 1/F= 1/10= 0.025ms
+  htim16.Init.Period = 24;// F= 1/(24+1)MHZ = 25KHz ,T= 1/F= 1/10= 0.1ms
   htim16.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim16.Init.RepetitionCounter = 0;
   htim16.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -288,7 +288,7 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* timHandle)
     */
     GPIO_InitStruct.Pin = GPIO_PIN_6;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_PULLDOWN ;//GPIO_NOPULL;//WT.EDIT 2023.06.01
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.Alternate = GPIO_AF5_TIM16;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);

@@ -4,7 +4,6 @@
 #include "run.h"
 #include "delay.h"
 #include "tim.h"
-#include "gpio.h"
 
 
 static void SetLevel_Fan_PWMA(uint8_t levelval);
@@ -20,18 +19,13 @@ void FAN_CCW_RUN(void)
 
 void FAN_Stop(void)
 {
-   //FAN_CW_SetLow(); //brake
+   FAN_CW_SetLow(); //brake
    HAL_TIM_PWM_Stop(&htim16,TIM_CHANNEL_1);
-   FAN_CW_SetHigh();
-   FAN_GPIO_Init();
-   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6,GPIO_PIN_RESET);
-   //HAL_TIM_PWM_Stop(&htim16,TIM_CHANNEL_1);
-  // SetLevel_Fan_PWMA(0);//SetLevel_Fan_PWMA(16);
 }
 
 void Fan_One_Speed(void)
 {
-	 SetLevel_Fan_PWMA(20);//SetLevel_Fan_PWMA(16);
+	 SetLevel_Fan_PWMA(25);//SetLevel_Fan_PWMA(16);
 	//FAN_CW_SetLow(); //brake
 	//HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6,GPIO_PIN_SET);
 
@@ -41,7 +35,7 @@ void Fan_One_Speed(void)
 
 void Fan_Two_Speed(void)
 {
-	SetLevel_Fan_PWMA(22);
+	SetLevel_Fan_PWMA(20);
 	//FAN_CW_SetLow(); //brake
 	//HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6,GPIO_PIN_SET);
 }
