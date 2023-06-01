@@ -31,7 +31,8 @@ typedef enum{
    WIFI_RESTART_INIT,
    FAN_CONTINUCE_RUN_ONE_MINUTE,
    POWER_ON_FAN_CONTINUCE_RUN_ONE_MINUTE,
-   POWER_NULL
+   POWER_NULL,
+   KEY_NULL
 
  }run_state_t;
 
@@ -85,6 +86,8 @@ typedef struct _RUN_T{
     //iwdg ref
 	uint8_t process_run_guarantee_flag;
 	uint8_t usart2_error_falg ;
+	uint8_t power_off_by_touchkey ;
+	uint8_t power_on_by_touchkey ;
 	
  
 
@@ -110,6 +113,7 @@ typedef struct _RUN_T{
 	uint8_t works_break_power_on;
 	uint8_t beijing_time_flag ;
 	uint8_t set_beijing_time_flag;
+	uint8_t rx_command_tag;
 
 	//fan:
 	uint8_t gFan_pwm_duty_level;
@@ -168,8 +172,9 @@ extern RUN_T run_t;
 
 
 
+void RunCommand_MainBoard_Fun(uint8_t keyflag);
 
-void  RunCommand_MainBoard_Fun(void);
+
 
 void Decode_RunCmd(void);
 
@@ -183,6 +188,9 @@ void Single_ReceiveCmd(uint8_t cmd);
 void SystemReset(void);
 
 void MainBoard_Self_Inspection_PowerOn_Fun(void);
+
+void RunCommand_Connect_Handler(void);
+
 
 #endif 
 

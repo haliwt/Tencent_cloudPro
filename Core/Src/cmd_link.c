@@ -54,6 +54,7 @@ void Decode_Function(void)
       run_t.decodeFlag =0;
 	  run_t.process_run_guarantee_flag=1;
       Decode_RunCmd();
+       run_t.decodeFlag =0;
       
      }
 }
@@ -78,9 +79,7 @@ void USART1_Cmd_Error_Handler(UART_HandleTypeDef *huart)
               __HAL_UART_CLEAR_NEFLAG(&huart1);
                __HAL_UART_CLEAR_FEFLAG(&huart1);
 
-          
-          
-          temp=USART1->TDR;
+        
           temp = USART1->RDR;
 
 		  UART_Start_Receive_IT(&huart1,inputBuf,1);

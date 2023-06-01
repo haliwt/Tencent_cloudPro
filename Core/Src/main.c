@@ -125,7 +125,12 @@ int main(void)
 	MainBoard_Self_Inspection_PowerOn_Fun();
 
 	Decode_Function();
-    RunCommand_MainBoard_Fun();
+	if(run_t.decodeFlag==0){
+	    RunCommand_Connect_Handler();
+		if(run_t.rx_command_tag== KEY_NULL)
+	         RunCommand_MainBoard_Fun(run_t.RunCommand_Label);
+
+	}
     RunWifi_Command_Handler();
     if(wifi_t.get_rx_beijing_time_enable==0 ){
 	     Tencent_Cloud_Rx_Handler();
