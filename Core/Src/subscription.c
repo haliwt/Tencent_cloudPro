@@ -570,9 +570,10 @@ void Json_Parse_Command_Fun(void)
            if(run_t.app_timer_power_off_flag ==0){
 		 	MqttData_Publish_SetOpen(0);  
 			HAL_Delay(350);
-	         run_t.RunCommand_Label=POWER_OFF;
 
-			SendWifiCmd_To_Order(WIFI_POWER_OFF);
+			run_t.rx_command_tag= RUN_COMMAND;
+	        run_t.RunCommand_Label=POWER_OFF;
+            SendWifiCmd_To_Order(WIFI_POWER_OFF);
 			HAL_Delay(5);
 			buzzer_temp_on=0;
 	
@@ -588,6 +589,7 @@ void Json_Parse_Command_Fun(void)
            
 			   MqttData_Publish_SetOpen(1);  
 			   HAL_Delay(300);
+	           run_t.rx_command_tag= RUN_COMMAND;
 			   run_t.RunCommand_Label=POWER_ON;
 			   SendWifiCmd_To_Order(WIFI_POWER_ON);
 			   HAL_Delay(5);
@@ -606,6 +608,7 @@ void Json_Parse_Command_Fun(void)
          MqttData_Publish_SetPtc(0x01);
 	  	 HAL_Delay(350);
 	     run_t.gDry=1;
+		
 		 SendWifiCmd_To_Order(WIFI_PTC_ON);
 		 HAL_Delay(5);
 		 buzzer_temp_on=0;
@@ -620,6 +623,7 @@ void Json_Parse_Command_Fun(void)
          MqttData_Publish_SetPtc(0);
 		 HAL_Delay(350);
 	     run_t.gDry=0;
+		
 		 SendWifiCmd_To_Order(WIFI_PTC_OFF);
          HAL_Delay(5);
 	  	}
@@ -633,6 +637,7 @@ void Json_Parse_Command_Fun(void)
             MqttData_Publish_SetPlasma(0);
 			HAL_Delay(350);
             run_t.gPlasma=0;
+			
 			SendWifiCmd_To_Order(WIFI_KILL_OFF);
 	  	   HAL_Delay(5);
 	  	}
@@ -645,6 +650,7 @@ void Json_Parse_Command_Fun(void)
             MqttData_Publish_SetPlasma(1);
 			HAL_Delay(350);
             run_t.gPlasma=1;
+			
 			SendWifiCmd_To_Order(WIFI_KILL_ON);
 	  	   HAL_Delay(5);
 	  	}
@@ -658,6 +664,7 @@ void Json_Parse_Command_Fun(void)
             MqttData_Publish_SetUltrasonic(0);
 				HAL_Delay(350);
             run_t.gUlransonic=0;
+	
 			SendWifiCmd_To_Order(WIFI_SONIC_OFF);
 			HAL_Delay(5);
         }
@@ -671,6 +678,7 @@ void Json_Parse_Command_Fun(void)
              MqttData_Publish_SetUltrasonic(1);
 			 	HAL_Delay(350);
             run_t.gUlransonic=1;
+		
 			SendWifiCmd_To_Order(WIFI_SONIC_ON);
 			HAL_Delay(5);
         }
@@ -683,7 +691,7 @@ void Json_Parse_Command_Fun(void)
 	         run_t.gModel=2;
             MqttData_Publish_SetState(2);
 			HAL_Delay(350);
-            
+        
 			SendWifiCmd_To_Order(WIFI_MODE_2);
 		   HAL_Delay(5);
         }
@@ -697,7 +705,7 @@ void Json_Parse_Command_Fun(void)
 		    run_t.gModel=1;
             MqttData_Publish_SetState(1);
 			HAL_Delay(350);
-           
+          
 			SendWifiCmd_To_Order(WIFI_MODE_1);
 		   HAL_Delay(5);
         }
@@ -759,7 +767,7 @@ void Json_Parse_Command_Fun(void)
 		      run_t.app_timer_power_off_flag = 0;
 			   MqttData_Publish_SetOpen(1);  
 			   HAL_Delay(350);
-
+				run_t.rx_command_tag= RUN_COMMAND;
 			   run_t.RunCommand_Label=POWER_ON;
 			   SendWifiCmd_To_Order(WIFI_POWER_ON);
 			   HAL_Delay(10);
@@ -777,6 +785,7 @@ void Json_Parse_Command_Fun(void)
                 __HAL_UART_CLEAR_OREFLAG(&huart2);
 		 			MqttData_Publish_SetOpen(0);  
 			       HAL_Delay(350);
+			run_t.rx_command_tag= RUN_COMMAND;
 	         run_t.RunCommand_Label=POWER_OFF;
 
 			SendWifiCmd_To_Order(WIFI_POWER_OFF);
