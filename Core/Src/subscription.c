@@ -564,6 +564,7 @@ void Json_Parse_Command_Fun(void)
    switch(run_t.response_wifi_signal_label){
        run_t.set_beijing_time_flag =0;
 	   wifi_t.get_rx_beijing_time_enable=0; //enab
+	
 
       case OPEN_OFF_ITEM:
 

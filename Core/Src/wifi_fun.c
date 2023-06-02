@@ -14,6 +14,7 @@
 
 
 WIFI_FUN   wifi_t;
+uint8_t sub_send_power_on_times;
 
 void (*PowerOn)(void);
 void (*PowerOff)(void);
@@ -177,9 +178,17 @@ void RunWifi_Command_Handler(void)
 		break;
 
 	   	case wifi_publish_update_tencent_cloud_data://05
+            
+             if(wifi_t.gTimer_subscriber_send > 94 || sub_send_power_on_times<3){
+				 wifi_t.gTimer_subscriber_send=0;
+                 sub_send_power_on_times++;
+				 Subscriber_Data_FromCloud_Handler();
+			     HAL_Delay(350);
+
+			}
 	   	      	
 
-		      while(run_t.beijing_time_flag == 1){
+		      while(run_t.beijing_time_flag == 1 && run_t.gPower_flag ==POWER_ON){
 				run_t.beijing_time_flag ++;
 				wifi_t.gTimer_get_beijing_time=0;
 				wifi_t.get_rx_beijing_time_enable=0;//disenable get beijing timing
@@ -209,7 +218,7 @@ void RunWifi_Command_Handler(void)
 				wifi_t.runCommand_order_lable= wifi_tencent_publish_dht11_data;
 			}
 
-			if(run_t.gTimer_auto_detected_net_link_state > 6){		
+			if(run_t.gTimer_auto_detected_net_link_state > 9){		
 
 				  run_t.gTimer_auto_detected_net_link_state=0;
 
@@ -230,16 +239,14 @@ void RunWifi_Command_Handler(void)
 			
     
 			if(run_t.gPower_flag == POWER_ON){
-			 if(run_t.app_timer_power_off_flag == 0 && (run_t.app_timer_power_on_flag==0||run_t.app_timer_power_on_flag==3)){
+			 if(run_t.app_timer_power_off_flag == 0 && run_t.gPower_On ==POWER_ON && (run_t.app_timer_power_on_flag==0||run_t.app_timer_power_on_flag==3)){
 				Update_Dht11_Totencent_Value();
-				HAL_Delay(350);
+				HAL_Delay(300);
 			
-			   //  Subscriber_Data_FromCloud_Handler();
-			   //  HAL_Delay(200);
 			 	}
 			
 			
-			if(wifi_t.gTimer_get_beijing_time > 423){ //&& run_t.power_on_send_bejing_times==0){ //
+			if(wifi_t.gTimer_get_beijing_time > 423 && run_t.gPower_On ==POWER_ON){ //&& run_t.power_on_send_bejing_times==0){ //
 			   wifi_t.gTimer_get_beijing_time=0;
 			  
 			   run_t.set_beijing_time_flag=1; //set beijing times .
@@ -254,12 +261,16 @@ void RunWifi_Command_Handler(void)
 			}
 
 			
+
+			
 			}
 			else{
 
                 wifi_t.runCommand_order_lable= wifi_publish_update_tencent_cloud_data;
                
 			}
+
+		  
 	  
 
 	   break;
@@ -274,7 +285,7 @@ void RunWifi_Command_Handler(void)
 		     wifi_t.get_rx_beijing_time_enable=1; //enable beijing times
 		     UART2_DATA.UART_Cnt=0;
              Get_BeiJing_Time_Cmd();
-			 HAL_Delay(200); //200
+			 HAL_Delay(400); //200
 			 run_t.gTimer_read_beijing_time=0;
 	   	 	}
 
@@ -282,7 +293,7 @@ void RunWifi_Command_Handler(void)
 	       if(run_t.gTimer_read_beijing_time > 2 && run_t.gTimer_read_beijing_time < 4){
 				run_t.gTimer_read_beijing_time=0;
 			   	Get_Beijing_Time();
-				HAL_Delay(200);
+				HAL_Delay(300);
 			    run_t.beijing_time_flag = 1;
 				
 			  	wifi_t.real_hours = (UART2_DATA.UART_Data[134]-0x30)*10 + UART2_DATA.UART_Data[135]-0x30;

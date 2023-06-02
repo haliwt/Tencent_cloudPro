@@ -467,7 +467,7 @@ void RunCommand_MainBoard_Fun(void)
 				   FAN_Stop();
                    if(fan_continuce == 0){
 		 	       fan_continuce ++;
-			        Subscriber_Data_FromCloud_Handler();
+			       Subscriber_Data_FromCloud_Handler();
 			       HAL_Delay(300);
 
 
@@ -581,11 +581,11 @@ void RunCommand_Connect_Handler(void)
 	
 
 			 MqttData_Publish_SetOpen(1);  
-			HAL_Delay(200);
+				HAL_Delay(200);
 			 MqttData_Publish_Update_Data();//MqttData_Publish_SetOpen(1);  //MqttData_Publish_SetOpen(0x01);
 	         HAL_Delay(200);
-	         Publish_Data_ToTencent_Initial_Data();
-			 HAL_Delay(200);
+	       //  Publish_Data_ToTencent_Initial_Data();
+			// HAL_Delay(200);
 		 }
 
 		 run_t.rx_command_tag=RUN_COMMAND ;//KEY_NULL;
