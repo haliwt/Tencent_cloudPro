@@ -78,6 +78,7 @@ typedef struct _RUN_T{
 
 	uint8_t gDht11_humidity ;
 	uint8_t gDht11_temperature;
+	uint8_t interval_time_stop_run ;
 
     
 
@@ -160,6 +161,7 @@ typedef struct _RUN_T{
 	uint8_t gTimer_senddata_panel;
 	
 	uint16_t gTimer_usart2_error;
+	uint16_t gTimer_continuce_works_time;
 	uint32_t randomName[1];
 	
 

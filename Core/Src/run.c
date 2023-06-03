@@ -180,22 +180,22 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
     break;
          
     case 0xAA: //power_on 
-      if(run_t.gPower_flag == POWER_ON){
-       run_t.works_break_power_on = 0;
-
-      	}
+//      if(run_t.gPower_flag == POWER_ON){
+//       run_t.works_break_power_on = 0;
+//
+//      	}
 	   
     break;
 
 	case 0x55: //power off
-	   if(run_t.gPower_flag == POWER_ON){
-		PTC_SetLow();
-		PLASMA_SetLow();
-		HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic off	
-        run_t.gFan_continueRun=1; 
-		run_t.gFan_counter=0;
-		run_t.works_break_power_on = 1;
-	   	}
+//	   if(run_t.gPower_flag == POWER_ON){
+//		PTC_SetLow();
+//		PLASMA_SetLow();
+//		HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic off	
+//        run_t.gFan_continueRun=1; 
+//		run_t.gFan_counter=0;
+//		run_t.works_break_power_on = 1;
+//	   	}
 
 	break;
 
@@ -380,6 +380,10 @@ void RunCommand_MainBoard_Fun(void)
 		 run_t.set_wind_speed_value=10;
 		 run_t.gModel =1;
 		run_t.app_timer_power_on_flag =0;
+		
+		run_t.interval_time_stop_run =0;
+		run_t.gTimer_continuce_works_time=0;
+		
 		fan_continuce =0;
 	
        
@@ -404,14 +408,52 @@ void RunCommand_MainBoard_Fun(void)
 	break;
 
    case UPDATE_TO_PANEL_DATA: //4
- 
-   
-     if(run_t.gTimer_senddata_panel >50){ //300ms
+
+     switch(run_t.interval_time_stop_run){
+
+	 case 0:
+	  if(run_t.gTimer_senddata_panel >50 ){ //300ms
 	   	    run_t.gTimer_senddata_panel=0;
 	        ActionEvent_Handler();
 	      
 
 	 }
+	 break;
+
+	 case 1:
+	 	
+		PLASMA_SetLow(); //
+		HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic Off 
+		PTC_SetLow();
+	  if(run_t.gTimer_continuce_works_time > 600){
+              run_t.gTimer_continuce_works_time=0;
+		    run_t.interval_time_stop_run =0;
+
+
+		}
+
+	 if(run_t.gFan_continueRun ==1){
+
+              if(run_t.gFan_counter < 60){
+          
+                      Fan_One_Power_Off_Speed();//Fan_RunSpeed_Fun();// FAN_CCW_RUN();
+                  }       
+
+	           if(run_t.gFan_counter > 59){
+		           
+				   run_t.gFan_counter=0;
+				
+				   run_t.gFan_continueRun++;
+				   FAN_Stop();
+	           }
+
+	  }
+	 
+
+	 break;
+
+     }
+     
      if(run_t.gTimer_send_dit > 49){
 
           run_t.gTimer_send_dit=0;
@@ -422,11 +464,9 @@ void RunCommand_MainBoard_Fun(void)
 
    if(run_t.app_timer_power_on_flag==2){
      	run_t.app_timer_power_on_flag++;
-     Subscriber_Data_FromCloud_Handler();
-	HAL_Delay(200);
-
-
-   }
+       Subscriber_Data_FromCloud_Handler();
+		HAL_Delay(350);
+     }
 	
    
 
@@ -440,6 +480,15 @@ void RunCommand_MainBoard_Fun(void)
        
 		
 	}
+
+	if(run_t.gTimer_continuce_works_time > 7200){
+	     run_t.gTimer_continuce_works_time =0;
+         run_t.interval_time_stop_run =1;
+	     run_t.gFan_continueRun =1;
+		 run_t.gFan_counter=0;
+    }
+
+	
     break;
 
 	case FAN_CONTINUCE_RUN_ONE_MINUTE: //7
@@ -468,7 +517,7 @@ void RunCommand_MainBoard_Fun(void)
                    if(fan_continuce == 0){
 		 	       fan_continuce ++;
 			       Subscriber_Data_FromCloud_Handler();
-			       HAL_Delay(300);
+			       HAL_Delay(350);
 
 
 		            }
@@ -482,11 +531,11 @@ void RunCommand_MainBoard_Fun(void)
 	case POWER_ON_FAN_CONTINUCE_RUN_ONE_MINUTE:
 
 	    
-	 if(run_t.gPower_flag ==POWER_ON && run_t.gFan_continueRun ==1){
+	 if(run_t.gPower_On ==POWER_ON && run_t.gFan_continueRun ==1){
 
               if(run_t.gFan_counter < 60){
           
-                      Fan_RunSpeed_Fun();// FAN_CCW_RUN();
+                      Fan_One_Power_Off_Speed();//Fan_RunSpeed_Fun();// FAN_CCW_RUN();
                   }       
 
 	           if(run_t.gFan_counter > 59){
@@ -558,7 +607,14 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 }
 
 
-
+/**************************************************************
+	*
+	*Function Name: void RunCommand_Connect_Handler(void)
+	*Function: power on and run command
+	*
+	*
+	*
+**************************************************************/
 void RunCommand_Connect_Handler(void)
 {
      switch(run_t.rx_command_tag){

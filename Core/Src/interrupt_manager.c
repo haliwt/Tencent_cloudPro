@@ -174,6 +174,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	   wifi_t.gTimer_reconnect_wifi_order++;
 	   wifi_t.gTimer_power_off++;
 	   wifi_t.gTimer_subscriber_send ++;
+	   run_t.gTimer_continuce_works_time++;
 	  
 	   if(run_t.gFan_continueRun ==1){
            run_t.gFan_counter++;
